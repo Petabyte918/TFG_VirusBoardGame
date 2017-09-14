@@ -1,0 +1,31 @@
+
+
+La baraja de cartas consiste en 68 cartas:
+
+21 órganos
+  --5 órgano-corazone
+  --5 órgano-pulmone
+  --5 órgano-riñone
+  --5 órgano-hígado
+  --1 órgano-comodín
+17 virus
+  --4 virus-corazon
+  --4 virus-pulmones
+  --4 virus-riñones
+  --4 virus-hígados
+  --1 virus-comodín
+20 medicinas
+  --5 medicina-corazon
+  --5 medicina-pulmones
+  --5 medicina-riñones
+  --5 medicina-hígados
+  --1 medicina-comodín
+  
+10 tratamientos
+  --2 error médico
+  --2 guante de latex
+  --2 transplante
+  --2 ladron de organos
+  --2 contagio
+
+
