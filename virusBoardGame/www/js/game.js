@@ -1,63 +1,8 @@
 
-//
-//console.log();
-//console.info();
-//console.warn();
-//console.error();
-//console.debug();
-//console.clear();
-/**console.groupCollapsed();
-console.log("Iteracion 1..");
-console.groupEnd();***/
 
 
-var cardType = {organo: 'organo', virus: 'virus', medicina:'medicina', tratamiento: 'tratamiento'}
 
-function card (cardType, organType, picture){
-	this.cardType = cardType;
-	this.organType = organType;
-	this.picture = picture;
-}
 
-card.prototype.toString = function () {
-	var value = "";
-	value += "Carta: "+this.cardType+" "+this.organType;
-	return value;
-}
-
-var deckOfCards = []
-function initDeckOfCards (){
-	for (var i = 0; i < 5; i++) {
-		deckOfCards.push(new card(cardType.organo, 'pulmon', 'img/cardImages/organoPulmon.jpg'));
-		deckOfCards.push(new card(cardType.organo, 'corazon', 'img/cardImages/organoCorazon.jpg'));
-		deckOfCards.push(new card(cardType.organo, 'higado', 'img/cardImages/organoHigado.jpg'));
-		deckOfCards.push(new card(cardType.organo, 'cerebro', 'img/cardImages/organoCerebro.jpg'));
-	}
-	for (var i = 0; i < 5; i++) {
-		deckOfCards.push(new card(cardType.medicina, 'pulmon', 'img/cardImages/medicinaPulmon.jpg'));
-		deckOfCards.push(new card(cardType.medicina, 'corazon', 'img/cardImages/medicinaCorazon.jpg'));
-		deckOfCards.push(new card(cardType.medicina, 'higado', 'img/cardImages/medicinaHigado.jpg'));
-		deckOfCards.push(new card(cardType.medicina, 'cerebro', 'img/cardImages/medicinaCerebro.jpg'));
-	}
-	for (var i = 0; i < 4; i++) {
-		deckOfCards.push(new card(cardType.virus, 'pulmon', 'img/cardImages/virusPulmon.jpg'));
-		deckOfCards.push(new card(cardType.virus, 'corazon', 'img/cardImages/virusCorazon.jpg'));
-		deckOfCards.push(new card(cardType.virus, 'higado', 'img/cardImages/virusHigado.jpg'));
-		deckOfCards.push(new card(cardType.virus, 'cerebro', 'img/cardImages/virusCerebro.jpg'));
-	}
-	for (var i = 0; i < 2; i++) {
-		deckOfCards.push(new card(cardType.tratamiento, 'error medico', 'img/cardImages/errorMedico.jpg'));
-		deckOfCards.push(new card(cardType.tratamiento, 'guante de latex', 'img/cardImages/guanteDeLatex.jpg'));
-		deckOfCards.push(new card(cardType.tratamiento, 'transplante', 'img/cardImages/transplante.jpg'));
-		deckOfCards.push(new card(cardType.tratamiento, 'ladron de organos', 'img/cardImages/ladronDeOrganos.jpg'));
-		deckOfCards.push(new card(cardType.tratamiento, 'contagio', 'img/cardImages/contagio.jpg'));
-	}
-	for (var i = 0; i < 1; i++) {
-		deckOfCards.push(new card(cardType.organo, 'comodin', 'img/cardImages/organoComodin.jpg'));
-		deckOfCards.push(new card(cardType.medicina, 'comodin', 'img/cardImages/medicinaComodin.jpg'));
-		deckOfCards.push(new card(cardType.virus, 'comodin', 'img/cardImages/virusComodin.jpg'));
-	}
-}
 
 function playSound(soundResource){
 	if (soundResource) {
@@ -69,46 +14,68 @@ function playSound(soundResource){
 	}
 }
 
-function renderImage(context){
-	// context.drawImage(img,x,y,width,height);
-	var currentImage = new Image();
-
-	currentImage.onload = function(){
-		context.drawImage(currentImage,10,10,150,200);
+var cv, cx, objetos, objetoActual = null;
+var inicioX = 0, inicioY = 0;
+function actualizar(){
+	cx.fillStyle = '#f0f0f0';
+	cx.fillRect(0,0,700,400);
+	for (var i = 0; i < objetos.length; i++){
+		cx.fillStyle = objetos[i].color;
+		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
 	}
-	randomBinaryNumber = Math.floor(Math.random() * 2);
+}
+window.onload = function(){
+	objetos = [];
+	cv = document.getElementById('canvas')
+	cx = cv.getContext('2d');
+	objetos.push({
+		x: 0, y: 0,
+		width: 100, height: 200,
+		color: '#00f'
+	});
+	objetos.push({
+		x: 300, y: 150,
+		width: 50, height: 100,
+		color: '#f00'
+	});
+	objetos.push({
+		x: 120, y: 150,
+		width: 50, height: 100,
+		color: '#0f0'
+	});
 
-	if (randomBinaryNumber == 0){
-		currentImage.src = 'img/cardImages/organoCorazon.jpg'
-	} else if (randomBinaryNumber == 1){
-		currentImage.src = 'img/cardImages/organoPulmon.jpg'
-	} else {
-		console.log(randomBinaryNumber);
+	cv.onmousedown = function(event) {
+		for (var i = 0; i < objetos.length; i++) {
+			if (objetos[i].x < event.clientX
+			  && (objetos[i].width + objetos[i].x > event.clientX)
+			  && objetos[i].y < event.clientY
+			  && (objetos[i].height + objetos[i].y > event.clientY)) {
+				objetoActual = objetos[i];
+				inicioY = event.clientY - objetos[i].y;
+				inicioX = event.clientX - objetos[i].x;
+				break;
+			}
+		}
 	}
 
+	cv.onmousemove = function(event) {
+		if (objetoActual != null) {
+			objetoActual.x = event.clientX - inicioX;
+			objetoActual.y = event.clientY - inicioY;
+		}
+		actualizar();
+	}
+
+	cv.onmouseup = function(event) {
+		objetoActual = null;
+	}
 }
 
-function shuffleDeck(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-  return array;
-}
 
 function takeCard(){
     if (deckOfCards.length != 0){
     	var drawedCard = deckOfCards.shift();
     	console.log(drawedCard);
-    	//Temp
-    	//render(drawedCard.source,0,0);
     	return drawedCard;
     } else {
     	alert("Oh! No quedan cartas en el mazo!");
@@ -116,29 +83,17 @@ function takeCard(){
     }
 }
 
-function drawCard(){
-	if (Modernizr.canvas){
-		var canvas = document.getElementById("canvas");
-		var context = canvas.getContext("2d");
-		if (context){
-			var currentCard = takeCard();
-			if (currentCard) {
-				alert(currentCard.toString());
-			}
-			renderImage(context);
-		}
-	} else {
-		alert("Canvas is not supported");
-	}
-}
-
-
-
 $(document).ready(function(){
 	console.log("Document Ready");
-	initDeckOfCards();
+
+	simularDatosIniciales();
+
+	Engine.initializeCanvas();
+	Engine.initializeJugadores();
+	Engine.initDeckOfCards();
+
 	shuffleDeck(deckOfCards);
-	$("#textButton").on("click", function() {
-		drawCard();
-	})
+
 })
+
+

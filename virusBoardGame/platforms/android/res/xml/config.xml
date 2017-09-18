@@ -4,9 +4,9 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
-    <name>HelloCordova</name>
+    <name>virusBoardGame</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Web app for popular virus board game
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
