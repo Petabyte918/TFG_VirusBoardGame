@@ -44,7 +44,9 @@ window.onload = function(){
 		color: '#0f0'
 	});
 
-	cv.onmousedown = function(event) {
+	cv.ontouchstart = function(event) {
+	//cv.onmousedown = function(event) {
+		console.log("Onmousedown");
 		for (var i = 0; i < objetos.length; i++) {
 			if (objetos[i].x < event.clientX
 			  && (objetos[i].width + objetos[i].x > event.clientX)
@@ -58,7 +60,9 @@ window.onload = function(){
 		}
 	}
 
-	cv.onmousemove = function(event) {
+	cv.ontouchmove = function(event) {
+	//cv.onmousemove = function(event) {
+		console.log("Onmousemove");
 		if (objetoActual != null) {
 			objetoActual.x = event.clientX - inicioX;
 			objetoActual.y = event.clientY - inicioY;
@@ -66,7 +70,9 @@ window.onload = function(){
 		actualizar();
 	}
 
-	cv.onmouseup = function(event) {
+	cv.ontouchend = function(event) {
+	//cv.onmouseup = function(event) {
+		console.log("Onmouseup");
 		objetoActual = null;
 	}
 }

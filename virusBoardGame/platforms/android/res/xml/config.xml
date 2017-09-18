@@ -6,7 +6,7 @@
     </feature>
     <name>virusBoardGame</name>
     <description>
-        Web app for popular virus board game
+        Web board game application
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
