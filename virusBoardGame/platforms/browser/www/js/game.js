@@ -14,21 +14,25 @@ function playSound(soundResource){
 	}
 }
 
-//TELEFONO
-/**
 var cv, cx, objetos, objetoActual = null;
 var inicioX = 0, inicioY = 0;
+var windowWidth, windowHeight = 0;
 function actualizar(){
 	cx.fillStyle = '#f0f0f0';
-	cx.fillRect(0,0,700,400);
+	cx.fillRect(0,0,windowWidth,windowHeight);
 	for (var i = 0; i < objetos.length; i++){
 		cx.fillStyle = objetos[i].color;
 		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
 	}
 }
+//1.-, 2.-
 window.onload = function(){
 	objetos = [];
-	cv = document.getElementById('canvas')
+	cv = document.getElementById('canvas');
+	windowWidth = window.outerWidth;
+	windowHeight = window.outerHeight;
+	cv.height = windowHeight;
+	cv.width = windowWidth;
 	cx = cv.getContext('2d');
 	objetos.push({
 		x: 0, y: 0,
@@ -46,105 +50,45 @@ window.onload = function(){
 		color: '#0f0'
 	});
 
+	//Movil - ordenador
 	cv.ontouchstart = function(event) {
+		var touch = event.touches[0];
+	//cv.onmousedown = function(event) {
+		//var touch = event;
 		console.log("Onmousedown");
 		for (var i = 0; i < objetos.length; i++) {
-			if (objetos[i].x < event.layerX
-			  && (objetos[i].width + objetos[i].x > event.layerX)
-			  && objetos[i].y < event.layerY
-			  && (objetos[i].height + objetos[i].y > event.layerY)) {
+			if (objetos[i].x < touch.pageX
+			  && (objetos[i].width + objetos[i].x > touch.pageX)
+			  && objetos[i].y < touch.pageY
+			  && (objetos[i].height + objetos[i].y > touch.pageY)) {
 				objetoActual = objetos[i];
 				console.log("Objeto "+i+" TOCADO");
-				inicioY = event.layerY - objetos[i].y;
-				inicioX = event.layerX - objetos[i].x;
+				inicioY = touch.pageY - objetos[i].y;
+				inicioX = touch.pageX - objetos[i].x;
 				break;
 			}
 		}
 	}
-
+	//Movil - ordenador
 	cv.ontouchmove = function(event) {
+		var touch = event.touches[0];
+	//cv.onmousemove = function(event) {
+		//var touch = event;
 		console.log("Onmousemove");
 		if (objetoActual != null) {
-			objetoActual.x = event.layerX - inicioX;
-			objetoActual.y = event.layerY - inicioY;
+			objetoActual.x = touch.pageX - inicioX;
+			objetoActual.y = touch.pageY - inicioY;
 		}
 		actualizar();
 	}
-
+	//Movil - ordenador
 	cv.ontouchend = function(event) {
+	//cv.onmouseup = function(event) {
 		console.log("Onmouseup");
 		objetoActual = null;
 	}
 }
-**/
 
-//ORDENADOR
-
-var cv, cx, objetos, objetoActual = null;
-var inicioX = 0, inicioY = 0;
-function actualizar(){
-	cx.fillStyle = '#f0f0f0';
-	cx.fillRect(0,0,1000,700);
-	for (var i = 0; i < objetos.length; i++){
-		cx.fillStyle = objetos[i].color;
-		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
-	}
-}
-window.onload = function(){
-	objetos = [];
-	cv = document.getElementById('canvas')
-	cx = cv.getContext('2d');
-	objetos.push({
-		x: 0, y: 0,
-		width: 200, height: 400,
-		color: '#00f'
-	});
-	objetos.push({
-		x: 300, y: 150,
-		width: 100, height: 200,
-		color: '#f00'
-	});
-	objetos.push({
-		x: 120, y: 150,
-		width: 100, height: 200,
-		color: '#0f0'
-	});
-
-	cv.onmousedown = function(event) {
-		console.log("Onmousedown");
-		console.log("Event: "+event);
-		//console.log("event.layerX: "+event.layerX);
-		//console.log("event.layerY: "+event.layerY);
-		//console.log("event.pageX: "+event.pageX);
-		//console.log("event.pageY: "+event.pageY);
-		for (var i = 0; i < objetos.length; i++) {
-			if (objetos[i].x < event.layerX
-			  && (objetos[i].width + objetos[i].x > event.layerX)
-			  && objetos[i].y < event.layerY
-			  && (objetos[i].height + objetos[i].y > event.layerY)) {
-				objetoActual = objetos[i];
-				console.log("Objeto "+i+" TOCADO");
-				inicioY = event.layerY - objetos[i].y;
-				inicioX = event.layerX - objetos[i].x;
-				break;
-			}
-		}
-	}
-
-	cv.onmousemove = function(event) {
-		console.log("Onmousemove");
-		if (objetoActual != null) {
-			objetoActual.x = event.layerX - inicioX;
-			objetoActual.y = event.layerY - inicioY;
-		}
-		actualizar();
-	}
-
-	cv.onmouseup = function(event) {
-		console.log("Onmouseup");
-		objetoActual = null;
-	}
-}
 
 
 function takeCard(){
@@ -161,7 +105,7 @@ function takeCard(){
 $(document).ready(function(){
 	console.log("Document Ready");
 	console.log("Orientation before lock is: "+screen.orientation.type);
-	//Dara error en las pruebas de ordenador, pero no deberia ocurrir nada mas
+	//Da error en el navegador, pero no para la ejecucion
 	screen.orientation.lock('landscape');
 
 	simularDatosIniciales();

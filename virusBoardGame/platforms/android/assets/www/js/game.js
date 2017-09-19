@@ -16,20 +16,23 @@ function playSound(soundResource){
 
 var cv, cx, objetos, objetoActual = null;
 var inicioX = 0, inicioY = 0;
+var windowWidth, windowHeight = 0;
 function actualizar(){
 	cx.fillStyle = '#f0f0f0';
-	cx.fillRect(0,0,700,400);
+	cx.fillRect(0,0,windowWidth,windowHeight);
 	for (var i = 0; i < objetos.length; i++){
 		cx.fillStyle = objetos[i].color;
 		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
 	}
 }
-//Si consideramos offset del canvas (deberia ser 0 pero si no..)
-//var x_2 = touch.pageX - canvas.offsetLeft;
-//var y_2 = touch.pageY - canvas.offsetTop
+//1.-, 2.-
 window.onload = function(){
 	objetos = [];
-	cv = document.getElementById('canvas')
+	cv = document.getElementById('canvas');
+	windowWidth = window.innerWidth;
+	windowHeight = window.innerHeight;
+	cv.height = windowHeight;
+	cv.width = windowWidth;
 	cx = cv.getContext('2d');
 	objetos.push({
 		x: 0, y: 0,
