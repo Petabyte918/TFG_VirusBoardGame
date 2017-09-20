@@ -92,10 +92,11 @@ window.onload = function(){
 function renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3){
 	
 	cx.fillStyle = '#000000';
-	cx.fillRect(0, 0, jugador.widthCarta, jugador.heightCarta);
-	for (var i = 0; i < pos.length; i++){
-		cx.fillStyle = objetos[i].color;
-		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
+	cx.fillRect(posCarta1[0], posCarta1[1], widthCarta, heightCarta);
+	cx.fillRect(posCarta2[0], posCarta2[1], widthCarta, heightCarta);
+	cx.fillRect(posCarta3[0], posCarta3[1], widthCarta, heightCarta);
+	for (var i = 0; i < jugadores.length; i++){
+		if (usuario == jugadores)
 	}
 }
 

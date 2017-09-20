@@ -1,9 +1,9 @@
 
 function aleatorioRGBrange(inferior,superior){
-	numPosibilidades = superior - inferior
-	aleat = Math.random() * numPosibilidades
-	aleat = Math.floor(aleat)
-	return parseInt(inferior) + aleat
+	var numPosibilidades = superior - inferior;
+	var aleat = Math.random() * numPosibilidades;
+	aleat = Math.floor(aleat);
+	return parseInt(inferior) + aleat;
 }
 function colorAleatorio(){
    return "rgb(" + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + ")";
@@ -41,6 +41,7 @@ var usuario = "";
 var numHumanos, numMaquinas, numJugadores = 0;
 var jugadores = []
 var deckOfCards = []
+var posJugadores = [];
 Engine = new function () {
 	//Responsive canvas
 	this.initializeCanvas = function(){
@@ -62,6 +63,26 @@ Engine = new function () {
 	}
 	this.initializeJugadores = function(){
 		//Servidor: Esta funcion debe pedir al servidor los jugadores
+
+		//Y saber como colocarlos en la mesa
+		//6 posiciones libres. La propia, una a la izq, tres enfrente y otra a la dcha
+		switch(numJugadores){
+		case 2:
+			posJugadores = [1, 4];
+		case 3:
+			posJugadores = [1, 2, 6]; //o [1, 3, 5];
+		case 4:
+			posJugadores = [1, 2, 4, 6];
+		case 5:
+			posJugadores = [1, 2, 3, 5, 6];
+		case 6:
+			posJugadores = [1, 2, 3, 4, 5, 6];
+		default:
+			alert("Posicion jugadores erroneo por numero de jugadores erroneo");
+		}
+	}
+	this.initCartasJugs = function (){
+		
 	}
 	this.initDeckOfCards = function(){
 		for (var i = 0; i < 5; i++) {
