@@ -9,11 +9,6 @@ function colorAleatorio(){
    return "rgb(" + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + ")";
 }
 
-var jugadorType = {humano: 'humano', maquina: 'maquina'};
-function jugador(){
-	this.jugadorType = jugadorType;
-}
-
 var cardType = {organo: 'organo', virus: 'virus', medicina:'medicina', tratamiento: 'tratamiento'}
 function card (cardType, organType, picture){
 	this.cardType = cardType;
@@ -27,7 +22,7 @@ card.prototype.toString = function () {
 	return value;
 }
 
-function shuffleDeck(array) {
+function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
@@ -42,8 +37,8 @@ function shuffleDeck(array) {
   return array;
 }
 
-var numJugadores = 0;
-var numMaquians = 0;
+var usuario = "";
+var numHumanos, numMaquinas, numJugadores = 0;
 var jugadores = []
 var deckOfCards = []
 Engine = new function () {
@@ -66,12 +61,7 @@ Engine = new function () {
 		}**/
 	}
 	this.initializeJugadores = function(){
-		for (var i=0; i < numJugadores; i++){
-			jugadores.push(new jugador(jugadorType.humano));
-		}
-		for (var i=0; i < numMaquinas; i++){
-			jugadores.push(new jugador(jugadorType.maquina));
-		}
+		//Servidor: Esta funcion debe pedir al servidor los jugadores
 	}
 	this.initDeckOfCards = function(){
 		for (var i = 0; i < 5; i++) {
@@ -108,8 +98,18 @@ Engine = new function () {
 }
 
 function simularDatosIniciales(){
-	numJugadores = 1;
-	numMaquinas = 0;
+	//Usuario logueado o usuario propio
+	usuario = "lucaskhane";
+	jugadores.push("lucaskhane");
+	//Otros jugadores
+	jugadores.push("Jose", "pepe");
+	numHumanos = 2;
+	//Usuarios maquina
+	jugadores.push("maquina1", "maquina2")
+	numMaquinas = 2;
+	numJugadores = jugadores.length();
+
+	shuffle(jugadores);
 }
 
 

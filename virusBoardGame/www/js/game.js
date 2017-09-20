@@ -31,8 +31,8 @@ window.onload = function(){
 	cv = document.getElementById('canvas');
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight;
-	cv.height = windowHeight;
 	cv.width = windowWidth;
+	cv.height = windowHeight;
 	cx = cv.getContext('2d');
 	objetos.push({
 		x: 0, y: 0,
@@ -51,10 +51,10 @@ window.onload = function(){
 	});
 
 	//Movil - ordenador
-	cv.ontouchstart = function(event) {
-		var touch = event.touches[0];
-	//cv.onmousedown = function(event) {
-		//var touch = event;
+	//cv.ontouchstart = function(event) {
+		//var touch = event.touches[0];
+	cv.onmousedown = function(event) {
+		var touch = event;
 		console.log("Onmousedown");
 		for (var i = 0; i < objetos.length; i++) {
 			if (objetos[i].x < touch.pageX
@@ -70,10 +70,10 @@ window.onload = function(){
 		}
 	}
 	//Movil - ordenador
-	cv.ontouchmove = function(event) {
-		var touch = event.touches[0];
-	//cv.onmousemove = function(event) {
-		//var touch = event;
+	//cv.ontouchmove = function(event) {
+		//var touch = event.touches[0];
+	cv.onmousemove = function(event) {
+		var touch = event;
 		console.log("Onmousemove");
 		if (objetoActual != null) {
 			objetoActual.x = touch.pageX - inicioX;
@@ -89,7 +89,48 @@ window.onload = function(){
 	}
 }
 
+function renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3){
+	
+	cx.fillStyle = '#000000';
+	cx.fillRect(0, 0, jugador.widthCarta, jugador.heightCarta);
+	for (var i = 0; i < pos.length; i++){
+		cx.fillStyle = objetos[i].color;
+		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
+	}
+}
 
+function ponerJugadores(numJugadores, numMaquinas){
+	switch(numJugadores + numMaquinas){
+		case 1:
+			alert("Alert: ¡estas jugando solo colega!");
+		case 2:
+			
+			//Posiciones y tamaños estaran proporcionados con el tamaño de la pantalla
+			var widthDisponible = windowWidth / 3;
+			var heightDisponible = windowHeight / 3;
+			//20px sera la separacion entre cartas * 2 = 40
+			var widthCarta = widthDisponible / 3 - 40;
+			//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
+			//posCartaX = [width, height, rotacion]
+			var heightCarta = widthCarta * 1.5;
+			var posCarta1 = [espDisponible, heightDisponible, 0];
+			var posCarta2 = [espDisponible + 20, heightDisponible, 0];
+			var posCarta3 = [espDisponible + 40, heightDisponible, 0];
+			var posCartasJug1 = [posCarta1, posCarta2, posCarta3];
+			posCartasJugadores.push(posCartasJugadores);
+			renderBgCard(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3);
+		case 3:
+
+		case 4:
+
+		case 5:
+
+		case 6:
+
+		default:
+			alert("Numero de jugadores erroneo");
+	}
+}
 
 function takeCard(){
     if (deckOfCards.length != 0){
@@ -114,7 +155,7 @@ $(document).ready(function(){
 	Engine.initializeJugadores();
 	Engine.initDeckOfCards();
 
-	shuffleDeck(deckOfCards);
+	shuffle(deckOfCards);
 
 })
 

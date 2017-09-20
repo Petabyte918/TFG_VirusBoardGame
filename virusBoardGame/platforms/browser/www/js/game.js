@@ -29,8 +29,8 @@ function actualizar(){
 window.onload = function(){
 	objetos = [];
 	cv = document.getElementById('canvas');
-	windowWidth = window.outerWidth;
-	windowHeight = window.outerHeight;
+	windowWidth = window.innerWidth;
+	windowHeight = window.innerHeight;
 	cv.height = windowHeight;
 	cv.width = windowWidth;
 	cx = cv.getContext('2d');

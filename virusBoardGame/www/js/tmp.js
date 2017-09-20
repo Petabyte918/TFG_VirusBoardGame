@@ -16,3 +16,16 @@ function renderImage(context){
 	}
 
 }
+
+
+var jugadorType = {humano: 'humano', maquina: 'maquina'};
+function jugador(){
+	this.jugadorType = jugadorType;
+}
+
+for (var i=0; i < numJugadores; i++){
+	jugadores.push(new jugador(jugadorType.humano));
+}
+for (var i=0; i < numMaquinas; i++){
+	jugadores.push(new jugador(jugadorType.maquina));
+}

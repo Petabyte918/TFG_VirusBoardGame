@@ -1,0 +1,10 @@
+//1.-
+//Si consideramos offset del canvas (deberia ser 0 pero si no..)
+//var x_2 = touch.pageX - canvas.offsetLeft;
+//var y_2 = touch.pageY - canvas.offsetTop
+
+//2.-
+//Obtener las diferentes posiciones y tamaños de navegador, pantalla..etc
+//screen.height - gives actual device height including task bar and title bar 
+//window.innerHeight - gives the height excluding task bar, title bar and address bar(if visible)
+//window.outerHeight - gives the height excluding task bar and title bar height, (no matter address bar is visible or hidden, outerHeight include the address bar height.)
