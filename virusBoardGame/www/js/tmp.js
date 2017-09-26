@@ -29,3 +29,22 @@ for (var i=0; i < numJugadores; i++){
 for (var i=0; i < numMaquinas; i++){
 	jugadores.push(new jugador(jugadorType.maquina));
 }
+
+
+function ponerJugadores(numJugadores, numMaquinas){
+	//Queremos que todos los usuarios esten ubicados en cada dispositivo de la misma forma
+	//Empezamos por el jugador propio y vamos colocando en sentido horario hasta completar el bucle
+	var posUsuario = jugadores.find();
+	var i = posUsuario;
+	var contador = 0;
+	while (contador < numJugadores) {
+		posJugadores[i];
+
+		renderBgCard(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3);
+
+		i++;
+		if (i == numJugadores){
+			i == 0;
+		}
+	}
+}

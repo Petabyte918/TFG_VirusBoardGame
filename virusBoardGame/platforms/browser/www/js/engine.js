@@ -1,17 +1,12 @@
 
 function aleatorioRGBrange(inferior,superior){
-	numPosibilidades = superior - inferior
-	aleat = Math.random() * numPosibilidades
-	aleat = Math.floor(aleat)
-	return parseInt(inferior) + aleat
+	var numPosibilidades = superior - inferior;
+	var aleat = Math.random() * numPosibilidades;
+	aleat = Math.floor(aleat);
+	return parseInt(inferior) + aleat;
 }
 function colorAleatorio(){
    return "rgb(" + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + ")";
-}
-
-var jugadorType = {humano: 'humano', maquina: 'maquina'};
-function jugador(){
-	this.jugadorType = jugadorType;
 }
 
 var cardType = {organo: 'organo', virus: 'virus', medicina:'medicina', tratamiento: 'tratamiento'}
@@ -27,7 +22,7 @@ card.prototype.toString = function () {
 	return value;
 }
 
-function shuffleDeck(array) {
+function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
@@ -42,10 +37,12 @@ function shuffleDeck(array) {
   return array;
 }
 
-var numJugadores = 0;
-var numMaquians = 0;
-var jugadores = []
-var deckOfCards = []
+var usuario = ""; //Nombre de usuario
+var numHumanos, numMaquinas, numJugadores = 0;
+var jugadores = []; //Nombres humanos
+var deckOfCards = []; //Array que contiene todas las cartas
+var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa usaremos
+var posCartasJugadores = []; //Que pintamos y donde en cada hueco
 Engine = new function () {
 	//Responsive canvas
 	this.initializeCanvas = function(){
@@ -66,12 +63,121 @@ Engine = new function () {
 		}**/
 	}
 	this.initializeJugadores = function(){
-		for (var i=0; i < numJugadores; i++){
-			jugadores.push(new jugador(jugadorType.humano));
+		//Servidor: Esta funcion debe pedir al servidor los jugadores
+
+		//Y saber como colocarlos en la mesa
+		//6 posiciones libres. La propia, una a la izq, tres enfrente y otra a la dcha
+		var pos1, pos2, pos3, pos4, pos5, pos6 = [];
+		switch(numJugadores){
+		case 2:
+			posJugadores = [1, 4];
+			break;
+		case 3:
+			posJugadores = [1, 2, 6]; //o [1, 3, 5];
+			break;
+		case 4:
+			posJugadores = [1, 2, 4, 6];
+			break;
+		case 5:
+			posJugadores = [1, 2, 3, 5, 6];
+			break;
+		case 6:
+			posJugadores = [1, 2, 3, 4, 5, 6];
+			break;
+		default:
+			alert("Posicion jugadores erroneo por numero de jugadores erroneo");
+			break;
 		}
-		for (var i=0; i < numMaquinas; i++){
-			jugadores.push(new jugador(jugadorType.maquina));
-		}
+	}
+	this.initializePosiciones = function(){
+		var widthDisponible, heightDisponible = 0;
+		var widthCarta, heightCarta = 0;
+		var posCarta1, posCarta2, posCarta3 = 0;
+		//Posiciones y tamaños estaran proporcionados con el tamaño de la pantalla
+
+		//POSICION 1
+		widthDisponible = windowWidth / 3;
+		heightDisponible = windowHeight / 3;
+		//20px sera la separacion entre cartas * 2 = 40
+		widthCarta = widthDisponible / 3 - 20;
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
+		//posCartaX = [width, height]
+		heightCarta = widthCarta * 1.5;
+		posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, windowHeight - heightCarta - 20];
+		posCarta2 = [windowWidth / 2 - widthCarta * 0.5, windowHeight - heightCarta - 20];
+		posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, windowHeight - heightCarta - 20];
+		var posCartasJug1 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+		posCartasJugadores.push(posCartasJug1);
+
+		//POSICION 2
+		widthDisponible = windowWidth / 3;
+		heightDisponible = windowHeight / 3;
+		//20px sera la separacion entre cartas * 2 = 40
+		heightCarta = widthDisponible / 6 - 20;
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
+		//posCartaX = [width, height]
+		widthCarta = heightCarta * 1.5;
+		posCarta1 = [20, windowHeight / 2 - heightCarta * 1.5 - 20];
+		posCarta2 = [20, windowHeight / 2 - heightCarta * 0.5];
+		posCarta3 = [20, windowHeight / 2 + heightCarta * 0.5 + 20];
+		var posCartasJug2 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+		posCartasJugadores.push(posCartasJug2);
+
+		//POSICION 3
+		widthDisponible = windowWidth / 3;
+		//20px sera la separacion entre cartas * 2 = 40
+		widthCarta = widthDisponible / 6 - 20; 
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
+		//posCartaX = [width, height, rotacion]
+		heightCarta = widthCarta * 1.5;
+		posCarta1 = [windowWidth / 3 - widthCarta * 3 - 40, 20];
+		posCarta2 = [windowWidth / 3 - widthCarta * 2 - 20, 20];
+		posCarta3 = [windowWidth / 3 - widthCarta * 1, 20];
+		var posCartasJug3 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+		posCartasJugadores.push(posCartasJug3);		
+
+		//POSICION 4
+		widthDisponible = windowWidth / 3;
+		//20px sera la separacion entre cartas * 2 = 40
+		widthCarta = widthDisponible / 6 - 20; 
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
+		//posCartaX = [width, height, rotacion]
+		heightCarta = widthCarta * 1.5;
+		posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, 20];
+		posCarta2 = [windowWidth / 2 - widthCarta * 0.5, 20];
+		posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, 20];
+		var posCartasJug4 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+		posCartasJugadores.push(posCartasJug4);
+
+		//POSICION 5
+		widthDisponible = windowWidth / 3;
+		//20px sera la separacion entre cartas * 2 = 40
+		widthCarta = widthDisponible / 6 - 20; 
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
+		//posCartaX = [width, height, rotacion]
+		heightCarta = widthCarta * 1.5;
+		posCarta1 = [(windowWidth / 3) * 2, 20];
+		posCarta2 = [(windowWidth / 3) * 2 + widthCarta * 1 + 20, 20];
+		posCarta3 = [(windowWidth / 3) * 2 + widthCarta * 2 + 40, 20];
+		var posCartasJug5 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+		posCartasJugadores.push(posCartasJug5);	
+
+		//POSICION 6
+		widthDisponible = windowWidth / 3;
+		heightDisponible = windowHeight / 3;
+		//20px sera la separacion entre cartas * 2 = 40
+		heightCarta = widthDisponible / 6 - 20;
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
+		//posCartaX = [width, height]
+		widthCarta = heightCarta * 1.5;
+		posCarta1 = [windowWidth - widthCarta - 20, windowHeight / 2 - heightCarta * 1.5 - 20];
+		posCarta2 = [windowWidth - widthCarta - 20, windowHeight / 2 - heightCarta * 0.5];
+		posCarta3 = [windowWidth - widthCarta - 20, windowHeight / 2 + heightCarta * 0.5 + 20];
+		var posCartasJug6 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+		posCartasJugadores.push(posCartasJug6);
+	}
+	this.initCartasJugs = function(){
+
 	}
 	this.initDeckOfCards = function(){
 		for (var i = 0; i < 5; i++) {
@@ -108,8 +214,18 @@ Engine = new function () {
 }
 
 function simularDatosIniciales(){
-	numJugadores = 1;
-	numMaquinas = 0;
+	//Usuario logueado o usuario propio
+	usuario = "lucaskhane";
+	jugadores.push("lucaskhane");
+	//Otros jugadores
+	//jugadores.push("Jose", "pepe");
+	numHumanos = 1;
+	//Usuarios maquina
+	jugadores.push("maquina1");
+	numMaquinas = 1;
+	numJugadores = jugadores.length;
+
+	shuffle(jugadores);
 }
 
 
