@@ -8,6 +8,7 @@
         <param name="android-package" value="cordova.plugins.screenorientation.CDVOrientation" />
     </feature>
     <name>¡Virus!</name>
+    <icon src="www/img/icon.png" />
     <description>
         Web board game application
     </description>
@@ -23,6 +24,10 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-intent href="market:*" />
+    <icon density="ldpi" src="www/img/icon.png" />
+    <icon density="mdpi" src="www/img/icon.png" />
+    <icon density="hdpi" src="www/img/icon.png" />
+    <icon density="xhdpi" src="www/img/icon.png" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="Orientation" value="landscape" />
 </widget>

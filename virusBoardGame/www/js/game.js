@@ -79,6 +79,7 @@ $(document).ready(function(){
 		//console.log("windowHeight: "+windowHeight);
 		objetos = [];
 
+		//Canvas principal
 		cv = document.getElementById('canvas');
 		cv.width = windowWidth;
 		cv.height = windowHeight;
@@ -86,11 +87,12 @@ $(document).ready(function(){
 		cx.fillStyle = "rgba(0,0,255,0)";
 		cx.fillRect(0,0,windowWidth,windowHeight);
 
+		//Canvas en background
 		cvBG = document.getElementById('canvasBG');
 		cvBG.width = windowWidth;
 		cvBG.height = windowHeight;
 		cxBG = cvBG.getContext('2d');
-		cxBG.fillStyle = 'red';
+		cxBG.fillStyle = 'MediumSeaGreen';
 		cxBG.fillRect(0,0,windowWidth,windowHeight);
 		/**objetos.push({
 			x: 0, y: 0,
