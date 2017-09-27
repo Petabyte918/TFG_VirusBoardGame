@@ -24,11 +24,13 @@ function actualizar(){
 }
 
 function renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3){
-	
-	cx.fillStyle = '#000000';
-	cx.fillRect(posCarta1[0], posCarta1[1], widthCarta, heightCarta);
-	cx.fillRect(posCarta2[0], posCarta2[1], widthCarta, heightCarta);
-	cx.fillRect(posCarta3[0], posCarta3[1], widthCarta, heightCarta);
+	var img = new Image();
+	img.src = "img/cardImages/reversoCarta.jpg";
+	img.onload = function(){
+		cx.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
+		cx.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
+		cx.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
+	}
 }
 
 function ponerJugadores(){
@@ -79,6 +81,7 @@ $(document).ready(function(){
 		//console.log("windowHeight: "+windowHeight);
 		objetos = [];
 
+		//Canvas principal
 		cv = document.getElementById('canvas');
 		cv.width = windowWidth;
 		cv.height = windowHeight;
@@ -86,11 +89,12 @@ $(document).ready(function(){
 		cx.fillStyle = "rgba(0,0,255,0)";
 		cx.fillRect(0,0,windowWidth,windowHeight);
 
+		//Canvas en background
 		cvBG = document.getElementById('canvasBG');
 		cvBG.width = windowWidth;
 		cvBG.height = windowHeight;
 		cxBG = cvBG.getContext('2d');
-		cxBG.fillStyle = 'red';
+		cxBG.fillStyle = 'MediumSeaGreen';
 		cxBG.fillRect(0,0,windowWidth,windowHeight);
 		/**objetos.push({
 			x: 0, y: 0,
@@ -149,9 +153,6 @@ $(document).ready(function(){
 		Engine.initializeJugadores();
 		Engine.initializePosiciones();
 		Engine.initDeckOfCards();
-
-		shuffle(deckOfCards);
-
 
 		ponerJugadores();
 	}

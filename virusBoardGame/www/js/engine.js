@@ -213,19 +213,5 @@ Engine = new function () {
 	}
 }
 
-function simularDatosIniciales(){
-	//Usuario logueado o usuario propio
-	usuario = "lucaskhane";
-	jugadores.push("lucaskhane");
-	//Otros jugadores
-	//jugadores.push("Jose", "pepe");
-	numHumanos = 1;
-	//Usuarios maquina
-	jugadores.push("maquina1");
-	numMaquinas = 1;
-	numJugadores = jugadores.length;
-
-	shuffle(jugadores);
-}
 
 
