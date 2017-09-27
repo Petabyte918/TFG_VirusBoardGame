@@ -12,11 +12,16 @@
 
 <body>
 
-
-		<canvas id="canvas" width="1000px" height="700px">
+	<div style="position: relative;">
+		<canvas id="canvas" width="1000px" height="700px"
+				style="position: absolute; left: 0; top: 0; z-index: 1;">
 			Your browser does not support canvas
 		</canvas>
-
+		<canvas id="canvasBG" width="1000px" height="700px"
+				style="position: absolute; left: 0; top: 0; z-index: 0;">
+			Your browser does not support canvas
+		</canvas>
+	</div>
 
 </body>
 </html>

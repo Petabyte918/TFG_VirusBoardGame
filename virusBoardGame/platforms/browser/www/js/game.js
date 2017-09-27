@@ -11,6 +11,7 @@ function playSound(soundResource){
 }
 
 var cv, cx, objetos, objetoActual = null;
+var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
 var windowWidth, windowHeight = 0;
 function actualizar(){
@@ -36,17 +37,17 @@ function ponerJugadores(){
 	var widthCarta = "";
 	var heightCarta = "";
 	for (var i = 0; i < posCartasJugadores.length; i++){
-		console.log("JUGADOR "+i+1);
+		//console.log("JUGADOR "+i+1);
 		var widthCarta = posCartasJugadores[i][0];
 		var heightCarta = posCartasJugadores[i][1];
 		posCarta1 = posCartasJugadores[i][2];
 		posCarta2 = posCartasJugadores[i][3];
 		posCarta3 = posCartasJugadores[i][4];
-		console.log("widthCarta: "+widthCarta);
-		console.log("heightCarta: "+heightCarta);
-		console.log("posCarta1: "+posCarta1);
-		console.log("posCarta2: "+posCarta2);
-		console.log("posCarta3: "+posCarta3);
+		//console.log("widthCarta: "+widthCarta);
+		//console.log("heightCarta: "+heightCarta);
+		//console.log("posCarta1: "+posCarta1);
+		//console.log("posCarta2: "+posCarta2);
+		//console.log("posCarta3: "+posCarta3);
 		renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3);
 	}
 }
@@ -72,15 +73,25 @@ $(document).ready(function(){
 
 	window.onload = function(){
 		console.log("Window onload");
-		objetos = [];
-		cv = document.getElementById('canvas');
 		windowWidth = window.innerWidth;
 		windowHeight = window.innerHeight;
-		console.log("windowWidth: "+windowWidth);
-		console.log("windowHeight: "+windowHeight);
+		//console.log("windowWidth: "+windowWidth);
+		//console.log("windowHeight: "+windowHeight);
+		objetos = [];
+
+		cv = document.getElementById('canvas');
 		cv.width = windowWidth;
 		cv.height = windowHeight;
 		cx = cv.getContext('2d');
+		cx.fillStyle = "rgba(0,0,255,0)";
+		cx.fillRect(0,0,windowWidth,windowHeight);
+
+		cvBG = document.getElementById('canvasBG');
+		cvBG.width = windowWidth;
+		cvBG.height = windowHeight;
+		cxBG = cvBG.getContext('2d');
+		cxBG.fillStyle = 'red';
+		cxBG.fillRect(0,0,windowWidth,windowHeight);
 		/**objetos.push({
 			x: 0, y: 0,
 			width: 200, height: 400,
