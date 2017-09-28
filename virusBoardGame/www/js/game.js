@@ -91,8 +91,10 @@ function takeCard(){
 }
 
 function actualizarCanvas(){
-	cx.fillStyle = '#f0f0f0';
-	cx.fillRect(0,0,windowWidth,windowHeight);
+	//Canvas superior transparente con un color no funcional de señal
+	//cx.fillStyle = "rgba(0,0,255,0)";
+	//cx.fillRect(0, 0, windowWidth, windowHeight);
+	cx.clearRect(0, 0, windowWidth, windowHeight);
 	for (var i = 0; i < objetos.length; i++){
 		cx.fillStyle = objetos[i].color;
 		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
@@ -145,7 +147,7 @@ $(document).ready(function(){
 			//Aqui hay un orden de cosas que ocurren estamos ignorando la com. servidor-cliente
 			//pero prefiero mantener separado cosas que hace el servidor con cosas que hace el cliente
 
-		/**objetos.push({
+		objetos.push({
 			x: 0, y: 0,
 			width: 200, height: 400,
 			color: '#00f'
@@ -190,14 +192,14 @@ $(document).ready(function(){
 				objetoActual.x = touch.pageX - inicioX;
 				objetoActual.y = touch.pageY - inicioY;
 			}
-			actualizar();
+			actualizarCanvas();
 		}
 		//Movil - ordenador
 		//cv.ontouchend = function(event) {
 		cv.onmouseup = function(event) {
 			console.log("Onmouseup");
 			objetoActual = null;
-		}**/
+		}
 	}
 })
 
