@@ -42,10 +42,12 @@ var numHumanos, numMaquinas, numJugadores = 0;
 var jugadores = []; //Nombres humanos
 var deckOfCards = []; //Array que contiene todas las cartas
 var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa usaremos
-var posCartasJugadores = []; //Que pintamos y donde en cada hueco
+var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
+var cartasUsuario = [];
+var posCartasUsuario = [];
 Engine = new function () {
 	//Responsive canvas
-	this.initializeCanvas = function(){
+	this.initCanvas = function(){
 		//Only purpose adapt the canvas to full screen or show a initial menu etc etc
 		/**if (Modernizr.canvas){
 			var canvas = document.getElementById("canvas");
@@ -62,7 +64,7 @@ Engine = new function () {
 			alert("Canvas is not supported");
 		}**/
 	}
-	this.initializeJugadores = function(){
+	this.initJugadores = function(){
 		//Servidor: Esta funcion debe pedir al servidor los jugadores
 
 		//Y saber como colocarlos en la mesa
@@ -89,126 +91,147 @@ Engine = new function () {
 			break;
 		}
 	}
-	this.initializePosiciones = function(){
+	this.initPosOrganosJugadores = function(){
 		var widthDisponible, heightDisponible = 0;
-		var widthCarta, heightCarta = 0;
-		var posCarta1, posCarta2, posCarta3 = 0;
+		var widthOrgano, heightOrgano = 0;
+		var posCerebro, posCorazon, posHueso, posHigado = 0;
 		//Posiciones y tamaños estaran proporcionados con el tamaño de la pantalla
 
 		//POSICION 1
 		widthDisponible = windowWidth / 3;
-		heightDisponible = windowHeight / 3;
-		//20px sera la separacion entre cartas * 2 = 40
-		widthCarta = widthDisponible / 3 - 20;
+		//La separacion entre organos sera la mitad de un organo
+		widthOrgano = widthDisponible / 6 - 20; 
 		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height]
-		heightCarta = widthCarta * 1.5;
-		posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, windowHeight - heightCarta - 20];
-		posCarta2 = [windowWidth / 2 - widthCarta * 0.5, windowHeight - heightCarta - 20];
-		posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, windowHeight - heightCarta - 20];
-		var posCartasJug1 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-		posCartasJugadores.push(posCartasJug1);
+		//posCartaX = [width, height, rotacion]
+		heightOrgano = widthOrgano * 1.5;
+		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2 - widthOrgano * 0.75, windowHeight - heightOrgano - 20];
+		posCorazon = [(windowWidth / 6) * 3 - widthOrgano * 1 - widthOrgano * 0.25, windowHeight - heightOrgano - 20];
+		posHueso = [(windowWidth / 6) * 3 + widthOrgano * 0.25, windowHeight - heightOrgano - 20];
+		posHigado = [(windowWidth / 6) * 3 + widthOrgano * 1 + widthOrgano * 0.75, windowHeight - heightOrgano - 20];
+		var posOrganosJug1 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
+		posOrganosJugadores.push(posOrganosJug1);
 
 		//POSICION 2
 		widthDisponible = windowWidth / 3;
 		heightDisponible = windowHeight / 3;
 		//20px sera la separacion entre cartas * 2 = 40
-		heightCarta = widthDisponible / 6 - 20;
+		heightOrgano = widthDisponible / 6 - 20;
 		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
 		//posCartaX = [width, height]
-		widthCarta = heightCarta * 1.5;
-		posCarta1 = [20, windowHeight / 2 - heightCarta * 1.5 - 20];
-		posCarta2 = [20, windowHeight / 2 - heightCarta * 0.5];
-		posCarta3 = [20, windowHeight / 2 + heightCarta * 0.5 + 20];
-		var posCartasJug2 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-		posCartasJugadores.push(posCartasJug2);
+		widthOrgano = heightOrgano * 1.5;
+		posCerebro = [20, windowHeight / 2 - heightOrgano * 2 - heightOrgano * 0.75];
+		posCorazon = [20, windowHeight / 2 - heightOrgano * 1 - heightOrgano * 0.25];
+		posHueso = [20, windowHeight / 2 + heightOrgano * 0.25];
+		posHigado = [20, windowHeight / 2 + heightOrgano * 1 + heightOrgano * 0.75];
+		var posOrganosJug2 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
+		posOrganosJugadores.push(posOrganosJug2);
 
 		//POSICION 3
 		widthDisponible = windowWidth / 3;
-		//20px sera la separacion entre cartas * 2 = 40
-		widthCarta = widthDisponible / 6 - 20; 
+		//La separacion entre organos sera la mitad de un organo
+		widthOrgano = widthDisponible / 6 - 20; 
 		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
 		//posCartaX = [width, height, rotacion]
-		heightCarta = widthCarta * 1.5;
-		posCarta1 = [windowWidth / 3 - widthCarta * 3 - 40, 20];
-		posCarta2 = [windowWidth / 3 - widthCarta * 2 - 20, 20];
-		posCarta3 = [windowWidth / 3 - widthCarta * 1, 20];
-		var posCartasJug3 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-		posCartasJugadores.push(posCartasJug3);		
+		heightOrgano = widthOrgano * 1.5;
+		posCerebro = [(windowWidth / 6) * 1  - widthOrgano * 2 - widthOrgano * 0.75, 20];
+		posCorazon = [(windowWidth / 6) * 1 - widthOrgano * 1 - widthOrgano * 0.25, 20];
+		posHueso = [(windowWidth / 6) * 1 + widthOrgano * 0.25, 20];
+		posHigado = [(windowWidth / 6) * 1 + widthOrgano * 1 + widthOrgano * 0.75, 20];
+		var posOrganosJug3 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
+		posOrganosJugadores.push(posOrganosJug3);		
 
 		//POSICION 4
 		widthDisponible = windowWidth / 3;
-		//20px sera la separacion entre cartas * 2 = 40
-		widthCarta = widthDisponible / 6 - 20; 
+		//La separacion entre organos sera la mitad de un organo
+		widthOrgano = widthDisponible / 6 - 20; 
 		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
 		//posCartaX = [width, height, rotacion]
-		heightCarta = widthCarta * 1.5;
-		posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, 20];
-		posCarta2 = [windowWidth / 2 - widthCarta * 0.5, 20];
-		posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, 20];
-		var posCartasJug4 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-		posCartasJugadores.push(posCartasJug4);
+		heightOrgano = widthOrgano * 1.5;
+		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2 - widthOrgano * 0.75, 20];
+		posCorazon = [(windowWidth / 6) * 3 - widthOrgano * 1 - widthOrgano * 0.25, 20];
+		posHueso = [(windowWidth / 6) * 3 + widthOrgano * 0.25, 20];
+		posHigado = [(windowWidth / 6) * 3 + widthOrgano * 1 + widthOrgano * 0.75, 20];
+		var posOrganosJug4 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
+		posOrganosJugadores.push(posOrganosJug4);
 
 		//POSICION 5
 		widthDisponible = windowWidth / 3;
-		//20px sera la separacion entre cartas * 2 = 40
-		widthCarta = widthDisponible / 6 - 20; 
+		//La separacion entre organos sera la mitad de un organo
+		widthOrgano = widthDisponible / 6 - 20; 
 		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
 		//posCartaX = [width, height, rotacion]
-		heightCarta = widthCarta * 1.5;
-		posCarta1 = [(windowWidth / 3) * 2, 20];
-		posCarta2 = [(windowWidth / 3) * 2 + widthCarta * 1 + 20, 20];
-		posCarta3 = [(windowWidth / 3) * 2 + widthCarta * 2 + 40, 20];
-		var posCartasJug5 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-		posCartasJugadores.push(posCartasJug5);	
+		heightOrgano = widthOrgano * 1.5;
+		posCerebro = [(windowWidth / 6) * 5  - widthOrgano * 2 - widthOrgano * 0.75, 20];
+		posCorazon = [(windowWidth / 6) * 5 - widthOrgano * 1 - widthOrgano * 0.25, 20];
+		posHueso = [(windowWidth / 6) * 5 + widthOrgano * 0.25, 20];
+		posHigado = [(windowWidth / 6) * 5 + widthOrgano * 1 + widthOrgano * 0.75, 20];
+		var posOrganosJug5 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
+		posOrganosJugadores.push(posOrganosJug5);	
 
 		//POSICION 6
 		widthDisponible = windowWidth / 3;
 		heightDisponible = windowHeight / 3;
 		//20px sera la separacion entre cartas * 2 = 40
-		heightCarta = widthDisponible / 6 - 20;
+		heightOrgano = widthDisponible / 6 - 20;
 		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
 		//posCartaX = [width, height]
-		widthCarta = heightCarta * 1.5;
-		posCarta1 = [windowWidth - widthCarta - 20, windowHeight / 2 - heightCarta * 1.5 - 20];
-		posCarta2 = [windowWidth - widthCarta - 20, windowHeight / 2 - heightCarta * 0.5];
-		posCarta3 = [windowWidth - widthCarta - 20, windowHeight / 2 + heightCarta * 0.5 + 20];
-		var posCartasJug6 = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-		posCartasJugadores.push(posCartasJug6);
+		widthOrgano = heightOrgano * 1.5;
+		posCerebro = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 2 - heightOrgano * 0.75];
+		posCorazon = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 1 - heightOrgano * 0.25];
+		posHueso = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 0.25];
+		posHigado = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 1 + heightOrgano * 0.75];
+		var posOrganosJug6 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
+		posOrganosJugadores.push(posOrganosJug6);
 	}
-	this.initCartasJugs = function(){
+	this.initPosCartasUsuario = function(){
+		var widthDisponible, heightDisponible = 0;
+		var widthOrgano, heightOrgano = 0;
+
+		widthDisponible = windowWidth / 3;
+		heightDisponible = windowHeight / 3;
+		widthOrgano = widthDisponible / 6 - 20; 
+		heightOrgano = widthOrgano * 1.5;
+		//20px sera la separacion entre cartas * 2 = 40
+		var widthCarta = widthDisponible / 3 - 20;
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
+		//posCartaX = [width, height]
+		var heightCarta = widthCarta * 1.5;
+		var posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, windowHeight - heightCarta - heightOrgano - 40];
+		var posCarta2 = [windowWidth / 2 - widthCarta * 0.5, windowHeight - heightCarta - heightOrgano - 40];
+		var posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, windowHeight - heightCarta - heightOrgano - 40];
+		posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
 
 	}
 	this.initDeckOfCards = function(){
 		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.organo, 'pulmon', 'img/cardImages/organoPulmon.jpg'));
-			deckOfCards.push(new card(cardType.organo, 'corazon', 'img/cardImages/organoCorazon.jpg'));
-			deckOfCards.push(new card(cardType.organo, 'higado', 'img/cardImages/organoHigado.jpg'));
-			deckOfCards.push(new card(cardType.organo, 'cerebro', 'img/cardImages/organoCerebro.jpg'));
+			deckOfCards.push(new card(cardType.organo, 'pulmon', 'img/cardImages/organoHueso.png'));
+			deckOfCards.push(new card(cardType.organo, 'corazon', 'img/cardImages/organoCorazon.png'));
+			deckOfCards.push(new card(cardType.organo, 'higado', 'img/cardImages/organoHigado.png'));
+			deckOfCards.push(new card(cardType.organo, 'cerebro', 'img/cardImages/organoCerebro.png'));
 		}
 		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.medicina, 'pulmon', 'img/cardImages/medicinaPulmon.jpg'));
-			deckOfCards.push(new card(cardType.medicina, 'corazon', 'img/cardImages/medicinaCorazon.jpg'));
-			deckOfCards.push(new card(cardType.medicina, 'higado', 'img/cardImages/medicinaHigado.jpg'));
-			deckOfCards.push(new card(cardType.medicina, 'cerebro', 'img/cardImages/medicinaCerebro.jpg'));
+			deckOfCards.push(new card(cardType.medicina, 'pulmon', 'img/cardImages/medicinaPulmon.png'));
+			deckOfCards.push(new card(cardType.medicina, 'corazon', 'img/cardImages/medicinaCorazon.png'));
+			deckOfCards.push(new card(cardType.medicina, 'higado', 'img/cardImages/medicinaHigado.png'));
+			deckOfCards.push(new card(cardType.medicina, 'cerebro', 'img/cardImages/medicinaCerebro.png'));
 		}
 		for (var i = 0; i < 4; i++) {
-			deckOfCards.push(new card(cardType.virus, 'pulmon', 'img/cardImages/virusPulmon.jpg'));
-			deckOfCards.push(new card(cardType.virus, 'corazon', 'img/cardImages/virusCorazon.jpg'));
-			deckOfCards.push(new card(cardType.virus, 'higado', 'img/cardImages/virusHigado.jpg'));
-			deckOfCards.push(new card(cardType.virus, 'cerebro', 'img/cardImages/virusCerebro.jpg'));
+			deckOfCards.push(new card(cardType.virus, 'pulmon', 'img/cardImages/virusPulmon.png'));
+			deckOfCards.push(new card(cardType.virus, 'corazon', 'img/cardImages/virusCorazon.png'));
+			deckOfCards.push(new card(cardType.virus, 'higado', 'img/cardImages/virusHigado.png'));
+			deckOfCards.push(new card(cardType.virus, 'cerebro', 'img/cardImages/virusCerebro.png'));
 		}
 		for (var i = 0; i < 2; i++) {
-			deckOfCards.push(new card(cardType.tratamiento, 'error medico', 'img/cardImages/errorMedico.jpg'));
-			deckOfCards.push(new card(cardType.tratamiento, 'guante de latex', 'img/cardImages/guanteDeLatex.jpg'));
-			deckOfCards.push(new card(cardType.tratamiento, 'transplante', 'img/cardImages/transplante.jpg'));
-			deckOfCards.push(new card(cardType.tratamiento, 'ladron de organos', 'img/cardImages/ladronDeOrganos.jpg'));
-			deckOfCards.push(new card(cardType.tratamiento, 'contagio', 'img/cardImages/contagio.jpg'));
+			deckOfCards.push(new card(cardType.tratamiento, 'error medico', 'img/cardImages/errorMedico.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'guante de latex', 'img/cardImages/guanteDeLatex.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'transplante', 'img/cardImages/transplante.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'ladron de organos', 'img/cardImages/ladronDeOrganos.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'contagio', 'img/cardImages/contagio.png'));
 		}
 		for (var i = 0; i < 1; i++) {
-			deckOfCards.push(new card(cardType.organo, 'comodin', 'img/cardImages/organoComodin.jpg'));
-			deckOfCards.push(new card(cardType.medicina, 'comodin', 'img/cardImages/medicinaComodin.jpg'));
-			deckOfCards.push(new card(cardType.virus, 'comodin', 'img/cardImages/virusComodin.jpg'));
+			deckOfCards.push(new card(cardType.organo, 'comodin', 'img/cardImages/organoComodin.png'));
+			deckOfCards.push(new card(cardType.medicina, 'comodin', 'img/cardImages/medicinaComodin.png'));
+			deckOfCards.push(new card(cardType.virus, 'comodin', 'img/cardImages/virusComodin.png'));
 		}
 	}
 }

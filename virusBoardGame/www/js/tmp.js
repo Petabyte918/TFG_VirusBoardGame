@@ -48,3 +48,11 @@ function ponerJugadores(numJugadores, numMaquinas){
 		}
 	}
 }
+
+
+	cx.fillStyle = '#f0f0f0';
+	cx.fillRect(0,0,windowWidth,windowHeight);
+	for (var i = 0; i < objetos.length; i++){
+		cx.fillStyle = objetos[i].color;
+		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
+	}

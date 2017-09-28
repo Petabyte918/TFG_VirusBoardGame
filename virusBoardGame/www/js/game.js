@@ -14,43 +14,68 @@ var cv, cx, objetos, objetoActual = null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
 var windowWidth, windowHeight = 0;
-function actualizar(){
-	cx.fillStyle = '#f0f0f0';
-	cx.fillRect(0,0,windowWidth,windowHeight);
-	for (var i = 0; i < objetos.length; i++){
-		cx.fillStyle = objetos[i].color;
-		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
-	}
-}
 
-function renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3){
+function renderBGCards (){
+	var widthCarta = posCartasUsuario[0];
+	var heightCarta = posCartasUsuario[1];
+	var posCarta1 = posCartasUsuario[2];
+	var posCarta2 = posCartasUsuario[3];
+	var posCarta3 = posCartasUsuario[4];
+
 	var img = new Image();
 	img.src = "img/cardImages/reversoCarta.jpg";
 	img.onload = function(){
-		cx.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
-		cx.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
-		cx.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
+		cxBG.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
+		cxBG.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
+		cxBG.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
 	}
+}
+
+function renderCard() {
+	
+}
+
+
+function renderOrgano (widthOrgano, heightOrgano, posOrgano, src, estado){
+	var x, y, r = 0;
+	var x = posOrgano[0] + widthOrgano / 2;
+	var y = posOrgano[1] + heightOrgano / 2;
+	var r = widthOrgano / 2;
+	//Estados: vacio, normal, enfermo, vacunado
+	if (estado == "vacio"){
+		cxBG.fillStyle = 'white';
+		cxBG.fillRect(posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
+	}
+	/** SERAN CIRCULOS
+		cx.strokeStyle = "red";
+		cx.fillStyle = "blue";
+		cx.lineWidth = 5;
+		cx.arc(x, y, r, 0, 2 * Math.PI);
+		cx.fill();
+		cx.stroke();
+	}
+	**/
 }
 
 function ponerJugadores(){
 	//Queremos que todos los usuarios esten ubicados en cada dispositivo de la misma forma
 	//Empezamos por el jugador propio y vamos colocando en sentido horario hasta completar el bucle
-	var widthCarta = "";
-	var heightCarta = "";
-	for (var i = 0; i < posCartasJugadores.length; i++){
+	var widthOrgano = "";
+	var heightOrgano = "";
+	var posOrgano1, posOrgano2, posOrgano3, posOrgano4 = null;
+	for (var i = 0; i < posOrganosJugadores.length; i++){
 		//console.log("JUGADOR "+i+1);
-		var widthCarta = posCartasJugadores[i][0];
-		var heightCarta = posCartasJugadores[i][1];
-		posCarta1 = posCartasJugadores[i][2];
-		posCarta2 = posCartasJugadores[i][3];
-		posCarta3 = posCartasJugadores[i][4];
-		//console.log("widthCarta: "+widthCarta);
-		//console.log("heightCarta: "+heightCarta);
-		//console.log("posCarta1: "+posCarta1);
-		//console.log("posCarta2: "+posCarta2);
-		//console.log("posCarta3: "+posCarta3);
-		renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3);
+		widthOrgano = posOrganosJugadores[i][0];
+		heightOrgano = posOrganosJugadores[i][1];
+		for (var u = 2; u < 6; u++){
+			posOrgano = posOrganosJugadores[i][u];
+			//console.log("widthCarta: "+widthCarta);
+			//console.log("heightCarta: "+heightCarta);
+			//console.log("posCarta1: "+posCarta1);
+			//console.log("posCarta2: "+posCarta2);
+			//console.log("posCarta3: "+posCarta3);
+			renderOrgano(widthOrgano, heightOrgano, posOrgano, "", "vacio");
+		}
 	}
 }
 
@@ -63,6 +88,15 @@ function takeCard(){
     	alert("Oh! No quedan cartas en el mazo!");
         return null;
     }
+}
+
+function actualizarCanvas(){
+	cx.fillStyle = '#f0f0f0';
+	cx.fillRect(0,0,windowWidth,windowHeight);
+	for (var i = 0; i < objetos.length; i++){
+		cx.fillStyle = objetos[i].color;
+		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
+	}
 }
 
 $(document).ready(function(){
@@ -96,6 +130,21 @@ $(document).ready(function(){
 		cxBG = cvBG.getContext('2d');
 		cxBG.fillStyle = 'MediumSeaGreen';
 		cxBG.fillRect(0,0,windowWidth,windowHeight);
+		
+		Engine.initCanvas();
+		Engine.initJugadores();
+		Engine.initPosOrganosJugadores();
+		Engine.initPosCartasUsuario();
+		Engine.initDeckOfCards();
+
+		ponerJugadores();
+		renderBGCards();
+
+		//Tricky
+		empezarJuego();
+			//Aqui hay un orden de cosas que ocurren estamos ignorando la com. servidor-cliente
+			//pero prefiero mantener separado cosas que hace el servidor con cosas que hace el cliente
+
 		/**objetos.push({
 			x: 0, y: 0,
 			width: 200, height: 400,
@@ -149,12 +198,6 @@ $(document).ready(function(){
 			console.log("Onmouseup");
 			objetoActual = null;
 		}**/
-		Engine.initializeCanvas();
-		Engine.initializeJugadores();
-		Engine.initializePosiciones();
-		Engine.initDeckOfCards();
-
-		ponerJugadores();
 	}
 })
 

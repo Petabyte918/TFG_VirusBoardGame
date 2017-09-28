@@ -23,7 +23,13 @@ function actualizar(){
 	}
 }
 
-function renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3){
+function renderBGCards (){
+	var widthCarta = posCartasUsuario[0];
+	var heightCarta = posCartasUsuario[1];
+	var posCarta1 = posCartasUsuario[2];
+	var posCarta2 = posCartasUsuario[3];
+	var posCarta3 = posCartasUsuario[4];
+
 	var img = new Image();
 	img.src = "img/cardImages/reversoCarta.jpg";
 	img.onload = function(){
@@ -33,24 +39,46 @@ function renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3)
 	}
 }
 
+function renderOrgano (widthOrgano, heightOrgano, posOrgano, src, estado){
+	var x, y, r = 0;
+	var x = posOrgano[0] + widthOrgano / 2;
+	var y = posOrgano[1] + heightOrgano / 2;
+	var r = widthOrgano / 2;
+	//Estados: vacio, normal, enfermo, vacunado
+	if (estado == "vacio"){
+		cx.fillStyle = 'white';
+		cx.fillRect(posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
+	}
+	/**
+		cx.strokeStyle = "red";
+		cx.fillStyle = "blue";
+		cx.lineWidth = 5;
+		cx.arc(x, y, r, 0, 2 * Math.PI);
+		cx.fill();
+		cx.stroke();
+	}
+	**/
+}
+
 function ponerJugadores(){
 	//Queremos que todos los usuarios esten ubicados en cada dispositivo de la misma forma
 	//Empezamos por el jugador propio y vamos colocando en sentido horario hasta completar el bucle
-	var widthCarta = "";
-	var heightCarta = "";
-	for (var i = 0; i < posCartasJugadores.length; i++){
+	var widthOrgano = "";
+	var heightOrgano = "";
+	var posOrgano1, posOrgano2, posOrgano3, posOrgano4 = null;
+	for (var i = 0; i < posOrganosJugadores.length; i++){
 		//console.log("JUGADOR "+i+1);
-		var widthCarta = posCartasJugadores[i][0];
-		var heightCarta = posCartasJugadores[i][1];
-		posCarta1 = posCartasJugadores[i][2];
-		posCarta2 = posCartasJugadores[i][3];
-		posCarta3 = posCartasJugadores[i][4];
-		//console.log("widthCarta: "+widthCarta);
-		//console.log("heightCarta: "+heightCarta);
-		//console.log("posCarta1: "+posCarta1);
-		//console.log("posCarta2: "+posCarta2);
-		//console.log("posCarta3: "+posCarta3);
-		renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3);
+		widthOrgano = posOrganosJugadores[i][0];
+		heightOrgano = posOrganosJugadores[i][1];
+		for (var u = 2; u < 6; u++){
+			posOrgano = posOrganosJugadores[i][u];
+			//console.log("widthCarta: "+widthCarta);
+			//console.log("heightCarta: "+heightCarta);
+			//console.log("posCarta1: "+posCarta1);
+			//console.log("posCarta2: "+posCarta2);
+			//console.log("posCarta3: "+posCarta3);
+			renderOrgano(widthOrgano, heightOrgano, posOrgano, "", "vacio");
+		}
 	}
 }
 
@@ -149,12 +177,18 @@ $(document).ready(function(){
 			console.log("Onmouseup");
 			objetoActual = null;
 		}**/
-		Engine.initializeCanvas();
-		Engine.initializeJugadores();
-		Engine.initializePosiciones();
+		Engine.initCanvas();
+		Engine.initJugadores();
+		Engine.initPosOrganosJugadores();
+		Engine.initPosCartasUsuario();
 		Engine.initDeckOfCards();
 
 		ponerJugadores();
+		renderBGCards();
+
+		//Tricky
+		empezarJuego();
+
 	}
 })
 
