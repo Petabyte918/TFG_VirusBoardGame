@@ -24,11 +24,13 @@ function actualizar(){
 }
 
 function renderBgCards(widthCarta, heightCarta, posCarta1, posCarta2, posCarta3){
-	
-	cx.fillStyle = '#000000';
-	cx.fillRect(posCarta1[0], posCarta1[1], widthCarta, heightCarta);
-	cx.fillRect(posCarta2[0], posCarta2[1], widthCarta, heightCarta);
-	cx.fillRect(posCarta3[0], posCarta3[1], widthCarta, heightCarta);
+	var img = new Image();
+	img.src = "img/cardImages/reversoCarta.jpg";
+	img.onload = function(){
+		cx.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
+		cx.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
+		cx.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
+	}
 }
 
 function ponerJugadores(){
@@ -151,9 +153,6 @@ $(document).ready(function(){
 		Engine.initializeJugadores();
 		Engine.initializePosiciones();
 		Engine.initDeckOfCards();
-
-		shuffle(deckOfCards);
-
 
 		ponerJugadores();
 	}
