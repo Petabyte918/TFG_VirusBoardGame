@@ -39,6 +39,7 @@ function empezarJuego() {
 	shuffle(deckOfCards);
 	shuffle(jugadores);
 	repartirCartas();
+	sendCartas();
 
 	
 }

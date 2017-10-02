@@ -10,7 +10,7 @@ function playSound(soundResource){
 	}
 }
 
-var cv, cx, objetos, objetoActual = null;
+var cv, cx, objetos, objetoActual= null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
 var windowWidth, windowHeight = 0;
@@ -31,10 +31,11 @@ function renderBGCards (){
 	}
 }
 
-function renderCard() {
-	
+/**function renderCard() {
+	var img = new Image();
+	img.src = ""
 }
-
+(cardType.organo, 'pulmon', 'img/cardImages/organoHueso.png')**/
 
 function renderOrgano (widthOrgano, heightOrgano, posOrgano, src, estado){
 	var x, y, r = 0;
@@ -91,13 +92,150 @@ function takeCard(){
 }
 
 function actualizarCanvas(){
-	//Canvas superior transparente con un color no funcional de señal
-	//cx.fillStyle = "rgba(0,0,255,0)";
-	//cx.fillRect(0, 0, windowWidth, windowHeight);
+	console.log("Actualizar canvas");
 	cx.clearRect(0, 0, windowWidth, windowHeight);
-	for (var i = 0; i < objetos.length; i++){
-		cx.fillStyle = objetos[i].color;
-		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
+	var img1 = new Image();
+	if (objetos[0].src != ""){
+		img1.src = objetos[0].src;
+		img1.onload = function(){
+			//console.log("objetos[0] :"+objetos[0]);
+			cx.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
+		}
+	}
+	var img2 = new Image();
+	if (objetos[1].src != ""){
+		img2.src = objetos[1].src;
+		img2.onload = function(){
+			//console.log("objetos[1] :"+objetos[1]);
+			cx.drawImage(img2, objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
+		}
+	}
+	var img3 = new Image();
+	if (objetos[2].src != ""){
+		img3.src = objetos[2].src;
+		img3.onload = function(){
+			//console.log("objetos[2] :"+objetos[2]);
+			cx.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
+		}
+	}
+}
+
+function moveObjects(){
+	var offsetCartasUsuario = 0;
+	offsetCartasUsuario = (posCartasUsuario[1] - posCartasUsuario[0]) / 2;
+
+	objetos.push({
+		x: posCartasUsuario[2][0], y: posCartasUsuario[2][1] + offsetCartasUsuario,
+		xOrigen: posCartasUsuario[2][0], yOrigen: posCartasUsuario[2][1] + offsetCartasUsuario,
+		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		src: "img/cardImages/organoHueso.png"
+	});
+	objetos.push({
+		x: posCartasUsuario[3][0], y: posCartasUsuario[3][1] + offsetCartasUsuario,
+		xOrigen: posCartasUsuario[3][0], yOrigen: posCartasUsuario[3][1] + offsetCartasUsuario,
+		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		src: "img/cardImages/organoHueso.png"
+	});
+	objetos.push({
+		x: posCartasUsuario[4][0], y: posCartasUsuario[4][1] + offsetCartasUsuario,
+		xOrigen: posCartasUsuario[4][0], yOrigen: posCartasUsuario[4][1] + offsetCartasUsuario,
+		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		src: "img/cardImages/organoHueso.png"
+	});
+
+	//Movil - ordenador
+	//cv.ontouchstart = function(event) {
+		//var touch = event.touches[0];
+	cv.onmousedown = function(event) {
+		var touch = event;
+		console.log("Onmousedown");
+		for (var i = 0; i < objetos.length; i++) {
+			if (objetos[i].x < touch.pageX
+			  && (objetos[i].width + objetos[i].x > touch.pageX)
+			  && objetos[i].y < touch.pageY
+			  && (objetos[i].height + objetos[i].y > touch.pageY)) {
+				objetoActual = objetos[i];
+				console.log("Objeto "+i+" TOCADO");
+				inicioY = touch.pageY - objetos[i].y;
+				inicioX = touch.pageX - objetos[i].x;
+				break;
+			}
+		}
+	}
+
+	//Movil - ordenador
+	//cv.ontouchmove = function(event) {
+		//var touch = event.touches[0];
+	cv.onmousemove = function(event) {
+		var touch = event;
+		console.log("Onmousemove");
+		//Solo actualizamos si movemos y hay algun objeto seleccionado y cada cierta diferencia de pixeles
+		if (objetoActual != null) /**&&
+			//Pendiente de optimizar
+			((objetoActual.x - 15 > touch.pageX - inicioX) ||
+			(objetoActual.x + 15 < touch.pageX - inicioX) ||
+			(objetoActual.y - 15 > touch.pageY - inicioY) ||
+			(objetoActual.y + 15 < touch.pageY - inicioY)) )**/ {
+			objetoActual.x = touch.pageX - inicioX;
+			objetoActual.y = touch.pageY - inicioY;
+			console.log("ObjetoActual.x: "+objetoActual.x);
+			console.log("touch.pageX: "+touch.pageX);
+			console.log("inicioX :"+inicioX);
+			actualizarCanvas();
+		}
+	}
+
+	//Movil - ordenador
+	//cv.ontouchend = function(event) {
+	cv.onmouseup = function(event) {
+		console.log("Onmouseup");
+		if (objetoActual != null){
+			checkCollision();
+			actualizarCanvas();
+		}
+		//	2Eliminar o no objeto
+		//	3Agregarlo o no a algun sitio
+		//4restablecer coordenadas iniciale
+		objetoActual = null;
+	}
+}
+
+function checkCollision(){
+	//En orden de probabilidad de ocurrencia
+	//Posicion 4
+	if ((objetoActual.x < ((windowWidth / 6) * 4)) &&
+		(objetoActual.x > ((windowWidth / 6) * 2)) &&
+		(objetoActual.y < (windowHeight / 3))) {
+		console.log("Colision zona 4");
+	}
+	//Posicion 2
+	if ((objetoActual.x < ((windowWidth / 6) * 1)) &&
+		(objetoActual.y > (windowHeight / 3))) {
+		console.log("Colision zona 2");
+	}
+	//Posicion 6
+	if ((objetoActual.x > ((windowWidth / 6) * 5)) &&
+		(objetoActual.y > (windowHeight / 3))) {
+		console.log("Colision zona 6");
+	}
+	//Posicion 3
+	if ((objetoActual.x < ((windowWidth / 6) * 2)) &&
+		(objetoActual.y < (windowHeight / 3))) {
+		console.log("Colision zona 3");
+	}
+	//Posicion 5
+	if ((objetoActual.x > ((windowWidth / 6) * 4)) &&
+		(objetoActual.y < (windowHeight / 3))) {
+		console.log("Colision zona 5");
+	}
+
+
+	if (objetoActual.x == null){
+
+	} else {
+		console.log("No colision: ");
+		objetoActual.x = objetoActual.xOrigen;
+		objetoActual.y = objetoActual.yOrigen;
 	}
 }
 
@@ -147,59 +285,9 @@ $(document).ready(function(){
 			//Aqui hay un orden de cosas que ocurren estamos ignorando la com. servidor-cliente
 			//pero prefiero mantener separado cosas que hace el servidor con cosas que hace el cliente
 
-		objetos.push({
-			x: 0, y: 0,
-			width: 200, height: 400,
-			color: '#00f'
-		});
-		objetos.push({
-			x: 300, y: 150,
-			width: 100, height: 200,
-			color: '#f00'
-		});
-		objetos.push({
-			x: 120, y: 150,
-			width: 100, height: 200,
-			color: '#0f0'
-		});
+		moveObjects();
+		actualizarCanvas();
 
-		//Movil - ordenador
-		//cv.ontouchstart = function(event) {
-			//var touch = event.touches[0];
-		cv.onmousedown = function(event) {
-			var touch = event;
-			console.log("Onmousedown");
-			for (var i = 0; i < objetos.length; i++) {
-				if (objetos[i].x < touch.pageX
-				  && (objetos[i].width + objetos[i].x > touch.pageX)
-				  && objetos[i].y < touch.pageY
-				  && (objetos[i].height + objetos[i].y > touch.pageY)) {
-					objetoActual = objetos[i];
-					console.log("Objeto "+i+" TOCADO");
-					inicioY = touch.pageY - objetos[i].y;
-					inicioX = touch.pageX - objetos[i].x;
-					break;
-				}
-			}
-		}
-		//Movil - ordenador
-		//cv.ontouchmove = function(event) {
-			//var touch = event.touches[0];
-		cv.onmousemove = function(event) {
-			var touch = event;
-			console.log("Onmousemove");
-			if (objetoActual != null) {
-				objetoActual.x = touch.pageX - inicioX;
-				objetoActual.y = touch.pageY - inicioY;
-			}
-			actualizarCanvas();
-		}
-		//Movil - ordenador
-		//cv.ontouchend = function(event) {
-		cv.onmouseup = function(event) {
-			console.log("Onmouseup");
-			objetoActual = null;
-		}
 	}
 })
 

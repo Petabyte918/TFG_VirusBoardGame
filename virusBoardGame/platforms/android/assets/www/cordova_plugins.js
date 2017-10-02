@@ -18,9 +18,9 @@ module.exports = [
 module.exports.metadata = 
 // TOP OF METADATA
 {
-    "cordova-plugin-whitelist": "1.3.2",
     "es6-promise-plugin": "4.1.0",
-    "cordova-plugin-screen-orientation": "2.0.1"
+    "cordova-plugin-screen-orientation": "2.0.1",
+    "cordova-plugin-whitelist": "1.3.2"
 };
 // BOTTOM OF METADATA
 });

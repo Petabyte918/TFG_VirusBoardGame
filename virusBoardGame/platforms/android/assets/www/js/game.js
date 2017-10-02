@@ -14,14 +14,6 @@ var cv, cx, objetos, objetoActual = null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
 var windowWidth, windowHeight = 0;
-function actualizar(){
-	cx.fillStyle = '#f0f0f0';
-	cx.fillRect(0,0,windowWidth,windowHeight);
-	for (var i = 0; i < objetos.length; i++){
-		cx.fillStyle = objetos[i].color;
-		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
-	}
-}
 
 function renderBGCards (){
 	var widthCarta = posCartasUsuario[0];
@@ -33,11 +25,16 @@ function renderBGCards (){
 	var img = new Image();
 	img.src = "img/cardImages/reversoCarta.jpg";
 	img.onload = function(){
-		cx.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
-		cx.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
-		cx.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
+		cxBG.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
+		cxBG.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
+		cxBG.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
 	}
 }
+
+function renderCard() {
+	
+}
+
 
 function renderOrgano (widthOrgano, heightOrgano, posOrgano, src, estado){
 	var x, y, r = 0;
@@ -46,10 +43,10 @@ function renderOrgano (widthOrgano, heightOrgano, posOrgano, src, estado){
 	var r = widthOrgano / 2;
 	//Estados: vacio, normal, enfermo, vacunado
 	if (estado == "vacio"){
-		cx.fillStyle = 'white';
-		cx.fillRect(posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
+		cxBG.fillStyle = 'white';
+		cxBG.fillRect(posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
 	}
-	/**
+	/** SERAN CIRCULOS
 		cx.strokeStyle = "red";
 		cx.fillStyle = "blue";
 		cx.lineWidth = 5;
@@ -93,38 +90,19 @@ function takeCard(){
     }
 }
 
-$(document).ready(function(){
-	console.log("Document Ready");
-	console.log("Orientation before lock is: "+screen.orientation.type);
-	//Da error en el navegador, pero no para la ejecucion
-	screen.orientation.lock('landscape');
+function actualizarCanvas(){
+	//Canvas superior transparente con un color no funcional de señal
+	//cx.fillStyle = "rgba(0,0,255,0)";
+	//cx.fillRect(0, 0, windowWidth, windowHeight);
+	cx.clearRect(0, 0, windowWidth, windowHeight);
+	for (var i = 0; i < objetos.length; i++){
+		cx.fillStyle = objetos[i].color;
+		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
+	}
+}
 
-	simularDatosIniciales();
-
-	window.onload = function(){
-		console.log("Window onload");
-		windowWidth = window.innerWidth;
-		windowHeight = window.innerHeight;
-		//console.log("windowWidth: "+windowWidth);
-		//console.log("windowHeight: "+windowHeight);
-		objetos = [];
-
-		//Canvas principal
-		cv = document.getElementById('canvas');
-		cv.width = windowWidth;
-		cv.height = windowHeight;
-		cx = cv.getContext('2d');
-		cx.fillStyle = "rgba(0,0,255,0)";
-		cx.fillRect(0,0,windowWidth,windowHeight);
-
-		//Canvas en background
-		cvBG = document.getElementById('canvasBG');
-		cvBG.width = windowWidth;
-		cvBG.height = windowHeight;
-		cxBG = cvBG.getContext('2d');
-		cxBG.fillStyle = 'MediumSeaGreen';
-		cxBG.fillRect(0,0,windowWidth,windowHeight);
-		/**objetos.push({
+function moveObjects(){
+	objetos.push({
 			x: 0, y: 0,
 			width: 200, height: 400,
 			color: '#00f'
@@ -169,14 +147,48 @@ $(document).ready(function(){
 				objetoActual.x = touch.pageX - inicioX;
 				objetoActual.y = touch.pageY - inicioY;
 			}
-			actualizar();
+			actualizarCanvas();
 		}
 		//Movil - ordenador
 		//cv.ontouchend = function(event) {
 		cv.onmouseup = function(event) {
 			console.log("Onmouseup");
 			objetoActual = null;
-		}**/
+		}
+}
+
+$(document).ready(function(){
+	console.log("Document Ready");
+	console.log("Orientation before lock is: "+screen.orientation.type);
+	//Da error en el navegador, pero no para la ejecucion
+	screen.orientation.lock('landscape');
+
+	simularDatosIniciales();
+
+	window.onload = function(){
+		console.log("Window onload");
+		windowWidth = window.innerWidth;
+		windowHeight = window.innerHeight;
+		//console.log("windowWidth: "+windowWidth);
+		//console.log("windowHeight: "+windowHeight);
+		objetos = [];
+
+		//Canvas principal
+		cv = document.getElementById('canvas');
+		cv.width = windowWidth;
+		cv.height = windowHeight;
+		cx = cv.getContext('2d');
+		cx.fillStyle = "rgba(0,0,255,0)";
+		cx.fillRect(0,0,windowWidth,windowHeight);
+
+		//Canvas en background
+		cvBG = document.getElementById('canvasBG');
+		cvBG.width = windowWidth;
+		cvBG.height = windowHeight;
+		cxBG = cvBG.getContext('2d');
+		cxBG.fillStyle = 'MediumSeaGreen';
+		cxBG.fillRect(0,0,windowWidth,windowHeight);
+		
 		Engine.initCanvas();
 		Engine.initJugadores();
 		Engine.initPosOrganosJugadores();
@@ -188,6 +200,10 @@ $(document).ready(function(){
 
 		//Tricky
 		empezarJuego();
+			//Aqui hay un orden de cosas que ocurren estamos ignorando la com. servidor-cliente
+			//pero prefiero mantener separado cosas que hace el servidor con cosas que hace el cliente
+
+		moveObjects();
 
 	}
 })
