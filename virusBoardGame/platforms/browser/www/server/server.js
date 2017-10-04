@@ -1,7 +1,15 @@
+
+var cartasJugadores = [];
+var organosJugadoresSrv = [];
+
 function simularDatosIniciales(){
 	//Usuario logueado o usuario propio
 	usuario = "lucaskhane";
 	jugadores.push("lucaskhane");
+	jugadores.push("lucas");
+	jugadores.push("Jose");
+	jugadores.push("pepe");
+	jugadores.push("nacho");
 	//Otros jugadores
 	//jugadores.push("Jose", "pepe");
 	numHumanos = 1;
@@ -11,11 +19,23 @@ function simularDatosIniciales(){
 	numJugadores = jugadores.length;
 	
 }
+
+function prepararOrganosJugadoresSrv(){
+	for (var i = 0; i < jugadores.length; i++){
+		organosJugadoresSrv.push({
+			jugador: jugadores[i],
+			cerebro: "",
+			corazon: "",
+			higado: "",
+			hueso: ""
+		})
+	}
+}
+
 function sendCartas(carta1, carta2, carta3){
 	cartasUsuario = [carta1, carta2, carta3];
 }
 
-var cartasJugadores = [];
 function repartirCartas(){
 	var nombreJugador = "";
 	for (var i = 0; i < jugadores.length; i++){
@@ -25,7 +45,7 @@ function repartirCartas(){
 		var carta3 = takeCard();
 		cartasJugadores[nombreJugador, carta1, carta2, carta3];
 		//sendJugador sus cartas
-		if (nombreJugador = usuario){
+		if (nombreJugador == usuario){
 			sendCartas(carta1, carta2, carta3);
 		}
 		//Activar cuenta atras ¿Ready? 3, 2 ,1 ¡Empezamos!
@@ -35,11 +55,8 @@ function repartirCartas(){
 }
 
 function empezarJuego() {
-	simularDatosIniciales();
 	shuffle(deckOfCards);
 	shuffle(jugadores);
+	prepararOrganosJugadoresSrv();
 	repartirCartas();
-	sendCartas();
-
-	
 }

@@ -92,7 +92,7 @@ function takeCard(){
 }
 
 function actualizarCanvas(){
-	console.log("Actualizar canvas");
+	//console.log("Actualizar canvas");
 	cx.clearRect(0, 0, windowWidth, windowHeight);
 	var img1 = new Image();
 	if (objetos[0].src != ""){
@@ -128,18 +128,21 @@ function moveObjects(){
 		x: posCartasUsuario[2][0], y: posCartasUsuario[2][1] + offsetCartasUsuario,
 		xOrigen: posCartasUsuario[2][0], yOrigen: posCartasUsuario[2][1] + offsetCartasUsuario,
 		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		numCarta: 0,
 		src: "img/cardImages/organoHueso.png"
 	});
 	objetos.push({
 		x: posCartasUsuario[3][0], y: posCartasUsuario[3][1] + offsetCartasUsuario,
 		xOrigen: posCartasUsuario[3][0], yOrigen: posCartasUsuario[3][1] + offsetCartasUsuario,
 		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		numCarta: 1,
 		src: "img/cardImages/organoHueso.png"
 	});
 	objetos.push({
 		x: posCartasUsuario[4][0], y: posCartasUsuario[4][1] + offsetCartasUsuario,
 		xOrigen: posCartasUsuario[4][0], yOrigen: posCartasUsuario[4][1] + offsetCartasUsuario,
 		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		numCarta: 2,
 		src: "img/cardImages/organoHueso.png"
 	});
 
@@ -178,9 +181,9 @@ function moveObjects(){
 			(objetoActual.y + 15 < touch.pageY - inicioY)) )**/ {
 			objetoActual.x = touch.pageX - inicioX;
 			objetoActual.y = touch.pageY - inicioY;
-			console.log("ObjetoActual.x: "+objetoActual.x);
-			console.log("touch.pageX: "+touch.pageX);
-			console.log("inicioX :"+inicioX);
+			//console.log("ObjetoActual.x: "+objetoActual.x);
+			//console.log("touch.pageX: "+touch.pageX);
+			//console.log("inicioX :"+inicioX);
 			actualizarCanvas();
 		}
 	}
@@ -200,43 +203,79 @@ function moveObjects(){
 	}
 }
 
+//Devuelve el numero de la pos. donde ha habido colision, 0 si no la ha habido o -1 si hay error
 function checkCollision(){
+	var movValido = false;
+	var colision = 0;
 	//En orden de probabilidad de ocurrencia
-	//Posicion 4
+	//Posicion 1
 	if ((objetoActual.x < ((windowWidth / 6) * 4)) &&
+		(objetoActual.x > ((windowWidth / 6) * 2)) &&
+		(objetoActual.y > (windowHeight / 3) * 2)) {
+		console.log("Colision zona 1");
+		colision = 1;
+	}
+	//Posicion 4
+	else if ((objetoActual.x < ((windowWidth / 6) * 4)) &&
 		(objetoActual.x > ((windowWidth / 6) * 2)) &&
 		(objetoActual.y < (windowHeight / 3))) {
 		console.log("Colision zona 4");
+		colision = 4;
 	}
 	//Posicion 2
-	if ((objetoActual.x < ((windowWidth / 6) * 1)) &&
+	else if ((objetoActual.x < ((windowWidth / 6) * 1)) &&
 		(objetoActual.y > (windowHeight / 3))) {
 		console.log("Colision zona 2");
+		colision = 2;
 	}
 	//Posicion 6
-	if ((objetoActual.x > ((windowWidth / 6) * 5)) &&
+	else if ((objetoActual.x > ((windowWidth / 6) * 5)) &&
 		(objetoActual.y > (windowHeight / 3))) {
 		console.log("Colision zona 6");
+		colision = 6;
 	}
 	//Posicion 3
-	if ((objetoActual.x < ((windowWidth / 6) * 2)) &&
+	else if ((objetoActual.x < ((windowWidth / 6) * 2)) &&
 		(objetoActual.y < (windowHeight / 3))) {
 		console.log("Colision zona 3");
+		colision = 3;
 	}
 	//Posicion 5
-	if ((objetoActual.x > ((windowWidth / 6) * 4)) &&
+	else if ((objetoActual.x > ((windowWidth / 6) * 4)) &&
 		(objetoActual.y < (windowHeight / 3))) {
 		console.log("Colision zona 5");
+		colision = 5;
+	} else {
+		colision = -1;
 	}
 
-
-	if (objetoActual.x == null){
+	movValido = validarMov(colision, objetoActual.numCarta);
+	if ((colision > 0) && (movValido == true)){
 
 	} else {
 		console.log("No colision: ");
 		objetoActual.x = objetoActual.xOrigen;
 		objetoActual.y = objetoActual.yOrigen;
 	}
+}
+
+//Devuelve true o false dependiendo de la validez del mov
+function validarMov(jugDestino, numCarta){
+	//console.log("Tipo de Carta: "+cartasUsuario[numCarta].cardType);
+	var cardType = cartasUsuario[numCarta].cardType;
+	if ((cardType == organo) && (jugDestino == 1)){
+		if (true){//si el organo no esta repetido
+			//Dibujar en el canvas
+			//Mandamos movimiento al servidor
+		}
+	}
+	return false;
+}
+
+function manejadorColision(){
+	//Comprobar si es "legal" el movimiento
+	//Enviar al servidor mi movimiento
+	//Dibujar mi movimiento
 }
 
 $(document).ready(function(){
@@ -284,6 +323,7 @@ $(document).ready(function(){
 		empezarJuego();
 			//Aqui hay un orden de cosas que ocurren estamos ignorando la com. servidor-cliente
 			//pero prefiero mantener separado cosas que hace el servidor con cosas que hace el cliente
+
 
 		moveObjects();
 		actualizarCanvas();

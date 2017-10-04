@@ -37,14 +37,28 @@ function shuffle(array) {
   return array;
 }
 
+function prepararOrganosJugadoresCli(){
+	for (var i = 0; i < jugadores.length; i++){
+		organosJugadoresCli.push({
+			jugador: jugadores[i],
+			cerebro: "",
+			corazon: "",
+			higado: "",
+			hueso: ""
+		})
+	}
+}
+
 var usuario = ""; //Nombre de usuario
 var numHumanos, numMaquinas, numJugadores = 0;
-var jugadores = []; //Nombres humanos
+var jugadores = []; //Nombres
 var deckOfCards = []; //Array que contiene todas las cartas
 var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa usaremos
 var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
 var cartasUsuario = [];
 var posCartasUsuario = [];
+var organosJugadoresCli = null;
+
 Engine = new function () {
 	//Responsive canvas
 	this.initCanvas = function(){
