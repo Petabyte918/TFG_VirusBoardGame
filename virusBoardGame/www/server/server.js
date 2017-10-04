@@ -33,6 +33,9 @@ function prepararOrganosJugadoresSrv(){
 }
 
 function sendCartas(carta1, carta2, carta3){
+	console.log(carta1.toString());
+	console.log(carta2.toString());
+	console.log(carta3.toString());
 	cartasUsuario = [carta1, carta2, carta3];
 }
 

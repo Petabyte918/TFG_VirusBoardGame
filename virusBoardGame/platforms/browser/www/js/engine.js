@@ -224,28 +224,28 @@ Engine = new function () {
 			deckOfCards.push(new card(cardType.organo, 'cerebro', 'img/cardImages/organoCerebro.png'));
 		}
 		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.medicina, 'pulmon', 'img/cardImages/medicinaPulmon.png'));
-			deckOfCards.push(new card(cardType.medicina, 'corazon', 'img/cardImages/medicinaCorazon.png'));
-			deckOfCards.push(new card(cardType.medicina, 'higado', 'img/cardImages/medicinaHigado.png'));
-			deckOfCards.push(new card(cardType.medicina, 'cerebro', 'img/cardImages/medicinaCerebro.png'));
+			deckOfCards.push(new card(cardType.medicina, 'pulmon', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.medicina, 'corazon', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.medicina, 'higado', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.medicina, 'cerebro', 'img/cardImages/otro.png'));
 		}
 		for (var i = 0; i < 4; i++) {
-			deckOfCards.push(new card(cardType.virus, 'pulmon', 'img/cardImages/virusPulmon.png'));
-			deckOfCards.push(new card(cardType.virus, 'corazon', 'img/cardImages/virusCorazon.png'));
-			deckOfCards.push(new card(cardType.virus, 'higado', 'img/cardImages/virusHigado.png'));
-			deckOfCards.push(new card(cardType.virus, 'cerebro', 'img/cardImages/virusCerebro.png'));
+			deckOfCards.push(new card(cardType.virus, 'pulmon', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.virus, 'corazon', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.virus, 'higado', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.virus, 'cerebro', 'img/cardImages/otro.png'));
 		}
 		for (var i = 0; i < 2; i++) {
-			deckOfCards.push(new card(cardType.tratamiento, 'error medico', 'img/cardImages/errorMedico.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'guante de latex', 'img/cardImages/guanteDeLatex.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'transplante', 'img/cardImages/transplante.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'ladron de organos', 'img/cardImages/ladronDeOrganos.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'contagio', 'img/cardImages/contagio.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'error medico', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'guante de latex', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'transplante', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'ladron de organos', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.tratamiento, 'contagio', 'img/cardImages/otro.png'));
 		}
 		for (var i = 0; i < 1; i++) {
-			deckOfCards.push(new card(cardType.organo, 'comodin', 'img/cardImages/organoComodin.png'));
-			deckOfCards.push(new card(cardType.medicina, 'comodin', 'img/cardImages/medicinaComodin.png'));
-			deckOfCards.push(new card(cardType.virus, 'comodin', 'img/cardImages/virusComodin.png'));
+			deckOfCards.push(new card(cardType.organo, 'comodin', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.medicina, 'comodin', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.virus, 'comodin', 'img/cardImages/otro.png'));
 		}
 	}
 }

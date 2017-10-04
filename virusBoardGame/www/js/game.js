@@ -82,13 +82,15 @@ function ponerJugadores(){
 
 function nuevaCarta(numCarta){
 	var newCard = takeCard();
+	console.log(newCard.toString());
 	cartasUsuario[numCarta] = newCard;
+	objetos[numCarta].src = newCard.picture;
 }
 
 function takeCard(){
     if (deckOfCards.length != 0){
     	var drawedCard = deckOfCards.shift();
-    	console.log(drawedCard);
+    	//console.log(drawedCard.toString());
     	return drawedCard;
     } else {
     	alert("Oh! No quedan cartas en el mazo!");
@@ -134,21 +136,21 @@ function moveObjects(){
 		xOrigen: posCartasUsuario[2][0], yOrigen: posCartasUsuario[2][1] + offsetCartasUsuario,
 		width: posCartasUsuario[0], height: posCartasUsuario[0],
 		numCarta: 0,
-		src: "img/cardImages/organoHueso.png"
+		src: cartasUsuario[0].picture
 	});
 	objetos.push({
 		x: posCartasUsuario[3][0], y: posCartasUsuario[3][1] + offsetCartasUsuario,
 		xOrigen: posCartasUsuario[3][0], yOrigen: posCartasUsuario[3][1] + offsetCartasUsuario,
 		width: posCartasUsuario[0], height: posCartasUsuario[0],
 		numCarta: 1,
-		src: "img/cardImages/organoHueso.png"
+		src: cartasUsuario[1].picture
 	});
 	objetos.push({
 		x: posCartasUsuario[4][0], y: posCartasUsuario[4][1] + offsetCartasUsuario,
 		xOrigen: posCartasUsuario[4][0], yOrigen: posCartasUsuario[4][1] + offsetCartasUsuario,
 		width: posCartasUsuario[0], height: posCartasUsuario[0],
 		numCarta: 2,
-		src: "img/cardImages/organoHueso.png"
+		src: cartasUsuario[2].picture
 	});
 
 	//Movil - ordenador
@@ -178,12 +180,7 @@ function moveObjects(){
 		var touch = event;
 		console.log("Onmousemove");
 		//Solo actualizamos si movemos y hay algun objeto seleccionado y cada cierta diferencia de pixeles
-		if (objetoActual != null) /**&&
-			//Pendiente de optimizar
-			((objetoActual.x - 15 > touch.pageX - inicioX) ||
-			(objetoActual.x + 15 < touch.pageX - inicioX) ||
-			(objetoActual.y - 15 > touch.pageY - inicioY) ||
-			(objetoActual.y + 15 < touch.pageY - inicioY)) )**/ {
+		if (objetoActual != null) {
 			objetoActual.x = touch.pageX - inicioX;
 			objetoActual.y = touch.pageY - inicioY;
 			//console.log("ObjetoActual.x: "+objetoActual.x);
@@ -213,8 +210,15 @@ function checkCollision(){
 	var movValido = false;
 	var colision = 0;
 	//En orden de probabilidad de ocurrencia
+	//Posicion dejar la carta en su sitio
+	if ((objetoActual.x > posCartasUsuario[2][0]) &&
+		(objetoActual.x < (posCartasUsuario[4][0] + posCartasUsuario[0])) &&
+		(objetoActual.y > posCartasUsuario[2][1]) &&
+		(objetoActual.y < (posCartasUsuario[4][1] + posCartasUsuario[1]))) {
+		colision = -1;
+	}
 	//Posicion 1
-	if ((objetoActual.x < ((windowWidth / 6) * 4)) &&
+	else if ((objetoActual.x < ((windowWidth / 6) * 4)) &&
 		(objetoActual.x > ((windowWidth / 6) * 2)) &&
 		(objetoActual.y > (windowHeight / 3) * 2)) {
 		console.log("Colision zona 1");
@@ -258,7 +262,9 @@ function checkCollision(){
 		(objetoActual.y < (windowHeight / 3) * 2)) {
 		console.log("Colision zona 0");
 		colision = 0;
-	} else {
+	}
+	//Posicion -1 - Redibujarmos otra vez
+	else {
 		colision = -1;
 	}
 
@@ -267,21 +273,21 @@ function checkCollision(){
 
 	} else {
 		console.log("No colision: ");
-		objetoActual.x = objetoActual.xOrigen;
-		objetoActual.y = objetoActual.yOrigen;
 	}
+
+	objetoActual.x = objetoActual.xOrigen;
+	objetoActual.y = objetoActual.yOrigen;
 }
 
 function organoNoRepetido(){
 
 }
 
-
-//Devuelve true o false dependiendo de la validez del mov
 function validarMov(jugDestino, numCarta){
 	if (jugDestino == 0) {
 		//En realidad puedes descartar cualquier numero de cartas en una jugada->Por implementar
-		descartarCarta(numCarta);
+		nuevaCarta(numCarta);
+		actualizarCanvas();
 		return true;
 	}
 	//console.log("Tipo de Carta: "+cartasUsuario[numCarta].cardType);
