@@ -80,6 +80,27 @@ function ponerJugadores(){
 	}
 }
 
+function asignarJugadoresAPosiciones(){
+	var posTablero = 1;
+	var posInicial = null;
+	for (var i = 0; i < jugadores.length; i++){
+		if (i == posInicial) {
+			break;
+		}
+		if (jugadores[i] == usuario){
+			posInicial = i;
+		}
+		if (posInicial != null){
+			jugPorPosicion.push({
+				jugador: jugadores[i],
+				posicion: posTablero
+			})
+			posTablero++;
+		}
+	}
+	console.log("jugPorPosicion :"+jugPorPosicion);
+}
+
 function nuevaCarta(numCarta){
 	var newCard = takeCard();
 	console.log(newCard.toString());
@@ -279,23 +300,57 @@ function checkCollision(){
 	objetoActual.y = objetoActual.yOrigen;
 }
 
-function organoNoRepetido(){
-
+function organoNoRepetido(cardType, jugDestino){
+	for (var i = 0; i < organosJugadoresCli.length; i++){
+		if (jugDestino == organosJugadoresCli[i].jugador){
+			switch(cardType){
+			case "hueso":
+				if (organosJugadoresCli[i].hueso == "") {
+					return true;
+				}
+				break;
+			case "corazon":
+				if (organosJugadoresCli[i].corazon == "") {
+					return true;
+				}
+				break;
+			case "higado":
+				if (organosJugadoresCli[i].higado == "") {
+					return true;
+				}
+				break;
+			case "cerebro":
+				if (organosJugadoresCli[i].cerebro == "") {
+					return true;
+				}
+				break;
+			default:
+				alert("OrganoNoRepetido: case organo inexistente");
+			}
+			return false;
+		}
+	}
 }
 
 function validarMov(jugDestino, numCarta){
+	var cardType = cartasUsuario[numCarta].cardType;
+	//Descarte
 	if (jugDestino == 0) {
 		//En realidad puedes descartar cualquier numero de cartas en una jugada->Por implementar
 		nuevaCarta(numCarta);
 		actualizarCanvas();
 		return true;
 	}
-	//console.log("Tipo de Carta: "+cartasUsuario[numCarta].cardType);
-	var cardType = cartasUsuario[numCarta].cardType;
+
 	if ((cardType == "organo") && (jugDestino == 1)){
 		if (organoNoRepetido(cardType, jugDestino)){
-			//Dibujar en el canvas
+			var src = cartasUsuario[numCarta].picture;
+
+			renderOrgano(widthOrgano, heightOrgano, posOrgano, src, "normal")
 			//Mandamos movimiento al servidor
+			nuevaCarta(numCarta);
+			actualizarCanvas();
+			return true;
 		}
 	}
 
@@ -348,6 +403,7 @@ $(document).ready(function(){
 
 		ponerJugadores();
 		renderBGCards();
+		asignarJugadoresAPosiciones();
 
 		//Tricky
 		empezarJuego();

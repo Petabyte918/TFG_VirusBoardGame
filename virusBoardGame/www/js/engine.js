@@ -58,6 +58,7 @@ var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
 var cartasUsuario = [];
 var posCartasUsuario = [];
 var organosJugadoresCli = null;
+var jugPorPosicion = [];
 
 Engine = new function () {
 	//Responsive canvas
@@ -218,19 +219,19 @@ Engine = new function () {
 	}
 	this.initDeckOfCards = function(){
 		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.organo, 'pulmon', 'img/cardImages/organoHueso.png'));
+			deckOfCards.push(new card(cardType.organo, 'hueso', 'img/cardImages/organoHueso.png'));
 			deckOfCards.push(new card(cardType.organo, 'corazon', 'img/cardImages/organoCorazon.png'));
 			deckOfCards.push(new card(cardType.organo, 'higado', 'img/cardImages/organoHigado.png'));
 			deckOfCards.push(new card(cardType.organo, 'cerebro', 'img/cardImages/organoCerebro.png'));
 		}
 		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.medicina, 'pulmon', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.medicina, 'hueso', 'img/cardImages/otro.png'));
 			deckOfCards.push(new card(cardType.medicina, 'corazon', 'img/cardImages/otro.png'));
 			deckOfCards.push(new card(cardType.medicina, 'higado', 'img/cardImages/otro.png'));
 			deckOfCards.push(new card(cardType.medicina, 'cerebro', 'img/cardImages/otro.png'));
 		}
 		for (var i = 0; i < 4; i++) {
-			deckOfCards.push(new card(cardType.virus, 'pulmon', 'img/cardImages/otro.png'));
+			deckOfCards.push(new card(cardType.virus, 'hueso', 'img/cardImages/otro.png'));
 			deckOfCards.push(new card(cardType.virus, 'corazon', 'img/cardImages/otro.png'));
 			deckOfCards.push(new card(cardType.virus, 'higado', 'img/cardImages/otro.png'));
 			deckOfCards.push(new card(cardType.virus, 'cerebro', 'img/cardImages/otro.png'));
