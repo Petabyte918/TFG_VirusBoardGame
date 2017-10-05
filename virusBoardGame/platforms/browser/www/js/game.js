@@ -120,7 +120,7 @@ function asignarJugadoresAPosiciones(){
 
 function nuevaCarta(numCarta){
 	var newCard = takeCard();
-	console.log(newCard.toString());
+	console.log("Nueva carta: "+newCard.toString());
 	cartasUsuario[numCarta] = newCard;
 	objetos[numCarta].src = newCard.picture;
 }
@@ -304,40 +304,41 @@ function checkCollision(){
 	//Posicion -1 - Redibujarmos otra vez
 	else {
 		colision = -1;
+		alert("Movimiento invalido");
 	}
 
-	movValido = validarMov(colision, objetoActual.numCarta);
-	if ((colision > -1) && (movValido == true)){
-
-	} else {
-		console.log("Movimiento invalido");
-	}
+	manejadorMov(colision, objetoActual.numCarta);
 
 	objetoActual.x = objetoActual.xOrigen;
 	objetoActual.y = objetoActual.yOrigen;
 }
 
+//Modifica organosJugadoresCli al nuevo estado
 function organoNoRepetido(cardType, posDestino){
 	for (var i = 0; i < organosJugadoresCli.length; i++){
 		if (jugPorPosicion[posDestino-1].jugador == organosJugadoresCli[i].jugador){
 			switch(cardType){
 			case "hueso":
 				if (organosJugadoresCli[i].hueso == "") {
+					organosJugadoresCli[i].hueso == "normal";
 					return true;
 				}
 				break;
 			case "corazon":
 				if (organosJugadoresCli[i].corazon == "") {
+					organosJugadoresCli[i].corazon == "normal";
 					return true;
 				}
 				break;
 			case "higado":
 				if (organosJugadoresCli[i].higado == "") {
+					organosJugadoresCli[i].higado == "normal";
 					return true;
 				}
 				break;
 			case "cerebro":
 				if (organosJugadoresCli[i].cerebro == "") {
+					organosJugadoresCli[i].cerebro == "normal";
 					return true;
 				}
 				break;
@@ -349,7 +350,7 @@ function organoNoRepetido(cardType, posDestino){
 	}
 }
 
-function validarMov(posDestino, numCarta){
+function manejadorMov(posDestino, numCarta){
 	var cardType = cartasUsuario[numCarta].cardType;
 	var organType = cartasUsuario[numCarta].organType;
 	//Descarte
@@ -383,21 +384,14 @@ function validarMov(posDestino, numCarta){
 				alert("ValidarMov: cardType erroneo")
 				break;
 			}
-			renderOrgano(widthOrgano, heightOrgano, posOrgano, src, "normal")
+			renderOrgano(widthOrgano, heightOrgano, posOrgano, src, "normal");
 			//Mandamos movimiento al servidor
 			nuevaCarta(numCarta);
 			actualizarCanvas();
 			return true;
 		}
 	}
-
 	return false;
-}
-
-function manejadorColision(){
-	//Mandar a servidor
-	//Esperar respuesta
-	//Dibujar resultado
 }
 
 $(document).ready(function(){

@@ -391,7 +391,6 @@ function manejadorMov(posDestino, numCarta){
 			return true;
 		}
 	}
-
 	return false;
 }
 
