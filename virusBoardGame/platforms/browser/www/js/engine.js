@@ -57,7 +57,7 @@ var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa 
 var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
 var cartasUsuario = [];
 var posCartasUsuario = [];
-var organosJugadoresCli = null;
+var organosJugadoresCli = [];
 var jugPorPosicion = [];
 
 Engine = new function () {

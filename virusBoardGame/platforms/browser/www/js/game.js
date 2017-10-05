@@ -38,14 +38,23 @@ function renderBGCards (){
 (cardType.organo, 'pulmon', 'img/cardImages/organoHueso.png')**/
 
 function renderOrgano (widthOrgano, heightOrgano, posOrgano, src, estado){
-	var x, y, r = 0;
-	var x = posOrgano[0] + widthOrgano / 2;
-	var y = posOrgano[1] + heightOrgano / 2;
-	var r = widthOrgano / 2;
+	//var x, y, r = 0;
+	//var x = posOrgano[0] + widthOrgano / 2;
+	//var y = posOrgano[1] + heightOrgano / 2;
+	//var r = widthOrgano / 2;
 	//Estados: vacio, normal, enfermo, vacunado
 	if (estado == "vacio"){
 		cxBG.fillStyle = 'white';
 		cxBG.fillRect(posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
+	}
+
+	if(estado == "normal"){
+		var img1 = new Image();
+		img1.src = objetos[0].src;
+		img1.onload = function(){
+			//console.log("objetos[0] :"+objetos[0]);
+			cxBG.drawImage(img1, posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
+		}
 	}
 	/** SERAN CIRCULOS
 		cx.strokeStyle = "red";
@@ -81,24 +90,32 @@ function ponerJugadores(){
 }
 
 function asignarJugadoresAPosiciones(){
-	var posTablero = 1;
-	var posInicial = null;
-	for (var i = 0; i < jugadores.length; i++){
-		if (i == posInicial) {
-			break;
-		}
+	var fin = false;
+	var i = 0;
+	var contPos = null;
+	while (fin != true){
 		if (jugadores[i] == usuario){
-			posInicial = i;
+			contPos = 0;
 		}
-		if (posInicial != null){
+
+		if (contPos != null){
 			jugPorPosicion.push({
 				jugador: jugadores[i],
-				posicion: posTablero
+				posicion: posJugadores[contPos]
 			})
-			posTablero++;
+			console.log("jugPorPosicion :"+jugPorPosicion[contPos].jugador+", "+jugPorPosicion[contPos].posicion);
+			contPos++;
 		}
+		i++;
+
+		if (i == (jugadores.length)){
+			i = 0;
+		}
+		if (contPos == (jugadores.length)){
+			fin = true;
+		}
+
 	}
-	console.log("jugPorPosicion :"+jugPorPosicion);
 }
 
 function nuevaCarta(numCarta){
@@ -293,16 +310,16 @@ function checkCollision(){
 	if ((colision > -1) && (movValido == true)){
 
 	} else {
-		console.log("No colision: ");
+		console.log("Movimiento invalido");
 	}
 
 	objetoActual.x = objetoActual.xOrigen;
 	objetoActual.y = objetoActual.yOrigen;
 }
 
-function organoNoRepetido(cardType, jugDestino){
+function organoNoRepetido(cardType, posDestino){
 	for (var i = 0; i < organosJugadoresCli.length; i++){
-		if (jugDestino == organosJugadoresCli[i].jugador){
+		if (jugPorPosicion[posDestino-1].jugador == organosJugadoresCli[i].jugador){
 			switch(cardType){
 			case "hueso":
 				if (organosJugadoresCli[i].hueso == "") {
@@ -332,20 +349,40 @@ function organoNoRepetido(cardType, jugDestino){
 	}
 }
 
-function validarMov(jugDestino, numCarta){
+function validarMov(posDestino, numCarta){
 	var cardType = cartasUsuario[numCarta].cardType;
+	var organType = cartasUsuario[numCarta].organType;
 	//Descarte
-	if (jugDestino == 0) {
+	if (posDestino == 0) {
 		//En realidad puedes descartar cualquier numero de cartas en una jugada->Por implementar
 		nuevaCarta(numCarta);
 		actualizarCanvas();
 		return true;
 	}
 
-	if ((cardType == "organo") && (jugDestino == 1)){
-		if (organoNoRepetido(cardType, jugDestino)){
+	if ((cardType == "organo") && (posDestino == 1)){
+		if (organoNoRepetido(organType, posDestino)){
+			var widthOrgano = posOrganosJugadores[posDestino-1][0];
+			var heightOrgano = posOrganosJugadores[posDestino-1][1];
+			var posOrgano = null;
 			var src = cartasUsuario[numCarta].picture;
-
+			switch (organType){
+			case "cerebro":
+				posOrgano = posOrganosJugadores[posDestino-1][2];
+				break;
+			case "corazon":
+				posOrgano = posOrganosJugadores[posDestino-1][3];
+				break;
+			case "hueso":
+				posOrgano = posOrganosJugadores[posDestino-1][4];
+				break;
+			case "higado":
+				posOrgano = posOrganosJugadores[posDestino-1][5];
+				break;
+			default:
+				alert("ValidarMov: cardType erroneo")
+				break;
+			}
 			renderOrgano(widthOrgano, heightOrgano, posOrgano, src, "normal")
 			//Mandamos movimiento al servidor
 			nuevaCarta(numCarta);
@@ -403,14 +440,14 @@ $(document).ready(function(){
 
 		ponerJugadores();
 		renderBGCards();
-		asignarJugadoresAPosiciones();
 
 		//Tricky
 		empezarJuego();
 			//Aqui hay un orden de cosas que ocurren estamos ignorando la com. servidor-cliente
 			//pero prefiero mantener separado cosas que hace el servidor con cosas que hace el cliente
 
-
+		asignarJugadoresAPosiciones();
+		prepararOrganosJugadoresCli();
 		moveObjects();
 		actualizarCanvas();
 
