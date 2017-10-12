@@ -2,7 +2,9 @@
 <html xmlns="http://w3.org/1999/xhtml">
 <head>
 	<title>TFG_VirusBoardGame</title>
+	<link href='http://fonts.googleapis.com/css?family=Oleo+Script' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="css/virusBoardGame.css" media="screen" />
+
 	<script src="Jquery/jquery-3.2.1.min.js"></script>
 	<script src="Modernizr/modernizr-customFull.js"></script>
 	<script src="server/server.js"></script>
@@ -12,14 +14,19 @@
 </head>
 
 <body>
+	<div id="container_botones">
+		<a class="boton" id="boton_jugar" title="Jugar">Jugar</a>
+		<a class="boton" id="boton_crear" title="Crear Partida">Crear Partida</a>
+		<a class="boton" id="boton_lista" title="Lista de partidas">Lista de partidas</a>
+	</div>
 
 	<div style="position: relative;">
 		<canvas id="canvas" width="1000px" height="700px"
-				style="position: absolute; left: 0; top: 0; z-index: 1;">
+				style="position: absolute; left: 0; top: 0; z-index: 5;">
 			Your browser does not support canvas
 		</canvas>
 		<canvas id="canvasBG" width="1000px" height="700px"
-				style="position: absolute; left: 0; top: 0; z-index: 0;">
+				style="position: absolute; left: 0; top: 0; z-index: 4;">
 			Your browser does not support canvas
 		</canvas>
 	</div>
