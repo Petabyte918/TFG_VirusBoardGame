@@ -7,6 +7,8 @@
 
 	<script src="Jquery/jquery-3.2.1.min.js"></script>
 	<script src="Modernizr/modernizr-customFull.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.4.0.js"></script>
+	<!--<script src="Socket.io.js/socket.io.js"></script>-->
 	<script src="server/server.js"></script>
 	<script src="js/engine.js"></script>
 	<script src="js/game.js"></script>
@@ -14,13 +16,20 @@
 </head>
 
 <body>
-	<div id="container_botones">
-		<a class="boton" id="boton_jugar" title="Jugar">Jugar</a>
-		<a class="boton" id="boton_crear" title="Crear Partida">Crear Partida</a>
-		<a class="boton" id="boton_lista" title="Lista de partidas">Lista de partidas</a>
+	<div id="container_nickname">
+		<input class="user_form" type="text" placeholder=":input">
+		<a class="user_form" id="boton_borrar" title="Borrar" onclick="button_delete()"></a>
 	</div>
 
-	<div style="position: relative;">
+	<div id="container_botones">
+		<a class="boton" id="boton_jugar" title="Jugar" onclick="button_play()">Jugar</a>
+		<a class="boton" id="boton_crear" title="Crear Partida" onclick="button_create()">Crear Partida</a>
+		<a class="boton" id="boton_lista" title="Lista de partidas" onclick="button_list()">Lista de partidas</a>
+	</div>
+
+	<div style="position: relative;
+				display: none;
+	">
 		<canvas id="canvas" width="1000px" height="700px"
 				style="position: absolute; left: 0; top: 0; z-index: 5;">
 			Your browser does not support canvas

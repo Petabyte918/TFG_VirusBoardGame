@@ -1,3 +1,34 @@
+//FUNCIONALIDAD CLIENTE
+//var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+//Local
+var socket = io.connect('localhost:8080');
+socket.on('connected', function (data) {
+   	console.log("Cliente conectado: ");
+});
+
+function button_play(){
+	
+}
+
+function button_create(){
+	
+}
+
+function button_list(){
+	
+}
+
+
+var usuario = ""; //Nombre de usuario
+var numHumanos, numMaquinas, numJugadores = 0;
+var jugadores = []; //Nombres
+var deckOfCards = []; //Array que contiene todas las cartas
+var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa usaremos
+var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
+var cartasUsuario = [];
+var posCartasUsuario = [];
+var organosJugadoresCli = [];
+var jugPorPosicion = [];
 
 function aleatorioRGBrange(inferior,superior){
 	var numPosibilidades = superior - inferior;
@@ -49,16 +80,19 @@ function prepararOrganosJugadoresCli(){
 	}
 }
 
-var usuario = ""; //Nombre de usuario
-var numHumanos, numMaquinas, numJugadores = 0;
-var jugadores = []; //Nombres
-var deckOfCards = []; //Array que contiene todas las cartas
-var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa usaremos
-var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
-var cartasUsuario = [];
-var posCartasUsuario = [];
-var organosJugadoresCli = [];
-var jugPorPosicion = [];
+
+
+function button_play(){
+	
+}
+
+function button_create(){
+
+}
+
+function button_list(){
+	
+}
 
 Engine = new function () {
 	//Responsive canvas

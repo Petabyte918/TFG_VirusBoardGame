@@ -1,9 +1,48 @@
 body {
 	margin: 0px;
+	background: url(img/startmenuBG3.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 
 #canvas {
 	/**background-color: MediumSeaGreen;**/
+}
+
+#container_nickname {
+	position: absolute;
+	max-width: 30%;
+	top: 5%;
+	left: 15%;
+}
+
+.user_form{
+	background-color: #2dc234;
+
+	background-image: -webkit-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: -moz-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: -o-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+
+	color: #fff;
+	display: block;
+	font-family: 'Oleo Script', Arial, sans-serif;
+	font-size: 20px;
+	line-height: 1;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: 0 -1px 1px rgba(25, 123, 29, .7);
+
+	display: inline-block;
+	float: left;
+	z-index: 10;
+}
+
+#boton_borrar{
+	background: url(img/equis.png);
+	background-size: cover;
+	margin-left: 15px;
+	padding: 25px;
 }
 
 #container_botones {
@@ -11,7 +50,7 @@ body {
 	max-width: 32%;
 	top: 30%;
 	left: 39%;
-	z-index: 2;
+	z-index: 10;
 }
 
 .boton {
