@@ -1,23 +1,3 @@
-//FUNCIONALIDAD CLIENTE
-//var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
-//Local
-var socket = io.connect('localhost:8080');
-socket.on('connected', function (data) {
-   	console.log("Cliente conectado: ");
-});
-
-function button_play(){
-	
-}
-
-function button_create(){
-	
-}
-
-function button_list(){
-	
-}
-
 
 var usuario = ""; //Nombre de usuario
 var numHumanos, numMaquinas, numJugadores = 0;

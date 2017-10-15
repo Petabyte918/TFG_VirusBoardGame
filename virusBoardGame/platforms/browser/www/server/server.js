@@ -4,8 +4,7 @@ var organosJugadoresSrv = [];
 
 function simularDatosIniciales(){
 	//Usuario logueado o usuario propio
-	usuario = "lucaskhane";
-	jugadores.push("lucaskhane");
+	jugadores.push(usuario);
 	jugadores.push("lucas");
 	jugadores.push("Jose");
 	jugadores.push("pepe");

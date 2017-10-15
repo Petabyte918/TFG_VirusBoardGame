@@ -56,3 +56,9 @@ function ponerJugadores(numJugadores, numMaquinas){
 		cx.fillStyle = objetos[i].color;
 		cx.fillRect(objetos[i].x, objetos[i].y, objetos[i].width, objetos[i].height);
 	}
+
+
+	<div id="container_nickname">
+		<input class="user_form" type="text" placeholder=":input">
+		<a class="user_form" id="boton_borrar" title="Borrar" onclick="button_delete()"></a>
+	</div>

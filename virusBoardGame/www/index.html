@@ -12,24 +12,47 @@
 	<script src="server/server.js"></script>
 	<script src="js/engine.js"></script>
 	<script src="js/game.js"></script>
+	<script src="js/cliente.js"></script>
 
 </head>
 
 <body>
-	<div id="container_nickname">
-		<input class="user_form" type="text" placeholder=":input">
-		<a class="user_form" id="boton_borrar" title="Borrar" onclick="button_delete()"></a>
-	</div>
-
 	<div id="container_botones">
 		<a class="boton" id="boton_jugar" title="Jugar" onclick="button_play()">Jugar</a>
 		<a class="boton" id="boton_crear" title="Crear Partida" onclick="button_create()">Crear Partida</a>
 		<a class="boton" id="boton_lista" title="Lista de partidas" onclick="button_list()">Lista de partidas</a>
 	</div>
 
+	<div id="container_form_create" style="display: none;">
+		<form name="form_create_game" id="form_create_game" onsubmit="return form_createGame()">
+			<ul class="form-style-1">
+			    <li class=li-marginTop>
+			    	<label class="label_form1">Escribe un nombre para tu partida<span class="required">*</span></label>
+			    	<input type="text" name="gameName" class="field-text" placeholder="Ej: partida de..." />
+			    </li>
+			    <li class="li-marginTop">
+			        <label class="label_form1">Elige el numero de jugadores</label>
+			        <select name="gameNumPlayers" class="field-select">
+			        <option selected="true" value="2">2</option>
+			        <option value="3">3</option>
+			        <option value="4">4</option>
+			        <option value="5">5</option>
+			        <option value="6">6</option>
+			        </select>
+			    </li>
+			    <input class="boton" value="BACK" onclick="backTo_InitMenu()">
+			    <input class="boton botonCrearPartida" type="submit" value="Crear partida">
+			</ul>
+		</form>
+	</div>
+
+	<div id="lista_partidas" style="display: none;">
+
+	</div>
+
 	<div style="position: relative;
 				display: none;
-	">
+				">
 		<canvas id="canvas" width="1000px" height="700px"
 				style="position: absolute; left: 0; top: 0; z-index: 5;">
 			Your browser does not support canvas
