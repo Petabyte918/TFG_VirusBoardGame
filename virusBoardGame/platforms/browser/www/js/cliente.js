@@ -29,10 +29,30 @@ function form_createGame(){
 	var gameNumPlayers = document.form_create_game.gameNumPlayers.value;
 	console.log("gameName: "+gameName);
 	console.log("gameNumPlayers: "+gameNumPlayers);
-	//Interaccion con el servidor
+	 if (gameName == "") {
+	 	gameName = "Juego de: "+usuario.substr(0,6);
+	 }
+
+	socket.emit('create_game', {creador: usuario, gameName: gameName, gameNumPlayers:gameNumPlayers});
 	//Pantalla de lista de espera
 	return false;
 }
+
+socket.on('create_game-OK', function(data){
+	console.log("Recibido: create_game-OK");
+})
+
+socket.on('actualizar_partidas', function(data){
+	console.log("Recibido: actualizar_partidas");
+})
+
+socket.on('game_ready', function(){
+
+})
+
+socket.on('game_end', function(){
+
+})
 
 function button_list(){
 	

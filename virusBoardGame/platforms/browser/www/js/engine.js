@@ -61,19 +61,6 @@ function prepararOrganosJugadoresCli(){
 }
 
 
-
-function button_play(){
-	
-}
-
-function button_create(){
-
-}
-
-function button_list(){
-	
-}
-
 Engine = new function () {
 	//Responsive canvas
 	this.initCanvas = function(){
