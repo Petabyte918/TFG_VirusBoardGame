@@ -1,4 +1,6 @@
 //FUNCIONALIDAD CLIENTE
+
+var lista_partidas = {};
 //var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 //Local
 var socket = io.connect('localhost:8080');
@@ -7,23 +9,35 @@ socket.on('Connection OK', function (data) {
    	usuario = data.player_id;
 });
 
-function button_play(){
+function button_play() {
 	
 }
 
-function button_create(){
+function button_create() {
 	console.log("button_create()");
 	$("#container_botones").css("display", "none");
 	$("#container_form_create").css("display", "inline");
+	$("#lista_partidas").css("display", "none");
 }
 
-function backTo_InitMenu(){
+function button_lista_partidas() {
+	console.log("button_lista_partidas()");
+	$("#container_botones").css("display", "none");
+	$("#container_form_create").css("display", "none");
+	//Comprobar actualizaciones de la lista de partidas
+	//Pedir que me envien periodicamente una lista (para no complicarlo, 
+	//que el servidor se la mande a todo el mundo todo el rato)
+	$("#lista_partidas").css("display", "inline");
+}
+
+function backTo_InitMenu() {
 	console.log("backTo_InitMenu()");
 	$("#container_botones").css("display", "inline");
 	$("#container_form_create").css("display", "none");
+	$("#lista_partidas").css("display", "none");
 }
 
-function form_createGame(){
+function form_createGame() {
 	console.log("form_createGame()");
 	var gameName = document.form_create_game.gameName.value;
 	var gameNumPlayers = document.form_create_game.gameNumPlayers.value;
@@ -43,6 +57,7 @@ socket.on('create_game-OK', function(data){
 })
 
 socket.on('actualizar_partidas', function(data){
+	lista_partidas = data;
 	console.log("Recibido: actualizar_partidas");
 })
 
@@ -53,8 +68,4 @@ socket.on('game_ready', function(){
 socket.on('game_end', function(){
 
 })
-
-function button_list(){
-	
-}
 

@@ -1,4 +1,6 @@
 //FUNCIONALIDAD CLIENTE
+
+var lista_partidas = {};
 //var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 //Local
 var socket = io.connect('localhost:8080');
@@ -43,6 +45,7 @@ socket.on('create_game-OK', function(data){
 })
 
 socket.on('actualizar_partidas', function(data){
+	lista_partidas = data;
 	console.log("Recibido: actualizar_partidas");
 })
 

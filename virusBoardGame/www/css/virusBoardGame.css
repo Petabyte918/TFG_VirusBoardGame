@@ -15,11 +15,73 @@ body {
     height: 80%;
     top: 10%;
     left: 15%;
+
     background-color: rgba(128, 0, 0, 0.8);
     -webkit-transition-property: width, height; /* Safari */
     -webkit-transition-duration: 2s; /* Safari */
     transition-property: width, height;
     transition-duration: 2s;
+
+    border: solid #330000 4px;
+    -ms-border-radius:8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: inset 0px 0px 80px 40px #4d0000, 10px 10px 100px 50px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 80px 40px #4d0000, 10px 10px 100px 50px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 80px 40px #4d0000, 10px 10px 100px 50px rgba(0,0,0,0.75);
+
+	font-family: 'Oleo Script', Arial, sans-serif;
+	color: #fff;
+	font-size: 1.1em;
+	line-height: 1;
+
+	overflow: hidden;
+}
+
+ul.container_partidas {
+	border: solid black 2px;
+	margin: 2em;
+}
+
+li.partida {
+	border: solid #330000 2px;
+	margin: 1em;
+	padding: 0.5em;
+
+	background-image: -webkit-linear-gradient(rgba(128, 0, 0, .9), rgba(160, 0, 0, .8));
+	background-image: -moz-linear-gradient(rgba(128, 0, 0, .9), rgba(160, 0, 0, .8));
+	background-image: -o-linear-gradient(rgba(128, 0, 0, .9), rgba(160, 0, 0, .8));
+	background-image: linear-gradient(rgba(128, 0, 0, .9), rgba(160, 0, 0, .8));
+
+	-ms-border-radius:8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+
+	-webkit-box-shadow: 0 8px 0 #330000, 0 10px 20px rgba(0, 0, 0, .4);
+	-moz-box-shadow: 0 8px 0 #330000, 0 10px 20px rgba(0, 0, 0, .4);
+	box-shadow: 0 8px 0 #330000, 0 10px 20px rgba(0, 0, 0, .4);
+}
+
+li.partida:active {
+	/* Disminiumos la cantidad de sombras */
+	-webkit-box-shadow: 0 5px 0 #197b1d, 0 5px 10px rgba(0, 0, 0, .4);
+	-moz-box-shadow: 0 5px 0 #197b1d, 0 5px 10px rgba(0, 0, 0, .4);
+	box-shadow: 0 5px 0 #197b1d, 0 5px 10px rgba(0, 0, 0, .4);
+	/* Movemos ligeramente el botón hacia abajo */
+	position: relative;
+	top: 5px;
+}
+
+a.nombre_partida {
+	float: left;
+	margin-left: 2em;
+}
+
+a.num_jugadores {
+	float: right;
+	margin-right: 2em;
 }
 
 #container_botones {
@@ -103,6 +165,14 @@ input.boton {
 	height: 60px;
 	display: inline;
 	margin-top: 1em;
+}
+
+input.botonListaPartidas {
+	width: 20%;
+	padding: 0px;
+	height: 40px;
+	display: inline;
+	margin-top: 0.6em;
 }
 
 input.botonCrearPartida {

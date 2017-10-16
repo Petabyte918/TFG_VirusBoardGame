@@ -17,7 +17,7 @@
 </head>
 
 <body>
-	<div id="container_botones">
+	<div id="container_botones" style="display: none;">
 		<a class="boton" id="boton_jugar" title="Jugar" onclick="button_play()">Jugar</a>
 		<a class="boton" id="boton_crear" title="Crear Partida" onclick="button_create()">Crear Partida</a>
 		<a class="boton" id="boton_lista" title="Lista de partidas" onclick="button_list()">Lista de partidas</a>
@@ -46,8 +46,14 @@
 		</form>
 	</div>
 
-	<div id="lista_partidas" style="display: none;">
-
+	<div id="lista_partidas" >
+		<input class="boton botonListaPartidas" value="BACK" onclick="backTo_InitMenu()">
+		<ul class="container partidas">
+			<li class="partida">
+				<a class="nombre_partida">Nombre partida: nombre de la partida</a>
+				<a class="nombre_partida">Nombre partida</a>
+				<a class="num_jugadores">4 / 6</a>
+			</li>
 	</div>
 
 	<div style="position: relative;
