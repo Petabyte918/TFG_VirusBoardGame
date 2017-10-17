@@ -17,10 +17,10 @@
 </head>
 
 <body>
-	<div id="container_botones" style="display: none;">
+	<div id="container_botones">
 		<a class="boton" id="boton_jugar" title="Jugar" onclick="button_play()">Jugar</a>
 		<a class="boton" id="boton_crear" title="Crear Partida" onclick="button_create()">Crear Partida</a>
-		<a class="boton" id="boton_lista" title="Lista de partidas" onclick="button_list()">Lista de partidas</a>
+		<a class="boton" id="boton_lista" title="Lista de partidas" onclick="button_lista_partidas()">Lista de partidas</a>
 	</div>
 
 	<div id="container_form_create" style="display: none;">
@@ -28,7 +28,7 @@
 			<ul class="form-style-1">
 			    <li class=li-marginTop>
 			    	<label class="label_form1">Escribe un nombre para tu partida<span class="required">*</span></label>
-			    	<input type="text" name="gameName" class="field-text" placeholder="Ej: partida de..." />
+			    	<input type="text" name="gameName" class="field-text" placeholder="Ej: partida de..." readonly="readonly"/>
 			    </li>
 			    <li class="li-marginTop">
 			        <label class="label_form1">Elige el numero de jugadores</label>
@@ -40,25 +40,26 @@
 			        <option value="6">6</option>
 			        </select>
 			    </li>
-			    <input class="boton" value="BACK" onclick="backTo_InitMenu()">
-			    <input class="boton botonCrearPartida" type="submit" value="Crear partida">
+			    <input class="boton" value="BACK" onclick="backTo_InitMenu() " readonly="readonly"/>
+			    <input class="boton botonCrearPartida" type="submit" value="Crear partida" readonly="readonly"/>
 			</ul>
 		</form>
 	</div>
 
-	<div id="lista_partidas" >
-		<input class="boton botonListaPartidas" value="BACK" onclick="backTo_InitMenu()">
+	<div id="lista_partidas" style="display: none;">
+		<input class="boton backBotonListaPartidas" value="BACK" onclick="backTo_InitMenu()" readonly="readonly"/>
+		<input class="boton actBotonListaPartidas" value="ACTUALIZAR" onclick="button_lista_partidas()" readonly="readonly"/>
 		<ul class="container partidas">
-			<li class="partida">
+			<!--<li class="partida">
 				<a class="nombre_partida">Nombre partida: nombre de la partida</a>
-				<a class="nombre_partida">Nombre partida</a>
+				<a class="nombre_creador>"></a>
+				<a class="join_partida">Join</a>
+				<a class="leave_partida">Leave</a>
 				<a class="num_jugadores">4 / 6</a>
-			</li>
+			</li>-->
 	</div>
 
-	<div style="position: relative;
-				display: none;
-				">
+	<div style="position: relative; display: none;">
 		<canvas id="canvas" width="1000px" height="700px"
 				style="position: absolute; left: 0; top: 0; z-index: 5;">
 			Your browser does not support canvas

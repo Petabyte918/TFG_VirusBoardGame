@@ -79,6 +79,22 @@ a.nombre_partida {
 	margin-left: 2em;
 }
 
+a.nombre_creador {
+	display: none;
+}
+
+a.join_partida {
+	float: right;
+	margin-right: 1em;
+	border: solid #197b1d 2px;
+}
+
+a.leave_partida {
+	float: right;
+	margin-right: 1em;
+	border: solid red 2px;
+}
+
 a.num_jugadores {
 	float: right;
 	margin-right: 2em;
@@ -167,12 +183,21 @@ input.boton {
 	margin-top: 1em;
 }
 
-input.botonListaPartidas {
+input.backBotonListaPartidas {
 	width: 20%;
 	padding: 0px;
 	height: 40px;
 	display: inline;
 	margin-top: 0.6em;
+}
+
+input.actBotonListaPartidas {
+	width: 20%;
+	padding: 0px;
+	height: 40px;
+	display: inline;
+	margin-top: 0.6em;
+	float: right;
 }
 
 input.botonCrearPartida {
