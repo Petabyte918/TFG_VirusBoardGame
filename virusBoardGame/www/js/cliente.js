@@ -1,8 +1,9 @@
 //FUNCIONALIDAD CLIENTE
 
-
-/** Establecimiento de la conexion con el servidor **/
 var lista_partidas = {};
+var idPartidaEsperando = "";
+var enPartidaEsperando = false;
+/** Establecimiento de la conexion con el servidor **/
 //var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 //Local
 var socket = io.connect('localhost:8080');
@@ -61,9 +62,10 @@ function form_createGame() {
 	return false;
 }
 
-socket.on('create_game-OK', function(){
+socket.on('create_game-OK', function(data){
 	console.log("Recibido: create_game-OK");
-	var strAleat = toString(Math.round(Math.random()*100));
+	idPartidaEsperando = data.idPartida;
+	enPartidaEsperando = true;
 	button_lista_partidas();
 })
 
@@ -84,25 +86,53 @@ socket.on('actualizar_partidas', function(data){
 	actualizar_listaPartidas();
 })
 
-
 function actualizar_listaPartidas() {
 	$(".container_partidas").empty();
 	for (var id in lista_partidas) {
-		//Si has creado la partida un icono que sea borrar partida
-		//Si estas dentro de la partida un icono que sea salir
-		$(".container_partidas").append(
-			'<li class=partida onclick=joinPartida("'+lista_partidas[id].idPartida+'")>'+
-				'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
-				'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
-				'<a class=num_jugadores>'+lista_partidas[id].gamePlayers.length+'/'+lista_partidas[id].gameNumPlayers+'</a>'+
-				'<a class=join_partida>ENTRAR</a>'+
-			'</li>'
-		);
+		if (enPartidaEsperando == false){
+			//Si no estoy en partida y la sala esta llena, me la salto
+			if (lista_partidas[id].gamePlayers.length >= lista_partidas[id].gameNumPlayers) {
+				continue;
+			}
+			$(".container_partidas").append(
+				'<li class=partida onclick=joinPartida("'+lista_partidas[id].idPartida+'")>'+
+					'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
+					'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
+					'<a class=num_jugadores>'+lista_partidas[id].gamePlayers.length+'/'+lista_partidas[id].gameNumPlayers+'</a>'+
+					'<a class=join_partida>ENTRAR</a>'+
+				'</li>'
+			);
+		} else {
+			if (id == idPartidaEsperando) {
+				$(".container_partidas").append(
+					'<li class=partida onclick=leavePartida("'+lista_partidas[id].idPartida+'")>'+
+						'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
+						'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
+						'<a class=num_jugadores>'+lista_partidas[id].gamePlayers.length+'/'+lista_partidas[id].gameNumPlayers+'</a>'+
+						'<a class="leave_partida">SALIR</a>'+
+					'</li>'
+				);
+			} else {
+				//Si estoy en partida me salto las partidas llenas si no son la mía
+				if (lista_partidas[id].gamePlayers.length >= lista_partidas[id].gameNumPlayers) {
+					continue;
+				}
+				$(".container_partidas").append(
+					'<li class=partida>'+
+						'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
+						'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
+						'<a class=num_jugadores>'+lista_partidas[id].gamePlayers.length+'/'+lista_partidas[id].gameNumPlayers+'</a>'+
+					'</li>'
+				);
+			}
+		}
 	}
 }
+				
+				
 
-function joinPartida(idPartida){
-	console.log("WORKS: "+idPartida);
+function joinPartida(idPartida) {
+	console.log("joinPartida()");
 	//No estamos en ninguna partida
 	var enPartida = false;
 	for (var id in lista_partidas) {
@@ -118,17 +148,45 @@ function joinPartida(idPartida){
 	} else {
 		socket.emit('join_game', {idPartida: idPartida});
 		socket.on('join_game-OK', function() {
+			console.log("join_game-OK");
+			idPartidaEsperando = idPartida;
+			enPartidaEsperando = true;
 			button_lista_partidas();
 		});
 		socket.on('join_game-KO', function(){
+			console.log("join_game-KO");
 			alert("Servidor alerta que no ha sido posible unirse a la partida. Intentalo de nuevo");
 			button_lista_partidas();
 		});
 	}
 }
 
-function leavePartida(){
-
+function leavePartida(idPartida) {
+	console.log("leavePartida()");
+	var enPartida = false;
+	//Estamos en la partida que queremos abandonar
+	for (var i = 0; i < lista_partidas[idPartida].gamePlayers.length; i++) {
+		if (lista_partidas[idPartida].gamePlayers[i] == usuario) {
+			enPartida = true;
+		}
+	}
+	if (enPartida == true) {
+		socket.emit('leave_game', {idPartida: idPartida});
+		socket.on('leave_game-OK', function() {
+			idPartidaEsperando = "";
+			enPartidaEsperando = false;
+			console.log("leave_game-OK");
+			button_lista_partidas();
+		});
+		socket.on('leave_game-KO', function(){
+			console.log("leave_game-KO");
+			alert("Servidor alerta que no ha sido posible abandonar a la partida. Intentalo de nuevo");
+			button_lista_partidas();
+		});
+	} else {
+		alert("No estas dentro de la partida que quieres abandonar");
+		button_lista_partidas();
+	}
 }
 /** -------------------- **/
 
@@ -142,4 +200,5 @@ socket.on('game_end', function(){
 })
 /** -------------------- **/
 
-
+/**  **/
+/** -------------------- **/
