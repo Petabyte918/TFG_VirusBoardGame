@@ -55,25 +55,26 @@ function form_createGame() {
 	 	gameName = "Juego de: "+usuario.substr(0,6);
 	 }
 
-	socket.emit('create_game', {creador: usuario, gameName: gameName, gameNumPlayers: gameNumPlayers});
+	socket.emit('create_game', 
+		{creador: usuario, gameName: gameName, gameNumPlayers: gameNumPlayers});
 	//Pantalla de lista de espera
 	return false;
 }
 
-socket.on('create_game-OK', function(data){
+socket.on('create_game-OK', function(){
 	console.log("Recibido: create_game-OK");
-	lista_partidas = data;
-	actualizar_listaPartidas();
+	var strAleat = toString(Math.round(Math.random()*100));
+	button_lista_partidas();
 })
 
-socket.on('create_game-KO', function(data){
+socket.on('create_game-KO', function(){
 	console.log("Recibido: create game-KO");
 	alert("Ya has creado o ya estas dentro de alguna partida");
-	lista_partidas = data;
-	actualizar_listaPartidas();
+	button_lista_partidas();
 })
 
 function actualizar_partidas(){
+	console.log("function actualizar_partidas()");
 	socket.emit('actualizar_partidas');
 }
 
@@ -83,19 +84,51 @@ socket.on('actualizar_partidas', function(data){
 	actualizar_listaPartidas();
 })
 
+
 function actualizar_listaPartidas() {
 	$(".container_partidas").empty();
-	for (var i = 0; i < lista_partidas.length; i++) {
+	for (var id in lista_partidas) {
 		//Si has creado la partida un icono que sea borrar partida
 		//Si estas dentro de la partida un icono que sea salir
 		$(".container_partidas").append(
-			"<li class='partida'>"+
-				"<a class='nombre_partida'>Nombre partida: "+lista_partidas[i].gameName+"</a>"+
-				"<a class='nombre_creador'>"+lista_partidas[i].creador+"</a>"+
-				"<a class='num_jugadores'>"+lista_partidas[i].players.length+"/"+lista_partidas[i].gameNumPlayers+"</a>"+
-			"</li>"
+			'<li class=partida onclick=joinPartida("'+lista_partidas[id].idPartida+'")>'+
+				'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
+				'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
+				'<a class=num_jugadores>'+lista_partidas[id].gamePlayers.length+'/'+lista_partidas[id].gameNumPlayers+'</a>'+
+				'<a class=join_partida>ENTRAR</a>'+
+			'</li>'
 		);
 	}
+}
+
+function joinPartida(idPartida){
+	console.log("WORKS: "+idPartida);
+	//No estamos en ninguna partida
+	var enPartida = false;
+	for (var id in lista_partidas) {
+		for (var i = 0; i < lista_partidas[id].gamePlayers.length; i++) {
+			if (lista_partidas[id].gamePlayers[i] == usuario) {
+				enPartida = true;
+			}
+		}
+	}
+	if (enPartida == true) {
+		alert("Ya has creado o ya estas dentro de alguna partida");
+		button_lista_partidas();
+	} else {
+		socket.emit('join_game', {idPartida: idPartida});
+		socket.on('join_game-OK', function() {
+			button_lista_partidas();
+		});
+		socket.on('join_game-KO', function(){
+			alert("Servidor alerta que no ha sido posible unirse a la partida. Intentalo de nuevo");
+			button_lista_partidas();
+		});
+	}
+}
+
+function leavePartida(){
+
 }
 /** -------------------- **/
 

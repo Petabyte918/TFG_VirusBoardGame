@@ -40,8 +40,8 @@ body {
 }
 
 ul.container_partidas {
-	border: solid black 2px;
-	margin: 2em;
+	/**border: solid black 2px;
+	margin: 2em;**/
 }
 
 li.partida {
@@ -79,20 +79,22 @@ a.nombre_partida {
 	margin-left: 2em;
 }
 
-a.nombre_creador {
+a.idPartida {
 	display: none;
 }
 
 a.join_partida {
 	float: right;
-	margin-right: 1em;
-	border: solid #197b1d 2px;
+	margin-right: 2em;
+	color: green;
+	font-size: 1.2em;
 }
 
 a.leave_partida {
 	float: right;
-	margin-right: 1em;
-	border: solid red 2px;
+	margin-right: 2em;
+	color: red;
+	font-size: 1.2em;
 }
 
 a.num_jugadores {
