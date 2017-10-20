@@ -30,10 +30,7 @@ function button_lista_partidas() {
 	console.log("button_lista_partidas()");
 	$("#container_botones").css("display", "none");
 	$("#container_form_create").css("display", "none");
-	//Comprobar actualizaciones de la lista de partidas
 	actualizar_partidas();
-	//Pedir que me envien periodicamente una lista (para no complicarlo, 
-	//que el servidor se la mande a todo el mundo todo el rato)
 	$("#lista_partidas").css("display", "inline");
 }
 
@@ -87,14 +84,27 @@ socket.on('actualizar_partidas', function(data){
 })
 
 function actualizar_listaPartidas() {
-	$(".container_partidas").empty();
+	console.log("function actualizar_listaPartidas()");
+	//Eliminamos primero los eventos asociados a los nodos hijos pues remove/empty no lo hace
+	//y en un mal escenario puedes tener millones de eventos disparandose cada vez
+	/** Hasta los huevos. Dia perdido. Retomar esta mierda algun dia
+	('#container_partidas *').unbind();
+	$('#container_partidas *').unbind('click');
+	$('#container_partidas *').attr('onClick','');
+	$('#container_partidas *').attr('onclick','');
+	$('.partida').unbind();
+	$('.partida').unbind('click');
+	$('.partida').attr('onClick','');
+	$('.partida').attr('onclick','');**/
+	
+	$("#container_partidas").empty();
 	for (var id in lista_partidas) {
 		if (enPartidaEsperando == false){
 			//Si no estoy en partida y la sala esta llena, me la salto
 			if (lista_partidas[id].gamePlayers.length >= lista_partidas[id].gameNumPlayers) {
 				continue;
 			}
-			$(".container_partidas").append(
+			$("#container_partidas").append(
 				'<li class=partida onclick=joinPartida("'+lista_partidas[id].idPartida+'")>'+
 					'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
 					'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
@@ -104,7 +114,7 @@ function actualizar_listaPartidas() {
 			);
 		} else {
 			if (id == idPartidaEsperando) {
-				$(".container_partidas").append(
+				$("#container_partidas").append(
 					'<li class=partida onclick=leavePartida("'+lista_partidas[id].idPartida+'")>'+
 						'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
 						'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
@@ -117,7 +127,7 @@ function actualizar_listaPartidas() {
 				if (lista_partidas[id].gamePlayers.length >= lista_partidas[id].gameNumPlayers) {
 					continue;
 				}
-				$(".container_partidas").append(
+				$("#container_partidas").append(
 					'<li class=partida>'+
 						'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
 						'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
@@ -127,9 +137,7 @@ function actualizar_listaPartidas() {
 			}
 		}
 	}
-}
-				
-				
+}			
 
 function joinPartida(idPartida) {
 	console.log("joinPartida()");

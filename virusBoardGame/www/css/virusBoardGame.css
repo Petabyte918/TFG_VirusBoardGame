@@ -39,7 +39,7 @@ body {
 	overflow: hidden;
 }
 
-ul.container_partidas {
+#container_partidas {
 	/**border: solid black 2px;
 	margin: 2em;**/
 }
