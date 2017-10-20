@@ -199,12 +199,13 @@ function leavePartida(idPartida) {
 /** -------------------- **/
 
 /** Interaccion con el servidor de la partida **/
-socket.on('game_ready', function(){
-
+socket.on('empezarPartida', function(datos_partida){
+	console.log("Empezar partida");
 })
 
-socket.on('game_end', function(){
-
+socket.on('terminarPartida', function(){
+	console.log("Terminar Partida");
+	button_lista_partidas();
 })
 /** -------------------- **/
 
