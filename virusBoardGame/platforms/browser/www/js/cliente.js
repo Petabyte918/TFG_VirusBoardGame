@@ -87,14 +87,15 @@ function actualizar_listaPartidas() {
 	console.log("function actualizar_listaPartidas()");
 	//Eliminamos primero los eventos asociados a los nodos hijos pues remove/empty no lo hace
 	//y en un mal escenario puedes tener millones de eventos disparandose cada vez
-	$('#container_partidas *').unbind();
+	/** Hasta los huevos. Dia perdido. Retomar esta mierda algun dia
+	('#container_partidas *').unbind();
 	$('#container_partidas *').unbind('click');
 	$('#container_partidas *').attr('onClick','');
 	$('#container_partidas *').attr('onclick','');
 	$('.partida').unbind();
 	$('.partida').unbind('click');
 	$('.partida').attr('onClick','');
-	$('.partida').attr('onclick','');
+	$('.partida').attr('onclick','');**/
 	
 	$("#container_partidas").empty();
 	for (var id in lista_partidas) {
@@ -198,12 +199,63 @@ function leavePartida(idPartida) {
 /** -------------------- **/
 
 /** Interaccion con el servidor de la partida **/
-socket.on('game_ready', function(){
+socket.on('prepararPartida', function(datos_iniciales){
+	console.log("prepararPartida");
 
+	idPartida = datos_iniciales.idPartida;
+	jugadores = datos_iniciales.jugadores;
+	cartasIniciales = datos_iniciales.cartasIniciales;
+
+	//Animacion de repartir cartas
+	Engine.initCanvas();
+	Engine.initJugadores();
+	Engine.initPosOrganosJugadores();
+	Engine.initPosCartasUsuario();
+
+	ponerJugadores();
+	renderBGCards();
 })
 
-socket.on('game_end', function(){
+function esperarMovimiento(){
+	setTimeout(function(){ 
+		//checkin
+		movJugador = "algo";
+		if (movJugador == ""){
+			esperarMovimiento();
+		} else {
+			//Robar carta
+			var newDatos_partida = {
+				idPartida: idPartida,
+				jugadores: jugadores,
+				turno: turno,
+				deckOfCards: deckOfCards,
+				movJugador: movJugador
+			};
+			socket.emit('siguienteTurnoSrv', newDatos_partida);
+		}
+	}, 1000);
+}
 
+socket.on('siguienteTurnoCli', function(datos_partida){
+	console.log("siguienteTurnoCli");
+	idPartida = datos_partida.idPartida;
+	jugadores = datos_partida.jugadores;
+	turno = datos_partida.turno;
+	deckOfCards = datos_partida.deckOfCards;
+	movJugador = datos_partida.movJugador;
+	//Representar turno de jugador
+	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
+	//enviado por el servidor)
+
+	if (turno == usuario) {
+		movJugador = "";
+		esperarMovimiento();
+	}
+});
+
+socket.on('terminarPartida', function(){
+	console.log("Terminar Partida");
+	button_lista_partidas();
 })
 /** -------------------- **/
 

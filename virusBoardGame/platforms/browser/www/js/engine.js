@@ -1,8 +1,10 @@
 
-var usuario = ""; //Nombre de usuario
-var numHumanos, numMaquinas, numJugadores = 0;
-var jugadores = []; //Nombres
-var deckOfCards = []; //Array que contiene todas las cartas
+var usuario = "";
+var idPartida = "";
+var jugadores = [];
+var deckOfCards = [];
+var movJugador = "";
+
 var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa usaremos
 var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
 var cartasUsuario = [];
@@ -18,19 +20,6 @@ function aleatorioRGBrange(inferior,superior){
 }
 function colorAleatorio(){
    return "rgb(" + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + ")";
-}
-
-var cardType = {organo: 'organo', virus: 'virus', medicina:'medicina', tratamiento: 'tratamiento'}
-function card (cardType, organType, picture){
-	this.cardType = cardType;
-	this.organType = organType;
-	this.picture = picture;
-}
-
-card.prototype.toString = function () {
-	var value = "";
-	value += "Carta: "+this.cardType+" "+this.organType;
-	return value;
 }
 
 function shuffle(array) {
@@ -60,25 +49,38 @@ function prepararOrganosJugadoresCli(){
 	}
 }
 
+function takeCard(){
+    if (deckOfCards.length != 0){
+    	var drawedCard = deckOfCards.shift();
+    	//console.log(drawedCard.toString());
+    	return drawedCard;
+    } else {
+    	alert("Oh! No quedan cartas en el mazo!");
+        return null;
+    }
+}
 
 Engine = new function () {
 	//Responsive canvas
 	this.initCanvas = function(){
-		//Only purpose adapt the canvas to full screen or show a initial menu etc etc
-		/**if (Modernizr.canvas){
-			var canvas = document.getElementById("canvas");
-			var context = canvas.getContext("2d");
+		windowWidth = window.innerWidth;
+		windowHeight = window.innerHeight;
 
-			if (context){
-				var currentCard = takeCard();
-				if (currentCard) {
-					alert(currentCard.toString());
-				}
-				renderImage(context);
-			}
-		} else {
-			alert("Canvas is not supported");
-		}**/
+		//Canvas principal
+		cv = document.getElementById('canvas');
+		cv.width = windowWidth;
+		cv.height = windowHeight;
+		cx = cv.getContext('2d');
+		cx.fillStyle = "rgba(0,0,255,0)";
+		cx.fillRect(0,0,windowWidth,windowHeight);
+
+		//Canvas en background
+		cvBG = document.getElementById('canvasBG');
+		cvBG.width = windowWidth;
+		cvBG.height = windowHeight;
+		cxBG = cvBG.getContext('2d');
+		cxBG.fillStyle = 'MediumSeaGreen';
+		cxBG.fillRect(0,0,windowWidth,windowHeight);
 	}
 	this.initJugadores = function(){
 		//Servidor: Esta funcion debe pedir al servidor los jugadores
@@ -86,7 +88,7 @@ Engine = new function () {
 		//Y saber como colocarlos en la mesa
 		//6 posiciones libres. La propia, una a la izq, tres enfrente y otra a la dcha
 		var pos1, pos2, pos3, pos4, pos5, pos6 = [];
-		switch(numJugadores){
+		switch(jugadores.length){
 		case 2:
 			posJugadores = [1, 4];
 			break;
@@ -218,39 +220,6 @@ Engine = new function () {
 		posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
 
 	}
-	this.initDeckOfCards = function(){
-		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.organo, 'hueso', 'img/orgaImages/organoHuesoSF.png'));
-			deckOfCards.push(new card(cardType.organo, 'corazon', 'img/orgaImages/organoCorazonSF.png'));
-			deckOfCards.push(new card(cardType.organo, 'higado', 'img/orgaImages/organoHigadoSF.png'));
-			deckOfCards.push(new card(cardType.organo, 'cerebro', 'img/orgaImages/organoCerebroSF.png'));
-		}
-		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.medicina, 'hueso', 'img/medImages/medHuesoSF.png'));
-			deckOfCards.push(new card(cardType.medicina, 'corazon', 'img/medImages/medCorazonSF.png'));
-			deckOfCards.push(new card(cardType.medicina, 'higado', 'img/medImages/medHigadoSF.png'));
-			deckOfCards.push(new card(cardType.medicina, 'cerebro', 'img/medImages/medCerebroSF.png'));
-		}
-		for (var i = 0; i < 4; i++) {
-			deckOfCards.push(new card(cardType.virus, 'hueso', 'img/virusImages/virusHuesoSF.png'));
-			deckOfCards.push(new card(cardType.virus, 'corazon', 'img/virusImages/virusCorazonSF.png'));
-			deckOfCards.push(new card(cardType.virus, 'higado', 'img/virusImages/virusHigadoSF.png'));
-			deckOfCards.push(new card(cardType.virus, 'cerebro', 'img/virusImages/virusCerebroSF.png'));
-		}
-		for (var i = 0; i < 2; i++) {
-			deckOfCards.push(new card(cardType.tratamiento, 'error medico', 'img/cardImages/otro.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'guante de latex', 'img/cardImages/otro.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'transplante', 'img/cardImages/otro.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'ladron de organos', 'img/cardImages/otro.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'contagio', 'img/cardImages/otro.png'));
-		}
-		for (var i = 0; i < 1; i++) {
-			deckOfCards.push(new card(cardType.organo, 'comodin', 'img/cardImages/otro.png'));
-			deckOfCards.push(new card(cardType.medicina, 'comodin', 'img/medImages/medComodinSF.png'));
-			deckOfCards.push(new card(cardType.virus, 'comodin', 'img/cardImages/otro.png'));
-		}
-	}
+	
 }
-
-
 

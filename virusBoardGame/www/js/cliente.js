@@ -199,9 +199,59 @@ function leavePartida(idPartida) {
 /** -------------------- **/
 
 /** Interaccion con el servidor de la partida **/
-socket.on('empezarPartida', function(datos_partida){
-	console.log("Empezar partida");
+socket.on('prepararPartida', function(datos_iniciales){
+	console.log("prepararPartida");
+
+	idPartida = datos_iniciales.idPartida;
+	jugadores = datos_iniciales.jugadores;
+	cartasIniciales = datos_iniciales.cartasIniciales;
+
+	//Animacion de repartir cartas
+	Engine.initCanvas();
+	Engine.initJugadores();
+	Engine.initPosOrganosJugadores();
+	Engine.initPosCartasUsuario();
+
+	ponerJugadores();
+	renderBGCards();
 })
+
+function esperarMovimiento(){
+	setTimeout(function(){ 
+		//checkin
+		movJugador = "algo";
+		if (movJugador == ""){
+			esperarMovimiento();
+		} else {
+			//Robar carta
+			var newDatos_partida = {
+				idPartida: idPartida,
+				jugadores: jugadores,
+				turno: turno,
+				deckOfCards: deckOfCards,
+				movJugador: movJugador
+			};
+			socket.emit('siguienteTurnoSrv', newDatos_partida);
+		}
+	}, 1000);
+}
+
+socket.on('siguienteTurnoCli', function(datos_partida){
+	console.log("siguienteTurnoCli");
+	idPartida = datos_partida.idPartida;
+	jugadores = datos_partida.jugadores;
+	turno = datos_partida.turno;
+	deckOfCards = datos_partida.deckOfCards;
+	movJugador = datos_partida.movJugador;
+	//Representar turno de jugador
+	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
+	//enviado por el servidor)
+
+	if (turno == usuario) {
+		movJugador = "";
+		esperarMovimiento();
+	}
+});
 
 socket.on('terminarPartida', function(){
 	console.log("Terminar Partida");

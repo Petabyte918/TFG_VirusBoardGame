@@ -10,10 +10,11 @@ function playSound(soundResource){
 	}
 }
 
-var cv, cx, objetos, objetoActual= null;
+var cv, cx, objetoActual= null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
 var windowWidth, windowHeight = 0;
+var objetos = [];
 
 function renderBGCards (){
 	var widthCarta = posCartasUsuario[0];
@@ -123,17 +124,6 @@ function nuevaCarta(numCarta){
 	console.log("Nueva carta: "+newCard.toString());
 	cartasUsuario[numCarta] = newCard;
 	objetos[numCarta].src = newCard.picture;
-}
-
-function takeCard(){
-    if (deckOfCards.length != 0){
-    	var drawedCard = deckOfCards.shift();
-    	//console.log(drawedCard.toString());
-    	return drawedCard;
-    } else {
-    	alert("Oh! No quedan cartas en el mazo!");
-        return null;
-    }
 }
 
 function actualizarCanvas(){
@@ -400,50 +390,14 @@ $(document).ready(function(){
 	//Da error en el navegador, pero no para la ejecucion
 	screen.orientation.lock('landscape');
 
-	simularDatosIniciales();
-
 	window.onload = function(){
 		console.log("Window onload");
-		windowWidth = window.innerWidth;
-		windowHeight = window.innerHeight;
-		//console.log("windowWidth: "+windowWidth);
-		//console.log("windowHeight: "+windowHeight);
-		objetos = [];
 
-		//Canvas principal
-		cv = document.getElementById('canvas');
-		cv.width = windowWidth;
-		cv.height = windowHeight;
-		cx = cv.getContext('2d');
-		cx.fillStyle = "rgba(0,0,255,0)";
-		cx.fillRect(0,0,windowWidth,windowHeight);
-
-		//Canvas en background
-		cvBG = document.getElementById('canvasBG');
-		cvBG.width = windowWidth;
-		cvBG.height = windowHeight;
-		cxBG = cvBG.getContext('2d');
-		cxBG.fillStyle = 'MediumSeaGreen';
-		cxBG.fillRect(0,0,windowWidth,windowHeight);
-		
-		Engine.initCanvas();
-		Engine.initJugadores();
-		Engine.initPosOrganosJugadores();
-		Engine.initPosCartasUsuario();
-		Engine.initDeckOfCards();
-
-		ponerJugadores();
-		renderBGCards();
-
-		//Tricky
-		empezarJuego();
-			//Aqui hay un orden de cosas que ocurren estamos ignorando la com. servidor-cliente
-			//pero prefiero mantener separado cosas que hace el servidor con cosas que hace el cliente
-
+/**
 		asignarJugadoresAPosiciones();
 		prepararOrganosJugadoresCli();
 		moveObjects();
-		actualizarCanvas();
+		actualizarCanvas();**/
 
 	}
 })
