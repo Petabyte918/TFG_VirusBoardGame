@@ -81,6 +81,11 @@ Engine = new function () {
 		cxBG = cvBG.getContext('2d');
 		cxBG.fillStyle = 'MediumSeaGreen';
 		cxBG.fillRect(0,0,windowWidth,windowHeight);
+
+		$("#container_botones").css("display", "none");
+		$("#container_form_create").css("display", "none");
+		$("#lista_partidas").css("display", "none");
+		$("#canvas_container").css("display", "inline");
 	}
 	this.initJugadores = function(){
 		//Servidor: Esta funcion debe pedir al servidor los jugadores

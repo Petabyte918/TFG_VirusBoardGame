@@ -24,6 +24,7 @@ function button_create() {
 	$("#container_botones").css("display", "none");
 	$("#container_form_create").css("display", "inline");
 	$("#lista_partidas").css("display", "none");
+	$("#canvas_container").css("display", "none");
 }
 
 function button_lista_partidas() {
@@ -32,6 +33,7 @@ function button_lista_partidas() {
 	$("#container_form_create").css("display", "none");
 	actualizar_partidas();
 	$("#lista_partidas").css("display", "inline");
+	$("#canvas_container").css("display", "none");
 }
 
 function backTo_InitMenu() {
@@ -39,6 +41,7 @@ function backTo_InitMenu() {
 	$("#container_botones").css("display", "inline");
 	$("#container_form_create").css("display", "none");
 	$("#lista_partidas").css("display", "none");
+	$("#canvas_container").css("display", "none");
 }
 /** -------------------- **/
 
@@ -221,14 +224,16 @@ function esperarMovimiento(){
 		//checkin
 		movJugador = "algo";
 		if (movJugador == ""){
+			console.log("Esperando movimiento");
 			esperarMovimiento();
 		} else {
-			//Robar carta
+			console.log("Robamos carta");
+			takeCard();
 			var newDatos_partida = {
 				idPartida: idPartida,
 				jugadores: jugadores,
 				turno: turno,
-				deckOfCards: deckOfCards,
+				deckOfCardsPartida: deckOfCards,
 				movJugador: movJugador
 			};
 			socket.emit('siguienteTurnoSrv', newDatos_partida);
@@ -241,12 +246,13 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
 	turno = datos_partida.turno;
-	deckOfCards = datos_partida.deckOfCards;
+	deckOfCards = datos_partida.deckOfCardsPartida;
 	movJugador = datos_partida.movJugador;
 	//Representar turno de jugador
 	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
 	//enviado por el servidor)
 
+	//console.log("Turno: "+turno+" - "+"Usuario: "+usuario);
 	if (turno == usuario) {
 		movJugador = "";
 		esperarMovimiento();
