@@ -11,6 +11,7 @@ var cartasUsuario = [];
 var posCartasUsuario = [];
 var organosJugadoresCli = [];
 var jugPorPosicion = [];
+var posPorJugador = {};
 
 function aleatorioRGBrange(inferior,superior){
 	var numPosibilidades = superior - inferior;
@@ -73,6 +74,14 @@ Engine = new function () {
 		cx = cv.getContext('2d');
 		cx.fillStyle = "rgba(0,0,255,0)";
 		cx.fillRect(0,0,windowWidth,windowHeight);
+
+		//Canvas del medio
+		cvMID = document.getElementById('canvasMID');
+		cvMID.width = windowWidth;
+		cvMID.height = windowHeight;
+		cxMID = cvMID.getContext('2d');
+		cxMID.fillStyle = "rgba(0,0,255,0)";
+		cxMID.fillRect(0,0,windowWidth,windowHeight);
 
 		//Canvas en background
 		cvBG = document.getElementById('canvasBG');

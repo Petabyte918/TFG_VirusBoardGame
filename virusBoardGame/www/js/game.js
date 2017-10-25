@@ -10,7 +10,8 @@ function playSound(soundResource){
 	}
 }
 
-var cv, cx, objetoActual= null;
+var cv, cx, objetoActual = null;
+var cvMID, cxMID = null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
 var windowWidth, windowHeight = 0;
@@ -90,6 +91,76 @@ function ponerJugadores(){
 	}
 }
 
+function indicarTurno(turno) {
+	var numJugadores = jugadores.length;
+	var index = jugadores.indexOf(turno);
+	var posX, posY, widthJug, heightJug = 0;
+
+	//Tengo el jugador veo que pos ocupa
+	var posJug = posPorJugador[turno].posicion;
+
+	//Limpiamos el canvas
+	cxMID.clearRect(0, 0, windowWidth, windowHeight);
+
+	switch (posJug){
+	//Posicion 1
+	case 1:
+		posX = (windowWidth / 6) * 1;
+		posY = (windowHeight / 3) * 1;
+		widthJug = (windowWidth / 6) * 4;
+		heightJug =  (windowHeight / 3) * 2;
+		break;
+	//Posicion 2
+	case 2:
+		posX = 0;
+		posY = (windowHeight / 3) * 1;
+		widthJug = (windowWidth / 6) * 1;
+		heightJug =  (windowHeight / 3) * 2;
+		break;
+	//Posicion 3
+	case 3:
+		posX = 0;
+		posY = 0;
+		widthJug = (windowWidth / 6) * 2;
+		heightJug =  (windowHeight / 3) * 1;
+		break;
+	//Posicion 4
+	case 4:
+		posX = (windowWidth / 6) * 2;
+		posY = 0;
+		widthJug = (windowWidth / 6) * 2;
+		heightJug =  (windowHeight / 3) * 1;
+		break;
+	//Posicion 5
+	case 5:
+		posX = (windowWidth / 6) * 4;
+		posY = 0;
+		widthJug = (windowWidth / 6) * 2;
+		heightJug =  (windowHeight / 3) * 1;
+		break;
+	//Posicion 6
+	case 6:
+		posX = (windowWidth / 6) * 5;
+		posY = (windowHeight / 3) * 1;
+		widthJug = (windowWidth / 6) * 1;
+		heightJug =  (windowHeight / 3) * 2;
+		break;
+	default:
+		console.log("Error grave representando los turnos de los jugadores");
+	}
+
+	//Creamos un marco para indica el turno de cada jugador
+	var gradient = cxMID.createRadialGradient(90,63,30,90,63,90);
+	gradient.addColorStop(0, '#FFD700');
+	gradient.addColorStop(1, '#DAA520');
+
+	cxMID.fillStyle = gradient;
+	cxMID.fillRect(posX, posY, widthJug, heightJug);
+
+	//Creamos el marco de 20 px de grosor
+	cxMID.clearRect(posX + 5, posY + 5, widthJug - 10, heightJug - 10);
+}
+
 function asignarJugadoresAPosiciones(){
 	var fin = false;
 	var i = 0;
@@ -116,6 +187,15 @@ function asignarJugadoresAPosiciones(){
 			fin = true;
 		}
 
+	}
+}
+
+function asignarPosicionesAJugadores(){
+	for (var i = 0; i < jugPorPosicion.length; i++){
+		posPorJugador[jugPorPosicion[i].jugador] = {
+			jugador: jugPorPosicion[i].jugador,
+			posicion: jugPorPosicion[i].posicion
+		}
 	}
 }
 
@@ -392,13 +472,6 @@ $(document).ready(function(){
 
 	window.onload = function(){
 		console.log("Window onload");
-
-/**
-		asignarJugadoresAPosiciones();
-		prepararOrganosJugadoresCli();
-		moveObjects();
-		actualizarCanvas();**/
-
 	}
 })
 

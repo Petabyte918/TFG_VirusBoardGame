@@ -217,6 +217,14 @@ socket.on('prepararPartida', function(datos_iniciales){
 
 	ponerJugadores();
 	renderBGCards();
+
+	//Crea dos arrays para poder buscar informacion comodamente.
+	asignarJugadoresAPosiciones();
+	asignarPosicionesAJugadores();
+
+	/**prepararOrganosJugadoresCli();
+	moveObjects();
+	actualizarCanvas();**/
 })
 
 function esperarMovimiento(){
@@ -248,7 +256,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	turno = datos_partida.turno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 	movJugador = datos_partida.movJugador;
-	//Representar turno de jugador
+	indicarTurno(turno);
 	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
 	//enviado por el servidor)
 
