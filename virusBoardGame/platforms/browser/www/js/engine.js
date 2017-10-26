@@ -1,17 +1,19 @@
 
+//Informacion que se intercambia con el servidor o se pide
 var usuario = "";
 var idPartida = "";
 var jugadores = [];
 var deckOfCards = [];
 var movJugador = "";
 
-var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa usaremos
-var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
-var cartasUsuario = [];
-var posCartasUsuario = [];
-var organosJugadoresCli = [];
-var jugPorPosicion = [];
-var posPorJugador = {};
+//Informacion exclusiva de cada cliente
+var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
+var posOrganosJugadores = []; //Informacion para dibujar los organos de los jugadores
+var cartasUsuario = []; //Cartas que tiene en la mano cada jugador
+var posCartasUsuario = []; //Informacion para dibujar las cartas de la mano
+var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
+var jugPorPosicion = []; //Dada una posicion te devuelve un jugador
+var posPorJugador = {}; //Dado un jugador te devuelve una posicion
 
 function aleatorioRGBrange(inferior,superior){
 	var numPosibilidades = superior - inferior;
@@ -38,15 +40,18 @@ function shuffle(array) {
   return array;
 }
 
+//
 function prepararOrganosJugadoresCli(){
 	for (var i = 0; i < jugadores.length; i++){
-		organosJugadoresCli.push({
+		//Estados: vacio, normal, enfermo, vacunado
+		organosJugadoresCli[jugadores[i]] = {
 			jugador: jugadores[i],
 			cerebro: "",
 			corazon: "",
 			higado: "",
-			hueso: ""
-		})
+			hueso: "",
+			organoComodin: ""
+		};
 	}
 }
 

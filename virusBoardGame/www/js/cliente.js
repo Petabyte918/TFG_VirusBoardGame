@@ -16,7 +16,8 @@ socket.on('Connection OK', function (data) {
 
 /** Los tres botones iniciales y el boton volver a inicio**/
 function button_play() {
-	
+	//Esta funcion te debe meter en la partida al azar que menos jugadores le falten
+	//o en una partida sin mas cualquiera
 }
 
 function button_create() {
@@ -207,7 +208,9 @@ socket.on('prepararPartida', function(datos_iniciales){
 
 	idPartida = datos_iniciales.idPartida;
 	jugadores = datos_iniciales.jugadores;
-	cartasIniciales = datos_iniciales.cartasIniciales;
+	cartasUsuario.push(datos_iniciales.carta1);
+	cartasUsuario.push(datos_iniciales.carta2);
+	cartasUsuario.push(datos_iniciales.carta3);
 
 	//Animacion de repartir cartas
 	Engine.initCanvas();
@@ -222,15 +225,14 @@ socket.on('prepararPartida', function(datos_iniciales){
 	asignarJugadoresAPosiciones();
 	asignarPosicionesAJugadores();
 
-	/**prepararOrganosJugadoresCli();
+	prepararOrganosJugadoresCli();
 	moveObjects();
-	actualizarCanvas();**/
+	actualizarCanvas();
 })
 
 function esperarMovimiento(){
 	setTimeout(function(){ 
 		//checkin
-		movJugador = "algo";
 		if (movJugador == ""){
 			console.log("Esperando movimiento");
 			esperarMovimiento();
