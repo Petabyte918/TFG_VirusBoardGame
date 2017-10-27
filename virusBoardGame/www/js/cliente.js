@@ -218,7 +218,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initPosOrganosJugadores();
 	Engine.initPosCartasUsuario();
 
-	ponerJugadores();
+	actualizarCanvasMID();
 	renderBGCards();
 
 	//Crea dos arrays para poder buscar informacion comodamente.
@@ -227,7 +227,9 @@ socket.on('prepararPartida', function(datos_iniciales){
 
 	prepararOrganosJugadoresCli();
 	moveObjects();
+
 	actualizarCanvas();
+	actualizarCanvasMID();
 })
 
 function esperarMovimiento(){

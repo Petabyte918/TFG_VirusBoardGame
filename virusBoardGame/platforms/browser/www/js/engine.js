@@ -4,7 +4,7 @@ var usuario = "";
 var idPartida = "";
 var jugadores = [];
 var deckOfCards = [];
-var movJugador = "";
+var movJugador = ""; //JugadorOrigen - JugDestino - Carta
 
 //Informacion exclusiva de cada cliente
 var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
@@ -43,7 +43,7 @@ function shuffle(array) {
 //
 function prepararOrganosJugadoresCli(){
 	for (var i = 0; i < jugadores.length; i++){
-		//Estados: vacio, normal, enfermo, vacunado
+		//Estados: vacio, normal, enfermo, vacunado, inmunizado
 		organosJugadoresCli[jugadores[i]] = {
 			jugador: jugadores[i],
 			cerebro: "",

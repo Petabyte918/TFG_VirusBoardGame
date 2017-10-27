@@ -8,7 +8,8 @@ var movJugador = ""; //JugadorOrigen - JugDestino - Carta
 
 //Informacion exclusiva de cada cliente
 var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
-var posOrganosJugadores = []; //Informacion para dibujar los organos de los jugadores
+							//Busco pasandole la posicion del jugador
+var posOrganosJugadores = {}; //Informacion para dibujar los organos de los jugadores
 var cartasUsuario = []; //Cartas que tiene en la mano cada jugador
 var posCartasUsuario = []; //Informacion para dibujar las cartas de la mano
 var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
@@ -42,15 +43,18 @@ function shuffle(array) {
 
 //
 function prepararOrganosJugadoresCli(){
+	var posicion = null;
 	for (var i = 0; i < jugadores.length; i++){
 		//Estados: vacio, normal, enfermo, vacunado, inmunizado
+		posicion = posPorJugador[jugadores[i]];
 		organosJugadoresCli[jugadores[i]] = {
 			jugador: jugadores[i],
+			posicion: posicion,
 			cerebro: "",
 			corazon: "",
 			higado: "",
 			hueso: "",
-			organoComodin: ""
+			//organoComodin: ""
 		};
 	}
 }
@@ -145,8 +149,14 @@ Engine = new function () {
 		posCorazon = [(windowWidth / 6) * 3 - widthOrgano * 1 - widthOrgano * 0.25, windowHeight - heightOrgano - 20];
 		posHueso = [(windowWidth / 6) * 3 + widthOrgano * 0.25, windowHeight - heightOrgano - 20];
 		posHigado = [(windowWidth / 6) * 3 + widthOrgano * 1 + widthOrgano * 0.75, windowHeight - heightOrgano - 20];
-		var posOrganosJug1 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug1);
+		posOrganosJugadores[1] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado
+		};
 
 		//POSICION 2
 		widthDisponible = windowWidth / 3;
@@ -160,8 +170,14 @@ Engine = new function () {
 		posCorazon = [20, windowHeight / 2 - heightOrgano * 1 - heightOrgano * 0.25];
 		posHueso = [20, windowHeight / 2 + heightOrgano * 0.25];
 		posHigado = [20, windowHeight / 2 + heightOrgano * 1 + heightOrgano * 0.75];
-		var posOrganosJug2 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug2);
+		posOrganosJugadores[2] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado
+		};
 
 		//POSICION 3
 		widthDisponible = windowWidth / 3;
@@ -174,8 +190,14 @@ Engine = new function () {
 		posCorazon = [(windowWidth / 6) * 1 - widthOrgano * 1 - widthOrgano * 0.25, 20];
 		posHueso = [(windowWidth / 6) * 1 + widthOrgano * 0.25, 20];
 		posHigado = [(windowWidth / 6) * 1 + widthOrgano * 1 + widthOrgano * 0.75, 20];
-		var posOrganosJug3 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug3);		
+		posOrganosJugadores[3] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado
+		};		
 
 		//POSICION 4
 		widthDisponible = windowWidth / 3;
@@ -188,8 +210,14 @@ Engine = new function () {
 		posCorazon = [(windowWidth / 6) * 3 - widthOrgano * 1 - widthOrgano * 0.25, 20];
 		posHueso = [(windowWidth / 6) * 3 + widthOrgano * 0.25, 20];
 		posHigado = [(windowWidth / 6) * 3 + widthOrgano * 1 + widthOrgano * 0.75, 20];
-		var posOrganosJug4 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug4);
+		posOrganosJugadores[4] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado
+		};
 
 		//POSICION 5
 		widthDisponible = windowWidth / 3;
@@ -202,8 +230,14 @@ Engine = new function () {
 		posCorazon = [(windowWidth / 6) * 5 - widthOrgano * 1 - widthOrgano * 0.25, 20];
 		posHueso = [(windowWidth / 6) * 5 + widthOrgano * 0.25, 20];
 		posHigado = [(windowWidth / 6) * 5 + widthOrgano * 1 + widthOrgano * 0.75, 20];
-		var posOrganosJug5 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug5);	
+		posOrganosJugadores[5] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado
+		};	
 
 		//POSICION 6
 		widthDisponible = windowWidth / 3;
@@ -217,8 +251,14 @@ Engine = new function () {
 		posCorazon = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 1 - heightOrgano * 0.25];
 		posHueso = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 0.25];
 		posHigado = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 1 + heightOrgano * 0.75];
-		var posOrganosJug6 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug6);
+		posOrganosJugadores[6] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado
+		};
 	}
 	this.initPosCartasUsuario = function(){
 		var widthDisponible, heightDisponible = 0;

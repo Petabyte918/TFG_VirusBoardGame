@@ -97,3 +97,61 @@ if (cardType == "organo") {
 		} else {
 			alert("Movimiento no valido");
 		}
+
+/**function renderCard() {
+	var img = new Image();
+	img.src = ""
+}
+(cardType.organo, 'pulmon', 'img/cardImages/organoHueso.png')**/
+
+function renderOrgano (widthOrgano, heightOrgano, posOrgano, src, estado){
+	//var x, y, r = 0;
+	//var x = posOrgano[0] + widthOrgano / 2;
+	//var y = posOrgano[1] + heightOrgano / 2;
+	//var r = widthOrgano / 2;
+	//Estados: vacio, normal, enfermo, vacunado
+	if (estado == "vacio"){
+		cxBG.fillStyle = 'white';
+		cxBG.fillRect(posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
+	}
+
+	if(estado == "normal"){
+		var img1 = new Image();
+		img1.src = objetos[0].src;
+		img1.onload = function(){
+			//console.log("objetos[0] :"+objetos[0]);
+			cxBG.drawImage(img1, posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
+		}
+	}
+	/** SERAN CIRCULOS
+		cx.strokeStyle = "red";
+		cx.fillStyle = "blue";
+		cx.lineWidth = 5;
+		cx.arc(x, y, r, 0, 2 * Math.PI);
+		cx.fill();
+		cx.stroke();
+	}
+	**/
+}
+
+function ponerJugadores(){
+	//Queremos que todos los usuarios esten ubicados en cada dispositivo de la misma forma
+	//Empezamos por el jugador propio y vamos colocando en sentido horario hasta completar el bucle
+	var widthOrgano = "";
+	var heightOrgano = "";
+	var posOrgano1, posOrgano2, posOrgano3, posOrgano4 = null;
+	for (var i = 0; i < posOrganosJugadores.length; i++){
+		//console.log("JUGADOR "+i+1);
+		widthOrgano = posOrganosJugadores[i][0];
+		heightOrgano = posOrganosJugadores[i][1];
+		for (var u = 2; u < 6; u++){
+			posOrgano = posOrganosJugadores[i][u];
+			//console.log("widthCarta: "+widthCarta);
+			//console.log("heightCarta: "+heightCarta);
+			//console.log("posCarta1: "+posCarta1);
+			//console.log("posCarta2: "+posCarta2);
+			//console.log("posCarta3: "+posCarta3);
+			renderOrgano(widthOrgano, heightOrgano, posOrgano, "", "vacio");
+		}
+	}
+}

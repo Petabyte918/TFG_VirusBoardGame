@@ -233,7 +233,6 @@ socket.on('prepararPartida', function(datos_iniciales){
 function esperarMovimiento(){
 	setTimeout(function(){ 
 		//checkin
-		movJugador = "algo";
 		if (movJugador == ""){
 			console.log("Esperando movimiento");
 			esperarMovimiento();

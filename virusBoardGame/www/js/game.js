@@ -33,64 +33,6 @@ function renderBGCards (){
 	}
 }
 
-/**function renderCard() {
-	var img = new Image();
-	img.src = ""
-}
-(cardType.organo, 'pulmon', 'img/cardImages/organoHueso.png')**/
-
-function renderOrgano (widthOrgano, heightOrgano, posOrgano, src, estado){
-	//var x, y, r = 0;
-	//var x = posOrgano[0] + widthOrgano / 2;
-	//var y = posOrgano[1] + heightOrgano / 2;
-	//var r = widthOrgano / 2;
-	//Estados: vacio, normal, enfermo, vacunado
-	if (estado == "vacio"){
-		cxBG.fillStyle = 'white';
-		cxBG.fillRect(posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
-	}
-
-	if(estado == "normal"){
-		var img1 = new Image();
-		img1.src = objetos[0].src;
-		img1.onload = function(){
-			//console.log("objetos[0] :"+objetos[0]);
-			cxBG.drawImage(img1, posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
-		}
-	}
-	/** SERAN CIRCULOS
-		cx.strokeStyle = "red";
-		cx.fillStyle = "blue";
-		cx.lineWidth = 5;
-		cx.arc(x, y, r, 0, 2 * Math.PI);
-		cx.fill();
-		cx.stroke();
-	}
-	**/
-}
-
-function ponerJugadores(){
-	//Queremos que todos los usuarios esten ubicados en cada dispositivo de la misma forma
-	//Empezamos por el jugador propio y vamos colocando en sentido horario hasta completar el bucle
-	var widthOrgano = "";
-	var heightOrgano = "";
-	var posOrgano1, posOrgano2, posOrgano3, posOrgano4 = null;
-	for (var i = 0; i < posOrganosJugadores.length; i++){
-		//console.log("JUGADOR "+i+1);
-		widthOrgano = posOrganosJugadores[i][0];
-		heightOrgano = posOrganosJugadores[i][1];
-		for (var u = 2; u < 6; u++){
-			posOrgano = posOrganosJugadores[i][u];
-			//console.log("widthCarta: "+widthCarta);
-			//console.log("heightCarta: "+heightCarta);
-			//console.log("posCarta1: "+posCarta1);
-			//console.log("posCarta2: "+posCarta2);
-			//console.log("posCarta3: "+posCarta3);
-			renderOrgano(widthOrgano, heightOrgano, posOrgano, "", "vacio");
-		}
-	}
-}
-
 function indicarTurno(turno) {
 	var numJugadores = jugadores.length;
 	var index = jugadores.indexOf(turno);
@@ -159,6 +101,8 @@ function indicarTurno(turno) {
 
 	//Creamos el marco de 20 px de grosor
 	cxMID.clearRect(posX + 5, posY + 5, widthJug - 10, heightJug - 10);
+
+	actualizarCanvasMID();
 }
 
 function asignarJugadoresAPosiciones(){
@@ -201,9 +145,68 @@ function asignarPosicionesAJugadores(){
 
 function nuevaCarta(numCarta){
 	var newCard = takeCard();
-	console.log("Nueva carta: "+newCard.toString());
+	//console.log("Nueva carta: "+newCard.toString());
 	cartasUsuario[numCarta] = newCard;
 	objetos[numCarta].src = newCard.picture;
+}
+
+//En el canvas mid estan los turnos y los organos de los jugadores
+function actualizarCanvasMID(){
+	var widthOrgano, heightOrgano = null;
+	var posOrgano = null;
+
+	//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
+	for (var jugador in organosJugadoresCli) {
+		var pos = organosJugadoresCli[jugador].posicion;
+
+		//posOrganosJug = {widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado};
+		for (var elem in organosJugadoresCli[pos]) {
+			if (elem == "widthOrgano") {
+				widthOrgano = posOrganosJugadores[pos].widthOrgano;
+				continue;
+			}
+			if (elem == "heightOrgano") {
+				heightOrgano = posOrganosJugadores[pos].heightOrgano;
+				continue;
+			}
+
+			posOrgano = organosJugadoresCli[pos][elem];
+			switch (organosJugadoresCli[pos][elem]) {
+			case "":
+				console.log("Organo vacio");
+				break;
+			case "normal":
+				console.log("Organo normal");
+				break;
+			case "enfermo":
+				console.log("Organo enfermo");
+				break;
+			case "vacunado":
+				console.log("Organo vacunado");
+				break;
+			case "inmunizado":
+				console.log("Organo inmunizado");
+				break;
+			default:
+				console.log("Fallo en actualizarCanvasMID cerebro");
+				break;
+			}
+		}
+
+
+/**
+				cxBG.fillStyle = 'white';
+			cxBG.fillRect(posOrgano[0], posOrgano[1], widthOrgano, heightOrgano);
+		
+		organosJugadoresCli[jugadores[i]] = {
+			jugador: jugadores[i],
+			cerebro: "",
+			corazon: "",
+			higado: "",
+			hueso: "",
+			organoComodin: ""
+		};**/
+	}
 }
 
 function actualizarCanvas(){
@@ -304,6 +307,7 @@ function moveObjects(){
 		console.log("Onmouseup");
 		if (objetoActual != null){
 			checkCollision();
+			objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
 			actualizarCanvas();
 		}
 		//	2Eliminar o no objeto
@@ -384,6 +388,7 @@ function checkCollision(){
 
 function manejadorMov(posDestino, numCarta){
 
+
 	var jugDestino = jugPorPosicion[posDestino];
 
 	var cardType = cartasUsuario[numCarta].cardType;
@@ -392,8 +397,17 @@ function manejadorMov(posDestino, numCarta){
 	//Descarte
 	if (posDestino == 0) {
 		//En realidad puedes descartar cualquier numero de cartas en una jugada->Por implementar
-		console.log("Carta descartada");
+		console.log("Carta descartada - Movimiento valido");
 		movValido = true;
+		nuevaCarta(numCarta);
+		//movJugador = "algo";
+		//Si es un descarte no seguimos evaluando nada mas!!
+		return;
+	}
+
+	if (organosJugadoresCli[jugDestino] == undefined){
+		//El jugador no esta presente sin más
+		return;
 	}
 
 	if (cardType == "organo") {
@@ -531,17 +545,17 @@ function manejadorMov(posDestino, numCarta){
 		case "cerebro":
 			if (organosJugadoresCli[jugDestino].cerebro == "enfermo"){
 				organosJugadoresCli[jugDestino].cerebro = "";
-
+				movValido = true;
 				break;
 			}
 			if (organosJugadoresCli[jugDestino].cerebro == "normal"){
 				organosJugadoresCli[jugDestino].cerebro = "enfermo";
-
+				movValido = true;
 				break;
 			}
 			if (organosJugadoresCli[jugDestino].cerebro == "vacunado"){
 				organosJugadoresCli[jugDestino].cerebro = "normal";
-
+				movValido = true;
 				break;
 			}
 			alert("Movimiento no valido");
@@ -646,13 +660,11 @@ function manejadorMov(posDestino, numCarta){
 	if (movValido) {
 		console.log("Movimiento valido");
 		nuevaCarta(numCarta);
-		actualizarCanvas();	
+		movValido = "algo";
 	} else {
 		alert("Movimiento no valido");
-		actualizarCanvas();	
 	}
-		
-
+	
 }
 
 $(document).ready(function(){
