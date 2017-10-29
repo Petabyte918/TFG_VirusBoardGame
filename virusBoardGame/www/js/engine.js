@@ -46,7 +46,7 @@ function prepararOrganosJugadoresCli(){
 	var posicion = null;
 	for (var i = 0; i < jugadores.length; i++){
 		//Estados: vacio, normal, enfermo, vacunado, inmunizado
-		posicion = posPorJugador[jugadores[i]];
+		posicion = posPorJugador[jugadores[i]].posicion;
 		organosJugadoresCli[jugadores[i]] = {
 			jugador: jugadores[i],
 			posicion: posicion,
@@ -54,7 +54,7 @@ function prepararOrganosJugadoresCli(){
 			corazon: "",
 			higado: "",
 			hueso: "",
-			//organoComodin: ""
+			organoComodin: ""
 		};
 	}
 }
@@ -76,7 +76,7 @@ Engine = new function () {
 		windowWidth = window.innerWidth;
 		windowHeight = window.innerHeight;
 
-		//Canvas principal
+		//Canvas principal - cosas que se mueven (se borra continuamente)
 		cv = document.getElementById('canvas');
 		cv.width = windowWidth;
 		cv.height = windowHeight;
@@ -84,7 +84,7 @@ Engine = new function () {
 		cx.fillStyle = "rgba(0,0,255,0)";
 		cx.fillRect(0,0,windowWidth,windowHeight);
 
-		//Canvas del medio
+		//Canvas del medio - turnos y estado tablero (se borra a veces)
 		cvMID = document.getElementById('canvasMID');
 		cvMID.width = windowWidth;
 		cvMID.height = windowHeight;
@@ -92,7 +92,7 @@ Engine = new function () {
 		cxMID.fillStyle = "rgba(0,0,255,0)";
 		cxMID.fillRect(0,0,windowWidth,windowHeight);
 
-		//Canvas en background
+		//Canvas en background - fondo y cosas permanentes (no se borra nunca o casi nunca)
 		cvBG = document.getElementById('canvasBG');
 		cvBG.width = windowWidth;
 		cvBG.height = windowHeight;

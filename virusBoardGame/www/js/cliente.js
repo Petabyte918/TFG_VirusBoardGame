@@ -8,7 +8,7 @@ var enPartidaEsperando = false;
 //Local
 var socket = io.connect('localhost:8080');
 socket.on('Connection OK', function (data) {
-   	console.log("Cliente conectado. Player_id: "+data.player_id);
+   	//console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
 });
 /** -------------------- **/
@@ -21,7 +21,7 @@ function button_play() {
 }
 
 function button_create() {
-	console.log("button_create()");
+	//console.log("button_create()");
 	$("#container_botones").css("display", "none");
 	$("#container_form_create").css("display", "inline");
 	$("#lista_partidas").css("display", "none");
@@ -29,7 +29,7 @@ function button_create() {
 }
 
 function button_lista_partidas() {
-	console.log("button_lista_partidas()");
+	//console.log("button_lista_partidas()");
 	$("#container_botones").css("display", "none");
 	$("#container_form_create").css("display", "none");
 	actualizar_partidas();
@@ -38,7 +38,7 @@ function button_lista_partidas() {
 }
 
 function backTo_InitMenu() {
-	console.log("backTo_InitMenu()");
+	//console.log("backTo_InitMenu()");
 	$("#container_botones").css("display", "inline");
 	$("#container_form_create").css("display", "none");
 	$("#lista_partidas").css("display", "none");
@@ -48,11 +48,11 @@ function backTo_InitMenu() {
 
 /** Interaccion con el servidor de los tres botones iniciales **/
 function form_createGame() {
-	console.log("form_createGame()");
+	//console.log("form_createGame()");
 	var gameName = document.form_create_game.gameName.value;
 	var gameNumPlayers = document.form_create_game.gameNumPlayers.value;
-	console.log("gameName: "+gameName);
-	console.log("gameNumPlayers: "+gameNumPlayers);
+	//console.log("gameName: "+gameName);
+	//console.log("gameNumPlayers: "+gameNumPlayers);
 	 if (gameName == "") {
 	 	gameName = "Juego de: "+usuario.substr(0,6);
 	 }
@@ -64,31 +64,31 @@ function form_createGame() {
 }
 
 socket.on('create_game-OK', function(data){
-	console.log("Recibido: create_game-OK");
+	//console.log("Recibido: create_game-OK");
 	idPartidaEsperando = data.idPartida;
 	enPartidaEsperando = true;
 	button_lista_partidas();
 })
 
 socket.on('create_game-KO', function(){
-	console.log("Recibido: create game-KO");
+	//console.log("Recibido: create game-KO");
 	alert("Ya has creado o ya estas dentro de alguna partida");
 	button_lista_partidas();
 })
 
 function actualizar_partidas(){
-	console.log("function actualizar_partidas()");
+	//console.log("function actualizar_partidas()");
 	socket.emit('actualizar_partidas');
 }
 
 socket.on('actualizar_partidas', function(data){
-	console.log("Recibido: actualizar_partidas");
+	//console.log("Recibido: actualizar_partidas");
 	lista_partidas = data;
 	actualizar_listaPartidas();
 })
 
 function actualizar_listaPartidas() {
-	console.log("function actualizar_listaPartidas()");
+	//console.log("function actualizar_listaPartidas()");
 	//Eliminamos primero los eventos asociados a los nodos hijos pues remove/empty no lo hace
 	//y en un mal escenario puedes tener millones de eventos disparandose cada vez
 	/** Hasta los huevos. Dia perdido. Retomar esta mierda algun dia
@@ -144,7 +144,7 @@ function actualizar_listaPartidas() {
 }			
 
 function joinPartida(idPartida) {
-	console.log("joinPartida()");
+	//console.log("joinPartida()");
 	//No estamos en ninguna partida
 	var enPartida = false;
 	for (var id in lista_partidas) {
@@ -160,13 +160,13 @@ function joinPartida(idPartida) {
 	} else {
 		socket.emit('join_game', {idPartida: idPartida});
 		socket.on('join_game-OK', function() {
-			console.log("join_game-OK");
+			//console.log("join_game-OK");
 			idPartidaEsperando = idPartida;
 			enPartidaEsperando = true;
 			button_lista_partidas();
 		});
 		socket.on('join_game-KO', function(){
-			console.log("join_game-KO");
+			//console.log("join_game-KO");
 			alert("Servidor alerta que no ha sido posible unirse a la partida. Intentalo de nuevo");
 			button_lista_partidas();
 		});
@@ -174,7 +174,7 @@ function joinPartida(idPartida) {
 }
 
 function leavePartida(idPartida) {
-	console.log("leavePartida()");
+	//console.log("leavePartida()");
 	var enPartida = false;
 	//Estamos en la partida que queremos abandonar
 	for (var i = 0; i < lista_partidas[idPartida].gamePlayers.length; i++) {
@@ -191,7 +191,7 @@ function leavePartida(idPartida) {
 			button_lista_partidas();
 		});
 		socket.on('leave_game-KO', function(){
-			console.log("leave_game-KO");
+			//console.log("leave_game-KO");
 			alert("Servidor alerta que no ha sido posible abandonar a la partida. Intentalo de nuevo");
 			button_lista_partidas();
 		});
@@ -218,7 +218,6 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initPosOrganosJugadores();
 	Engine.initPosCartasUsuario();
 
-	actualizarCanvasMID();
 	renderBGCards();
 
 	//Crea dos arrays para poder buscar informacion comodamente.
@@ -239,18 +238,71 @@ function esperarMovimiento(){
 			console.log("Esperando movimiento");
 			esperarMovimiento();
 		} else {
-			console.log("Robamos carta");
-			takeCard();
-			var newDatos_partida = {
-				idPartida: idPartida,
-				jugadores: jugadores,
-				turno: turno,
-				deckOfCardsPartida: deckOfCards,
-				movJugador: movJugador
-			};
-			socket.emit('siguienteTurnoSrv', newDatos_partida);
+			//Comprobamos si hay ganador
+			var ganador = checkPartidaTerminada();
+			if (ganador != ""){
+				console.log("Hemos ganado");
+				var data = {
+					idPartida: idPartida
+				}
+				socket.emit('terminarPartida', data);
+			} else {
+				//Si no hay ganador seguimos con el juego
+				console.log("Robamos carta");
+				takeCard();
+				var newDatos_partida = {
+					idPartida: idPartida,
+					jugadores: jugadores,
+					turno: turno,
+					deckOfCardsPartida: deckOfCards,
+					movJugador: movJugador
+				};
+				socket.emit('siguienteTurnoSrv', newDatos_partida);
+			}
 		}
 	}, 1000);
+}
+
+function checkPartidaTerminada(){
+	var totalOrganosCompletos;
+	for (var jugador in organosJugadoresCli) {
+		totalOrganosCompletos = 0;
+		if ((organosJugadoresCli[jugador].cerebro == "normal") ||
+			(organosJugadoresCli[jugador].cerebro == "vacunado") ||
+			(organosJugadoresCli[jugador].cerebro == "inmunizado")) {
+
+			totalOrganosCompletos++;
+		}
+		if ((organosJugadoresCli[jugador].corazon == "normal") ||
+			(organosJugadoresCli[jugador].corazon == "vacunado") ||
+			(organosJugadoresCli[jugador].corazon == "inmunizado")) {
+			
+			totalOrganosCompletos++;
+		}
+		if ((organosJugadoresCli[jugador].hueso == "normal") ||
+			(organosJugadoresCli[jugador].hueso == "vacunado") ||
+			(organosJugadoresCli[jugador].hueso == "inmunizado")) {
+			
+			totalOrganosCompletos++;
+		}
+		if ((organosJugadoresCli[jugador].higado == "normal") ||
+			(organosJugadoresCli[jugador].higado == "vacunado") ||
+			(organosJugadoresCli[jugador].higado == "inmunizado")) {
+			
+			totalOrganosCompletos++;
+		}
+		if ((organosJugadoresCli[jugador].comodin == "normal") ||
+			(organosJugadoresCli[jugador].comodin == "vacunado") ||
+			(organosJugadoresCli[jugador].comodin == "inmunizado")) {
+			
+			totalOrganosCompletos++;
+		}
+
+		if (totalOrganosCompletos >= 4){
+			return jugador;
+		}
+	}
+	return "";
 }
 
 socket.on('siguienteTurnoCli', function(datos_partida){
@@ -271,8 +323,9 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 });
 
-socket.on('terminarPartida', function(){
+socket.on('terminarPartida', function(data){
 	console.log("Terminar Partida");
+	console.log("Ganador: "+data.ganador);
 	button_lista_partidas();
 })
 /** -------------------- **/
