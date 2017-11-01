@@ -24,6 +24,7 @@ function renderBGCards (){
 	var posCarta2 = posCartasUsuario[3];
 	var posCarta3 = posCartasUsuario[4];
 
+	//"Containers" de las diferentes cartas de usuario
 	var img = new Image();
 	img.src = "img/cardImages/reversoCarta.jpg";
 	img.onload = function(){
@@ -31,6 +32,118 @@ function renderBGCards (){
 		cxBG.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
 		cxBG.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
 	}
+
+	//Imagenes de lso diferentes cubos de basura de la zona de descartes
+	var widthCubo = posCubosDescarte.widthCubo;
+	var heightCubo = posCubosDescarte.heightCubo;
+
+	var cubo1 = posCubosDescarte[1];
+	var img1 = new Image();
+	img1.src = "img/descartesImages/cuboAmarillo.png";
+	img1.onload = function(){
+		cxBG.drawImage(img1, cubo1.x, cubo1.y, widthCubo, heightCubo);
+	}
+	var cubo2 = posCubosDescarte[2];
+	var img2 = new Image();
+	img2.src = "img/descartesImages/cuboRojo.png"
+	img2.onload = function(){
+		cxBG.drawImage(img2, cubo2.x, cubo2.y, widthCubo, heightCubo);
+	}
+	var cubo3 = posCubosDescarte[3];
+	var img3 = new Image();
+	img3.src = "img/descartesImages/cuboAzul.png";
+	img3.onload = function(){
+		cxBG.drawImage(img3, cubo3.x, cubo3.y, widthCubo, heightCubo);
+	}
+	var cubo4 = posCubosDescarte[4];	
+	var img4 = new Image();
+	img4.src = "img/descartesImages/cuboVerde.png";
+	img4.onload = function(){
+		cxBG.drawImage(img4, cubo4.x, cubo4.y, widthCubo, heightCubo);
+	}
+
+	cxBG.font = "bold 30px Arial";
+	cxBG.fillText("Zona de descartes", ((windowHeight / 6) * 2), ((windowHeight / 2)));
+}
+
+function degToRad(degree) {
+		var factor = Math.PI / 180 ;
+		return degree * factor;
+}
+
+function renderCountDown(time, oldDate){
+	var radius = 30;
+	var xCountDown = posCubosDescarte[1].x -radius;
+	var yCountDown = posCubosDescarte[1].y + radius*6;
+
+	//Cada vez que cambiemos el tiempo del cronometro hay que ajustar el valor
+	//multiplicando el tiempo por (60/valorcronometro)
+	var ajuste = 2;
+
+	var now = new Date();
+	var newMilliseconds = now.getTime();
+	var oldMilliseconds = oldDate.getTime();
+
+	var timeLapse = newMilliseconds - oldMilliseconds;
+
+	time = time - (timeLapse / 1000);
+
+	var seconds = Math.floor(time);
+	if (seconds < 0){
+		seconds = 0;
+	}
+
+
+	//Limpiamos canvas + (pxLinea + pxDifuminado)*2
+	cxMID.clearRect(xCountDown-10-radius, yCountDown-10-radius, radius*2+20, radius*2+20);
+
+	//Fondo
+	cxMID.beginPath();
+	cxMID.strokeStyle = '#09303a';
+	cxMID.lineWidth = 10;
+	cxMID.lineCap = 'black';
+	cxMID.shadowBlur = 0;
+	cxMID.shadowColor = '#09303a';
+
+	gradient = cxMID.createRadialGradient(250, 250, 5, 250, 250, 300);
+	gradient.addColorStop(0, '#09303a');
+	gradient.addColorStop(1, 'black');
+	cxMID.fillStyle = gradient;
+	cxMID.arc(xCountDown,yCountDown,radius, 0, degToRad(360),false);
+	cxMID.fill();
+	cxMID.stroke();
+
+	//Arco
+	cxMID.beginPath();
+	cxMID.strokeStyle = '#28d1fa';
+	cxMID.lineWidth = 10;
+	cxMID.lineCap = 'round';
+	cxMID.shadowBlur = 2;
+	cxMID.shadowColor = '#28d1fa';
+
+	cxMID.arc(xCountDown,yCountDown,radius, degToRad(270), degToRad(((time*6)*ajuste)-90),false);
+	cxMID.stroke();
+
+	//CountDown
+	cxMID.beginPath();
+	cxMID.font = "20px Arial Bold";
+	cxMID.fillStyle = '#28d1fa';
+	if (seconds < 10){
+		cxMID.fillText(seconds, xCountDown - 5, yCountDown + 8);
+	} else {
+		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8);
+	}
+
+	setTimeout(function(){ 
+		//checkin
+		if ((movJugador == "") && (time>0)){
+			renderCountDown(time, now);
+		} else {
+			if (time <= 0){
+				movJugador = "tiempo_agotado";
+			}
+		}
+	}, 100);
 }
 
 function indicarTurno(turno) {
@@ -116,10 +229,10 @@ function asignarJugadoresAPosiciones(){
 		}
 
 		if (contPos != null){
-			jugPorPosicion.push({
+			jugPorPosicion[posJugadores[contPos]]= {
 				jugador: jugadores[i],
 				posicion: posJugadores[contPos]
-			})
+			};
 			//console.log("jugPorPosicion :"+jugPorPosicion[contPos].jugador+", "+jugPorPosicion[contPos].posicion);
 			contPos++;
 		}
@@ -136,10 +249,10 @@ function asignarJugadoresAPosiciones(){
 }
 
 function asignarPosicionesAJugadores(){
-	for (var i = 0; i < jugPorPosicion.length; i++){
-		posPorJugador[jugPorPosicion[i].jugador] = {
-			jugador: jugPorPosicion[i].jugador,
-			posicion: jugPorPosicion[i].posicion
+	for (var pos in jugPorPosicion){
+		posPorJugador[jugPorPosicion[pos].jugador] = {
+			jugador: jugPorPosicion[pos].jugador,
+			posicion: jugPorPosicion[pos].posicion
 		}
 	}
 }
@@ -190,22 +303,24 @@ function actualizarCanvasMID(){
 					posOrgano.src = 'img/orgaImages/organoCorazonSF.png';
 					break;
 				case "higado":
-				posOrgano.tipo = "higado";
+					posOrgano.tipo = "higado";
 					posOrgano.x = posOrganosJugadores[pos].posHigado[0];
 					posOrgano.y = posOrganosJugadores[pos].posHigado[1];
 					posOrgano.src = 'img/orgaImages/organoHigadoSF.png';					
 					break;
 				case "hueso":
-				posOrgano.tipo = "hueso";
+					posOrgano.tipo = "hueso";
 					posOrgano.x = posOrganosJugadores[pos].posHueso[0];
 					posOrgano.y = posOrganosJugadores[pos].posHueso[1];
 					posOrgano.src = 'img/orgaImages/organoHuesoSF.png';					
 					break;
-				case "comodin":
-				posOrgano.tipo = "comodin";
+				case "organoComodin":
+				/** Aun no trabajamps con el comodn y no esta pensado donde dibujarse
+					posOrgano.tipo = "organoComodin";
 					posOrgano.x = posOrganosJugadores[pos].posComodin[0];
 					posOrgano.y = posOrganosJugadores[pos].posComodin[1];
 					posOrgano.src = 'img/orgaImages/organoComodinSF.png';
+					**/
 					break;
 				default:
 					console.log("Fallo en actualizarCanvasMID switch elem-opcion extraña ha aparecido");
@@ -230,33 +345,73 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	var src = posOrgano.src;
 
 	//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
+	//Marco negro en fondo blanco
 	if (estadoOrgano == ""){
-		cxMID.fillStyle = 'white';
+		cxMID.fillStyle = 'black';
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+		cxMID.fillStyle = 'white';
+		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+
 	}
 
+	//Marco negro en fondo blanco y encima la imagen
 	if(estadoOrgano == "normal"){
+		cxMID.fillStyle = 'black';
+		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+		cxMID.fillStyle = 'white';
+		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
 		var img1 = new Image();
-		img1.src = objetos[0].src;
+		img1.src = src;
 		img1.onload = function(){
 			//console.log("objetos[0] :"+objetos[0]);
 			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
 		}
 	}
 
+	//Marco rojo en fondo blanco y encima la imagen
 	if (estadoOrgano == "enfermo"){
-		cxMID.fillStyle = 'white';
+		cxMID.fillStyle = 'red';
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+		cxMID.fillStyle = 'white';
+		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+		var img1 = new Image();
+		img1.src = src;
+		img1.onload = function(){
+			//console.log("objetos[0] :"+objetos[0]);
+			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+		}
 	}
 
+	//Marco azul en fondo blanco y encima la imagen
 	if (estadoOrgano == "vacunado"){
-		cxMID.fillStyle = 'white';
+		cxMID.fillStyle = 'blue';
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+		cxMID.fillStyle = 'white';
+		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+		var img1 = new Image();
+		img1.src = src;
+		img1.onload = function(){
+			//console.log("objetos[0] :"+objetos[0]);
+			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+		}
 	}
 
+	//Marco azul en fondo blanco, imagen y encima cuadrado azul semitransparente
 	if (estadoOrgano == "inmunizado"){
-		cxMID.fillStyle = 'white';
+		cxMID.fillStyle = 'blue';
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+		cxMID.fillStyle = 'white';
+		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+		var img1 = new Image();
+		img1.src = src;
+		img1.onload = function(){
+			//console.log("objetos[0] :"+objetos[0]);
+			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+		}
+		cxMID.globalAlpha = 0.2;
+		cxMID.fillStyle = 'blue';
+	    cxMID.fillRect(x, y, widthOrgano, heightOrgano);;
+	    cxMID.globalAlpha = 1.0;
 	}
 }
 
@@ -370,6 +525,13 @@ function moveObjects(){
 
 //Devuelve el numero de la pos. donde ha habido colision, 0 si no la ha habido o -1 si hay error
 function checkCollision(){
+	//Si no es mi turno aunque pueda mover los objetos no proceso nada y devuelvo los obj a su origen
+	if (turno != usuario){
+		objetoActual.x = objetoActual.xOrigen;
+		objetoActual.y = objetoActual.yOrigen;
+		return;
+	}
+
 	var colision = 0;
 	//En orden de probabilidad de ocurrencia
 	//Posicion dejar la carta en su sitio
@@ -418,8 +580,8 @@ function checkCollision(){
 		colision = 5;
 	}
 	//Posicion 0 (central = descarte)
-	else if ((objetoActual.x < ((windowWidth / 6) * 4)) &&
-		(objetoActual.x > ((windowWidth / 6) * 2)) &&
+	else if ((objetoActual.x < ((windowWidth / 6) * 5)) &&
+		(objetoActual.x > ((windowWidth / 6) * 1)) &&
 		(objetoActual.y > (windowHeight / 3) * 1) &&
 		(objetoActual.y < (windowHeight / 3) * 2)) {
 		//console.log("Colision zona 0");
@@ -428,6 +590,8 @@ function checkCollision(){
 	//Posicion -1 - Redibujarmos otra vez
 	else {
 		colision = -1;
+		//Cuidado porque hay dos cuadrados de los 18 que no son colision con nada
+		//pero no impican movimiento invalido
 		alert("Movimiento invalido");
 	}
 
@@ -438,28 +602,30 @@ function checkCollision(){
 }
 
 function manejadorMov(posDestino, numCarta){
-
-
-	var jugDestino = jugPorPosicion[posDestino];
-
-	var cardType = cartasUsuario[numCarta].cardType;
-	var organType = cartasUsuario[numCarta].organType;
+	console.log("Pos destino del movimiento: "+posDestino);
 
 	//Descarte
 	if (posDestino == 0) {
 		//En realidad puedes descartar cualquier numero de cartas en una jugada->Por implementar
 		//console.log("Carta descartada - Movimiento valido");
-		movValido = true;
+		movJugador = "algo";
 		nuevaCarta(numCarta);
-		//movJugador = "algo";
 		//Si es un descarte no seguimos evaluando nada mas!!
 		return;
 	}
 
-	if (organosJugadoresCli[jugDestino] == undefined){
-		//El jugador no esta presente sin más
+	//He soltado la carta en una posicion que no corresponde a ningún jugador
+	if (jugPorPosicion[posDestino] == undefined) {
+		console.log("jugPorPosicion[posDestino] == "+jugPorPosicion[posDestino]);
 		return;
 	}
+
+	var jugDestino = jugPorPosicion[posDestino].jugador;
+
+	var cardType = cartasUsuario[numCarta].cardType;
+	var organType = cartasUsuario[numCarta].organType;
+
+	var movValido = false;
 
 	if (cardType == "organo") {
 		if (posDestino == 1){
@@ -482,7 +648,6 @@ function manejadorMov(posDestino, numCarta){
 					movValido = true;
 					break;
 				}
-				alert("Movimiento no valido");
 				break;
 			case "higado":
 				if (organosJugadoresCli[jugDestino].higado == ""){
@@ -490,7 +655,6 @@ function manejadorMov(posDestino, numCarta){
 					movValido = true;
 					break;
 				}
-				alert("Movimiento no valido");
 				break;
 			case "comodin":
 				//Mov valido pero de momento no hacemos nada
@@ -501,7 +665,7 @@ function manejadorMov(posDestino, numCarta){
 				console.log("Error grave en manejadorMov()-switch organo");
 			}
 		} else {
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 		}
 	}
 
@@ -524,7 +688,7 @@ function manejadorMov(posDestino, numCarta){
 				movValido = true;
 				break;
 			}
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 			break;
 		case "corazon":
 			if (organosJugadoresCli[jugDestino].corazon == "enfermo"){
@@ -542,7 +706,7 @@ function manejadorMov(posDestino, numCarta){
 				movValido = true;
 				break;
 			}
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 			break;
 		case "hueso":
 			if (organosJugadoresCli[jugDestino].hueso == "enfermo"){
@@ -560,7 +724,7 @@ function manejadorMov(posDestino, numCarta){
 				movValido = true;
 				break;
 			}
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 			break;
 		case "higado":
 			if (organosJugadoresCli[jugDestino].higado == "enfermo"){
@@ -578,7 +742,7 @@ function manejadorMov(posDestino, numCarta){
 				movValido = true;
 				break;
 			}
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 			break;
 		case "comodin":
 			//Mov valido pero de momento no hacemos nada
@@ -609,7 +773,7 @@ function manejadorMov(posDestino, numCarta){
 				movValido = true;
 				break;
 			}
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 			break;
 		case "corazon":
 			if (organosJugadoresCli[jugDestino].corazon == "enfermo"){
@@ -627,7 +791,7 @@ function manejadorMov(posDestino, numCarta){
 				movValido = true;
 				break;
 			}
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 			break;
 		case "hueso":
 			if (organosJugadoresCli[jugDestino].hueso == "enfermo"){
@@ -645,7 +809,7 @@ function manejadorMov(posDestino, numCarta){
 				movValido = true;
 				break;
 			}
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 			break;
 		case "higado":
 			if (organosJugadoresCli[jugDestino].higado == "enfermo"){
@@ -663,7 +827,7 @@ function manejadorMov(posDestino, numCarta){
 				movValido = true;
 				break;
 			}
-			alert("Movimiento no valido");
+			console.log("Movimiento no valido");
 			break;
 		case "comodin":
 			//Mov valido pero de momento no hacemos nada
@@ -711,9 +875,9 @@ function manejadorMov(posDestino, numCarta){
 	if (movValido) {
 		console.log("Movimiento valido");
 		nuevaCarta(numCarta);
-		movValido = "algo";
+		movJugador = "algo";
 	} else {
-		alert("Movimiento no valido");
+		console.log("Movimiento no valido");
 	}
 	
 }

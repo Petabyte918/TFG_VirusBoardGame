@@ -12,8 +12,9 @@ var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num d
 var posOrganosJugadores = {}; //Informacion para dibujar los organos de los jugadores
 var cartasUsuario = []; //Cartas que tiene en la mano cada jugador
 var posCartasUsuario = []; //Informacion para dibujar las cartas de la mano
+var posCubosDescarte = {};
 var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
-var jugPorPosicion = []; //Dada una posicion te devuelve un jugador
+var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
 
 function aleatorioRGBrange(inferior,superior){
@@ -57,6 +58,10 @@ function prepararOrganosJugadoresCli(){
 			organoComodin: ""
 		};
 	}
+}
+
+function gestionarMov(movJugador){
+
 }
 
 function takeCard(){
@@ -266,19 +271,42 @@ Engine = new function () {
 
 		widthDisponible = windowWidth / 3;
 		heightDisponible = windowHeight / 3;
-		widthOrgano = widthDisponible / 6 - 20; 
+		widthOrgano = widthDisponible / 8 - 20; 
 		heightOrgano = widthOrgano * 1.5;
 		//20px sera la separacion entre cartas * 2 = 40
-		var widthCarta = widthDisponible / 3 - 20;
+		var widthCarta = widthDisponible / 4 - 20;
 		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
 		//posCartaX = [width, height]
 		var heightCarta = widthCarta * 1.5;
-		var posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, windowHeight - heightCarta - heightOrgano - 40];
-		var posCarta2 = [windowWidth / 2 - widthCarta * 0.5, windowHeight - heightCarta - heightOrgano - 40];
-		var posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, windowHeight - heightCarta - heightOrgano - 40];
+		var posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, windowHeight - heightCarta*1.5 - heightOrgano - 40];
+		var posCarta2 = [windowWidth / 2 - widthCarta * 0.5, windowHeight - heightCarta*1.5 - heightOrgano - 40];
+		var posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, windowHeight - heightCarta*1.5 - heightOrgano - 40];
 		posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
 
 	}
-	
+	this.initCubosDescarte = function(){
+		var widthCubo = ((windowWidth / 6) * 0.65) - 20;
+		var heightCubo = (widthCubo * 0.9) //(180/201) Para mantener la prop de la imagen
+
+		posCubosDescarte.widthCubo = widthCubo;
+		posCubosDescarte.heightCubo = heightCubo;
+
+		posCubosDescarte[1] = {
+			x: ((windowWidth / 2) - widthCubo * 2 - 30),
+			y: ((windowHeight / 3) + 30)
+		}
+		posCubosDescarte[2] = {
+			x: ((windowWidth / 2) - widthCubo * 1 - 10),
+			y: ((windowHeight / 3) + 30)
+		}
+		posCubosDescarte[3] = {
+			x: ((windowWidth / 2) + widthCubo * 0 + 10),
+			y: ((windowHeight / 3) + 30)
+		}
+		posCubosDescarte[4] = {
+			x: ((windowWidth / 2) + widthCubo * 1 + 30),
+			y: ((windowHeight / 3) + 30)
+		}
+	}	
 }
 

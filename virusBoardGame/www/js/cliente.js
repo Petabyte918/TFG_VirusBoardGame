@@ -217,6 +217,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
 	Engine.initPosCartasUsuario();
+	Engine.initCubosDescarte();
 
 	renderBGCards();
 
@@ -228,7 +229,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	moveObjects();
 
 	actualizarCanvas();
-	actualizarCanvasMID();
+	//actualizarCanvasMID();
 })
 
 function esperarMovimiento(){
@@ -255,6 +256,7 @@ function esperarMovimiento(){
 					jugadores: jugadores,
 					turno: turno,
 					deckOfCardsPartida: deckOfCards,
+					organosJugadoresCli: organosJugadoresCli,
 					movJugador: movJugador
 				};
 				socket.emit('siguienteTurnoSrv', newDatos_partida);
@@ -311,10 +313,21 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	jugadores = datos_partida.jugadores;
 	turno = datos_partida.turno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
+	if (datos_partida.organosJugadoresCli != undefined){
+		for (var jugador in datos_partida.organosJugadoresCli){
+			organosJugadoresCli[jugador].cerebro = datos_partida.organosJugadoresCli[jugador].cerebro;
+			organosJugadoresCli[jugador].corazon = datos_partida.organosJugadoresCli[jugador].corazon;
+			organosJugadoresCli[jugador].higado = datos_partida.organosJugadoresCli[jugador].higado
+			organosJugadoresCli[jugador].hueso = datos_partida.organosJugadoresCli[jugador].hueso;
+			organosJugadoresCli[jugador].organoComodin = datos_partida.organosJugadoresCli[jugador].organoComodin;
+		}
+	}
 	movJugador = datos_partida.movJugador;
-	indicarTurno(turno);
 	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
 	//enviado por el servidor)
+	indicarTurno(turno);
+	renderCountDown(30, new Date());
+
 
 	//console.log("Turno: "+turno+" - "+"Usuario: "+usuario);
 	if (turno == usuario) {

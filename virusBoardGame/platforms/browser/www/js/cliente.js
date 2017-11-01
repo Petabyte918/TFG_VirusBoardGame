@@ -217,6 +217,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
 	Engine.initPosCartasUsuario();
+	Engine.initCubosDescarte();
 
 	renderBGCards();
 
@@ -228,7 +229,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	moveObjects();
 
 	actualizarCanvas();
-	actualizarCanvasMID();
+	//actualizarCanvasMID();
 })
 
 function esperarMovimiento(){
@@ -238,18 +239,72 @@ function esperarMovimiento(){
 			console.log("Esperando movimiento");
 			esperarMovimiento();
 		} else {
-			console.log("Robamos carta");
-			takeCard();
-			var newDatos_partida = {
-				idPartida: idPartida,
-				jugadores: jugadores,
-				turno: turno,
-				deckOfCardsPartida: deckOfCards,
-				movJugador: movJugador
-			};
-			socket.emit('siguienteTurnoSrv', newDatos_partida);
+			//Comprobamos si hay ganador
+			var ganador = checkPartidaTerminada();
+			if (ganador != ""){
+				console.log("Hemos ganado");
+				var data = {
+					idPartida: idPartida
+				}
+				socket.emit('terminarPartida', data);
+			} else {
+				//Si no hay ganador seguimos con el juego
+				console.log("Robamos carta");
+				takeCard();
+				var newDatos_partida = {
+					idPartida: idPartida,
+					jugadores: jugadores,
+					turno: turno,
+					deckOfCardsPartida: deckOfCards,
+					organosJugadoresCli: organosJugadoresCli,
+					movJugador: movJugador
+				};
+				socket.emit('siguienteTurnoSrv', newDatos_partida);
+			}
 		}
 	}, 1000);
+}
+
+function checkPartidaTerminada(){
+	var totalOrganosCompletos;
+	for (var jugador in organosJugadoresCli) {
+		totalOrganosCompletos = 0;
+		if ((organosJugadoresCli[jugador].cerebro == "normal") ||
+			(organosJugadoresCli[jugador].cerebro == "vacunado") ||
+			(organosJugadoresCli[jugador].cerebro == "inmunizado")) {
+
+			totalOrganosCompletos++;
+		}
+		if ((organosJugadoresCli[jugador].corazon == "normal") ||
+			(organosJugadoresCli[jugador].corazon == "vacunado") ||
+			(organosJugadoresCli[jugador].corazon == "inmunizado")) {
+			
+			totalOrganosCompletos++;
+		}
+		if ((organosJugadoresCli[jugador].hueso == "normal") ||
+			(organosJugadoresCli[jugador].hueso == "vacunado") ||
+			(organosJugadoresCli[jugador].hueso == "inmunizado")) {
+			
+			totalOrganosCompletos++;
+		}
+		if ((organosJugadoresCli[jugador].higado == "normal") ||
+			(organosJugadoresCli[jugador].higado == "vacunado") ||
+			(organosJugadoresCli[jugador].higado == "inmunizado")) {
+			
+			totalOrganosCompletos++;
+		}
+		if ((organosJugadoresCli[jugador].comodin == "normal") ||
+			(organosJugadoresCli[jugador].comodin == "vacunado") ||
+			(organosJugadoresCli[jugador].comodin == "inmunizado")) {
+			
+			totalOrganosCompletos++;
+		}
+
+		if (totalOrganosCompletos >= 4){
+			return jugador;
+		}
+	}
+	return "";
 }
 
 socket.on('siguienteTurnoCli', function(datos_partida){
@@ -258,10 +313,21 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	jugadores = datos_partida.jugadores;
 	turno = datos_partida.turno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
+	if (datos_partida.organosJugadoresCli != undefined){
+		for (var jugador in datos_partida.organosJugadoresCli){
+			organosJugadoresCli[jugador].cerebro = datos_partida.organosJugadoresCli[jugador].cerebro;
+			organosJugadoresCli[jugador].corazon = datos_partida.organosJugadoresCli[jugador].corazon;
+			organosJugadoresCli[jugador].higado = datos_partida.organosJugadoresCli[jugador].higado
+			organosJugadoresCli[jugador].hueso = datos_partida.organosJugadoresCli[jugador].hueso;
+			organosJugadoresCli[jugador].organoComodin = datos_partida.organosJugadoresCli[jugador].organoComodin;
+		}
+	}
 	movJugador = datos_partida.movJugador;
-	indicarTurno(turno);
 	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
 	//enviado por el servidor)
+	indicarTurno(turno);
+	renderCountDown(30, new Date());
+
 
 	//console.log("Turno: "+turno+" - "+"Usuario: "+usuario);
 	if (turno == usuario) {
@@ -270,8 +336,9 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 });
 
-socket.on('terminarPartida', function(){
+socket.on('terminarPartida', function(data){
 	console.log("Terminar Partida");
+	console.log("Ganador: "+data.ganador);
 	button_lista_partidas();
 })
 /** -------------------- **/
