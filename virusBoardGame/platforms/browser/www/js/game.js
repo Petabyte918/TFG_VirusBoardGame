@@ -24,46 +24,76 @@ function renderBGCards (){
 	var posCarta2 = posCartasUsuario[3];
 	var posCarta3 = posCartasUsuario[4];
 
-	//"Containers" de las diferentes cartas de usuario
-	var img = new Image();
-	img.src = "img/cardImages/reversoCarta.jpg";
-	img.onload = function(){
-		cxBG.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
-		cxBG.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
-		cxBG.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
-	}
+	//Imagen del fondo en BG
+	var img0 = new Image();
+	img0.src = "img/def/varios/tapete_verde-claro.jpg";
+	img0.onload = function(){
+		cxBG.drawImage(img0, 0, 0, windowWidth, windowHeight);
+		
 
-	//Imagenes de lso diferentes cubos de basura de la zona de descartes
-	var widthCubo = posCubosDescarte.widthCubo;
-	var heightCubo = posCubosDescarte.heightCubo;
+		//"Containers" de las diferentes cartas de usuario
+		var img = new Image();
+		img.src = "img/cardImages/reversoCarta.jpg";
+		img.onload = function(){
+			cxBG.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
+			cxBG.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
+			cxBG.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
+		}
 
-	var cubo1 = posCubosDescarte[1];
-	var img1 = new Image();
-	img1.src = "img/descartesImages/cuboAmarillo.png";
-	img1.onload = function(){
-		cxBG.drawImage(img1, cubo1.x, cubo1.y, widthCubo, heightCubo);
-	}
-	var cubo2 = posCubosDescarte[2];
-	var img2 = new Image();
-	img2.src = "img/descartesImages/cuboRojo.png"
-	img2.onload = function(){
-		cxBG.drawImage(img2, cubo2.x, cubo2.y, widthCubo, heightCubo);
-	}
-	var cubo3 = posCubosDescarte[3];
-	var img3 = new Image();
-	img3.src = "img/descartesImages/cuboAzul.png";
-	img3.onload = function(){
-		cxBG.drawImage(img3, cubo3.x, cubo3.y, widthCubo, heightCubo);
-	}
-	var cubo4 = posCubosDescarte[4];	
-	var img4 = new Image();
-	img4.src = "img/descartesImages/cuboVerde.png";
-	img4.onload = function(){
-		cxBG.drawImage(img4, cubo4.x, cubo4.y, widthCubo, heightCubo);
-	}
+		//Imagenes de lso diferentes cubos de basura de la zona de descartes
+		var widthCubo = posCubosDescarte.widthCubo;
+		var heightCubo = posCubosDescarte.heightCubo;
 
-	cxBG.font = "bold 30px Arial";
-	cxBG.fillText("Zona de descartes", ((windowHeight / 6) * 2), ((windowHeight / 2)));
+		var cubo1 = posCubosDescarte[1];
+		var img1 = new Image();
+		img1.src = "img/descartesImages/cuboAmarillo.png";
+		img1.onload = function(){
+			cxBG.drawImage(img1, cubo1.x, cubo1.y, widthCubo, heightCubo);
+
+			cxBG.font = "bold 50px Arial";
+			cxBG.fillStyle = "rgba(60,179,113,0.1)";
+			cxBG.strokeStyle = "rgba(0,0,0,0.1)";
+			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
+			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
+		}
+		var cubo2 = posCubosDescarte[2];
+		var img2 = new Image();
+		img2.src = "img/descartesImages/cuboRojo.png"
+		img2.onload = function(){
+			cxBG.drawImage(img2, cubo2.x, cubo2.y, widthCubo, heightCubo);
+
+			cxBG.font = "bold 50px Arial";
+			cxBG.fillStyle = "rgba(60,179,113,0.1)";
+			cxBG.strokeStyle = "rgba(0,0,0,0.1)";
+			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
+			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
+		}
+		var cubo3 = posCubosDescarte[3];
+		var img3 = new Image();
+		img3.src = "img/descartesImages/cuboAzul.png";
+		img3.onload = function(){
+			cxBG.drawImage(img3, cubo3.x, cubo3.y, widthCubo, heightCubo);
+
+			cxBG.font = "bold 50px Arial";
+			cxBG.fillStyle = "rgba(60,179,113,0.1)";
+			cxBG.strokeStyle = "rgba(0,0,0,0.1)";
+			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
+			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
+		}
+		var cubo4 = posCubosDescarte[4];	
+		var img4 = new Image();
+		img4.src = "img/descartesImages/cuboVerde.png";
+		img4.onload = function(){
+			cxBG.drawImage(img4, cubo4.x, cubo4.y, widthCubo, heightCubo);
+
+			cxBG.font = "bold 50px Arial";
+			cxBG.fillStyle = "rgba(60,179,113,0.1)";
+			cxBG.strokeStyle = "rgba(0,0,0,0.1)";
+			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
+			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
+		}
+
+	}
 }
 
 function degToRad(degree) {
@@ -72,6 +102,7 @@ function degToRad(degree) {
 }
 
 function renderCountDown(time, oldDate){
+	console.log("renderCountDown()");
 	var radius = 30;
 	var xCountDown = posCubosDescarte[1].x -radius;
 	var yCountDown = posCubosDescarte[1].y + radius*6;
@@ -93,8 +124,7 @@ function renderCountDown(time, oldDate){
 		seconds = 0;
 	}
 
-
-	//Limpiamos canvas + (pxLinea + pxDifuminado)*2
+	//Limpiamos zona particular del canvas + (pxLinea + pxDifuminado)*2
 	cxMID.clearRect(xCountDown-10-radius, yCountDown-10-radius, radius*2+20, radius*2+20);
 
 	//Fondo

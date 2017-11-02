@@ -13,6 +13,8 @@ socket.on('Connection OK', function (data) {
 });
 /** -------------------- **/
 
+//Comprobamos si hemos abandonado una partida en curso
+checkMatchRunning();
 
 /** Los tres botones iniciales y el boton volver a inicio**/
 function button_play() {
@@ -203,10 +205,47 @@ function leavePartida(idPartida) {
 /** -------------------- **/
 
 /** Interaccion con el servidor de la partida **/
+function checkMatchRunning(){
+	var idPartidaStored = localStorage.getItem('idPartida');
+
+	if ((idPartidaStored != undefined) && (idPartidaStored != "") && (idPartidaStored != null)) {
+		console.log("Hay una partida abandonada");
+		console.log("Tratamos de entrar de nuevo");
+		var usuarioAntiguo = localStorage.getItem('usuario', usuario);
+
+		//Preguntamos al servidor si en el id de partida que tenemos guardado, esta nuestro nuevo id o el antiguo
+		console.log("idPartida: "+idPartidaStored);
+		console.log("usuario: "+usuario);
+		console.log("usuarioAntiguo: "+usuarioAntiguo);
+		var datos = {
+			idPartida: idPartidaStored,
+			usuario: usuario,
+			usuarioAntiguo: usuarioAntiguo
+		}
+		socket.emit('checkMatchRunning', datos);
+			//Si es que si pedimos al servidor que cambie de sus variables el antiguo id por el nuevo
+			//Pedimos datos de la partida->Si he ido programando bien, con que nos pase prepararPartida deberia valer
+	} else {
+		console.log("No hay partidas empezadas");
+	}
+}
+
+socket.on('checkMatchRunningKO', function(){
+	//Aunque el usuario tiene guardada la partida, el servidor no.
+	//Puede ser porque la partida ha terminado o porque el servidor le ha expulsado de la partida definitivamente
+	//o porque el usuario ha salido de la app bruscamente y no se ha borrado correctamente el localStorage
+	console.log("checkMatchRunningKO");
+	localStorage.removeItem('idPartida');
+})
+
 socket.on('prepararPartida', function(datos_iniciales){
 	console.log("prepararPartida");
 
 	idPartida = datos_iniciales.idPartida;
+	//No guardamos al usuario antes, no nos hace falta e igualmente debemos guardalo aqui si tenemos un idPartida
+	//guardado pero el servidor ya ha eliminado la partida o nos ha eliminado de la partida
+	localStorage.setItem('usuario', usuario);
+	localStorage.setItem('idPartida', idPartida);
 	jugadores = datos_iniciales.jugadores;
 	cartasUsuario.push(datos_iniciales.carta1);
 	cartasUsuario.push(datos_iniciales.carta2);
@@ -309,10 +348,17 @@ function checkPartidaTerminada(){
 
 socket.on('siguienteTurnoCli', function(datos_partida){
 	console.log("siguienteTurnoCli");
+
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
 	turno = datos_partida.turno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
+
+	//Comprobamos si nos estamos reenchando a la partida
+	if (cartasUsuario.length <= 0){
+		handleReconect();
+	}
+
 	if (datos_partida.organosJugadoresCli != undefined){
 		for (var jugador in datos_partida.organosJugadoresCli){
 			organosJugadoresCli[jugador].cerebro = datos_partida.organosJugadoresCli[jugador].cerebro;
@@ -322,23 +368,74 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 			organosJugadoresCli[jugador].organoComodin = datos_partida.organosJugadoresCli[jugador].organoComodin;
 		}
 	}
+
 	movJugador = datos_partida.movJugador;
 	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
 	//enviado por el servidor)
+	//Pendiente
+	//Una vez representado el movimiento del jugador, borramos el mov
+	movJugador = "";
 	indicarTurno(turno);
 	renderCountDown(30, new Date());
 
-
 	//console.log("Turno: "+turno+" - "+"Usuario: "+usuario);
 	if (turno == usuario) {
-		movJugador = "";
 		esperarMovimiento();
 	}
 });
 
+function handleReconect(){
+	console.log("handleReconect");
+
+	//No guardamos al usuario antes, no nos hace falta e igualmente debemos guardalo aqui si tenemos un idPartida
+	//guardado pero el servidor ya ha eliminado la partida o nos ha eliminado de la partida
+	localStorage.setItem('usuario', usuario);
+	localStorage.setItem('idPartida', idPartida);
+
+	var carta1 = takeCard();
+	var carta2 = takeCard();
+	if (carta2 == null) {
+		console.log("handleReconect - La carta 2 es null");
+		carta2 = carta1;
+	}
+	var carta3 = takeCard();
+		if (carta3 == null) {
+		console.log("handleReconect - La carta 3 es null");
+		carta3 = carta1;
+	}
+
+	//Un poco tricky porque:
+	//1.- Si no es tu turno, otro tipo robara de nuevo cartas que has robado
+	//2.- Si no hay suficientes cartas en el mazo al menos puedes robar una y la repites
+	//Solucion: tener una baraja entera y robar cartas aleatorias de ahi
+	cartasUsuario.push(carta1);
+	cartasUsuario.push(carta2);
+	cartasUsuario.push(carta3);
+
+	//Animacion de repartir cartas
+	Engine.initCanvas();
+	Engine.initJugadores();
+	Engine.initPosOrganosJugadores();
+	Engine.initPosCartasUsuario();
+	Engine.initCubosDescarte();
+
+	renderBGCards();
+
+	//Crea dos arrays para poder buscar informacion comodamente.
+	asignarJugadoresAPosiciones();
+	asignarPosicionesAJugadores();
+
+	prepararOrganosJugadoresCli();
+	moveObjects();
+
+	actualizarCanvas();
+	//actualizarCanvasMID();
+}
+
 socket.on('terminarPartida', function(data){
 	console.log("Terminar Partida");
 	console.log("Ganador: "+data.ganador);
+	localStorage.removeItem('idPartida');
 	button_lista_partidas();
 })
 /** -------------------- **/
