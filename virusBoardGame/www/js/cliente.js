@@ -14,14 +14,9 @@ socket.on('Connection OK', function (data) {
 /** -------------------- **/
 
 //Comprobamos si hemos abandonado una partida en curso
-checkMatchRunning();
+//checkMatchRunning();
 
 /** Los tres botones iniciales y el boton volver a inicio**/
-function button_play() {
-	//Esta funcion te debe meter en la partida al azar que menos jugadores le falten
-	//o en una partida sin mas cualquiera
-}
-
 function button_create() {
 	//console.log("button_create()");
 	$("#container_botones").css("display", "none");
@@ -105,13 +100,13 @@ function actualizar_listaPartidas() {
 	
 	$("#container_partidas").empty();
 	for (var id in lista_partidas) {
-		if (enPartidaEsperando == false){
+		if (enPartidaEsperando == false) {
 			//Si no estoy en partida y la sala esta llena, me la salto
 			if (lista_partidas[id].gamePlayers.length >= lista_partidas[id].gameNumPlayers) {
 				continue;
 			}
 			$("#container_partidas").append(
-				'<li class=partida onclick=joinPartida("'+lista_partidas[id].idPartida+'")>'+
+				'<li class=partida onclick=joinPartida("'+lista_partidas[id].idPartida+'","'+false+'")>'+
 					'<a class=nombre_partida>Nombre partida: '+lista_partidas[id].gameName+'</a>'+
 					'<a class=idPartida>'+lista_partidas[id].idPartida+'</a>'+
 					'<a class=num_jugadores>'+lista_partidas[id].gamePlayers.length+'/'+lista_partidas[id].gameNumPlayers+'</a>'+
@@ -145,9 +140,9 @@ function actualizar_listaPartidas() {
 	}
 }			
 
-function joinPartida(idPartida) {
+function joinPartida(idPartida , flag) {
 	//console.log("joinPartida()");
-	//No estamos en ninguna partida
+
 	var enPartida = false;
 	for (var id in lista_partidas) {
 		for (var i = 0; i < lista_partidas[id].gamePlayers.length; i++) {
@@ -160,10 +155,10 @@ function joinPartida(idPartida) {
 		alert("Ya has creado o ya estas dentro de alguna partida");
 		button_lista_partidas();
 	} else {
-		socket.emit('join_game', {idPartida: idPartida});
-		socket.on('join_game-OK', function() {
-			//console.log("join_game-OK");
-			idPartidaEsperando = idPartida;
+		socket.emit('join_game', {idPartida: idPartida, random: flag});
+		socket.on('join_game-OK', function(data) {
+			console.log("join_game-OK");
+			idPartidaEsperando = data.idPartida;
 			enPartidaEsperando = true;
 			button_lista_partidas();
 		});
