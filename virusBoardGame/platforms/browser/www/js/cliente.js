@@ -16,13 +16,18 @@ socket.on('Connection OK', function (data) {
 //Comprobamos si hemos abandonado una partida en curso
 //checkMatchRunning();
 
-/** Los tres botones iniciales y el boton volver a inicio**/
+/** Los botones iniciales y el boton volver a inicio**/
 function button_create() {
 	//console.log("button_create()");
 	$("#container_botones").css("display", "none");
 	$("#container_form_create").css("display", "inline");
 	$("#lista_partidas").css("display", "none");
 	$("#canvas_container").css("display", "none");
+	$("#registerForm").css("display", "none");
+	$("#settings").css("display", "none");
+	$("#login").css("display", "none");
+	$("#leave").css("display", "none");
+	$("#register").css("display", "none");
 }
 
 function button_lista_partidas() {
@@ -32,6 +37,11 @@ function button_lista_partidas() {
 	actualizar_partidas();
 	$("#lista_partidas").css("display", "inline");
 	$("#canvas_container").css("display", "none");
+	$("#registerForm").css("display", "none");
+	$("#settings").css("display", "none");
+	$("#login").css("display", "none");
+	$("#leave").css("display", "none");
+	$("#register").css("display", "none");
 }
 
 function backTo_InitMenu() {
@@ -40,10 +50,66 @@ function backTo_InitMenu() {
 	$("#container_form_create").css("display", "none");
 	$("#lista_partidas").css("display", "none");
 	$("#canvas_container").css("display", "none");
+	$("#registerForm").css("display", "none");
+	$("#settings").css("display", "inline");
+	$("#login").css("display", "inline");
+	$("#leave").css("display", "inline");
+	$("#register").css("display", "inline");
+}
+
+function button_login () {
+	console.log("button_login()");
+}
+
+function button_registerForm () {
+	console.log("button_register()");
+	//console.log("Display: "+$("#registerForm").css("display"));
+	if ($("#registerForm").css("display") == "block") {
+		$("#registerForm").css("display","none");
+	} else {
+		$("#registerForm").css("display","block");
+	}
+}
+
+function button_leave () {
+	console.log("button_leave()");
+}
+
+function button_ranquing () {
+	console.log("button_ranquing()");
+}
+
+function button_settings () {
+	console.log("button_settings");
 }
 /** -------------------- **/
 
-/** Interaccion con el servidor de los tres botones iniciales **/
+/** Interaccion con el servidor de los botones iniciales **/
+function form_register() {
+	var registerName = document.form_register_user.registerName.value;
+	var registerPass1 = document.form_register_user.registerPass1.value;
+	var registerPass2 = document.form_register_user.registerPass2.value;
+
+	if (registerPass1 != registerPass2) {
+		console.log("Las contraseñas no coinciden");
+	} else {
+		socket.emit('register_user', {user: registerName, pass: registerPass1});
+	}
+
+	return false;
+}
+
+socket.on('register_user-OK', function() {
+	console.log("register_user-OK");
+});
+
+socket.on('register_user-KO', function(data) {
+	console.log("register_user-KO");
+	if (data.usuarioRepetido == "true") {
+		console.log("Usuario ya en uso");
+	}
+});
+
 function form_createGame() {
 	//console.log("form_createGame()");
 	var gameName = document.form_create_game.gameName.value;

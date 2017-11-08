@@ -17,14 +17,18 @@ var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
 var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
 
-function aleatorioRGBrange(inferior,superior){
+function aleatorioRGBrange(inferior,superior) {
 	var numPosibilidades = superior - inferior;
 	var aleat = Math.random() * numPosibilidades;
 	aleat = Math.floor(aleat);
 	return parseInt(inferior) + aleat;
 }
-function colorAleatorio(){
+function colorAleatorio() {
    return "rgb(" + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + ")";
+}
+
+function cambiaApass(caja) {
+	console.log("cambiaApass()-"+caja);
 }
 
 function shuffle(array) {
@@ -271,13 +275,18 @@ Engine = new function () {
 
 		widthDisponible = windowWidth / 3;
 		heightDisponible = windowHeight / 3;
+
+		//Esto esta para separarlo de la parte de abajo
 		widthOrgano = widthDisponible / 8 - 20; 
-		heightOrgano = widthOrgano * 1.5;
+		heightOrgano = widthOrgano * (1536/1013);
+
 		//20px sera la separacion entre cartas * 2 = 40
-		var widthCarta = widthDisponible / 4 - 20;
+		var widthCarta = widthDisponible / 3 - 20;
+
 		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
 		//posCartaX = [width, height]
-		var heightCarta = widthCarta * 1.5;
+		var heightCarta = widthCarta * (1536/1013);
+
 		var posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, windowHeight - heightCarta*1.5 - heightOrgano - 40];
 		var posCarta2 = [windowWidth / 2 - widthCarta * 0.5, windowHeight - heightCarta*1.5 - heightOrgano - 40];
 		var posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, windowHeight - heightCarta*1.5 - heightOrgano - 40];

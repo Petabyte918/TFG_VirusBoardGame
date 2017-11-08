@@ -26,19 +26,19 @@ function renderBGCards (){
 
 	//Imagen del fondo en BG
 	var img0 = new Image();
-	img0.src = "img/def/varios/tapete_verde-claro.jpg";
+	img0.src = "img/BG/tapete_verde-claro.jpg";
 	img0.onload = function(){
 		cxBG.drawImage(img0, 0, 0, windowWidth, windowHeight);
 		
 
 		//"Containers" de las diferentes cartas de usuario
-		var img = new Image();
+		/**var img = new Image();
 		img.src = "img/cardImages/reversoCarta.jpg";
 		img.onload = function(){
 			cxBG.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
 			cxBG.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
 			cxBG.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
-		}
+		}**/
 
 		//Imagenes de lso diferentes cubos de basura de la zona de descartes
 		var widthCubo = posCubosDescarte.widthCubo;
@@ -102,7 +102,7 @@ function degToRad(degree) {
 }
 
 function renderCountDown(time, oldDate){
-	console.log("renderCountDown()");
+	//console.log("renderCountDown()");
 	var radius = 30;
 	var xCountDown = posCubosDescarte[1].x -radius;
 	var yCountDown = posCubosDescarte[1].y + radius*6;
@@ -324,25 +324,25 @@ function actualizarCanvasMID(){
 					posOrgano.tipo = "cerebro";
 					posOrgano.x = posOrganosJugadores[pos].posCerebro[0];
 					posOrgano.y = posOrganosJugadores[pos].posCerebro[1];
-					posOrgano.src = 'img/orgaImages/organoCerebroSF.png';
+					posOrgano.src = 'img/cardImagesLQ/organos/orgaCerebro.png';
 					break;
 				case "corazon":
 					posOrgano.tipo = "corazon";
 					posOrgano.x = posOrganosJugadores[pos].posCorazon[0];
 					posOrgano.y = posOrganosJugadores[pos].posCorazon[1];
-					posOrgano.src = 'img/orgaImages/organoCorazonSF.png';
+					posOrgano.src = 'img/cardImagesLQ/organos/orgaCorazon.png';
 					break;
 				case "higado":
 					posOrgano.tipo = "higado";
 					posOrgano.x = posOrganosJugadores[pos].posHigado[0];
 					posOrgano.y = posOrganosJugadores[pos].posHigado[1];
-					posOrgano.src = 'img/orgaImages/organoHigadoSF.png';					
+					posOrgano.src = 'img/cardImagesLQ/organos/orgaHigado.png';					
 					break;
 				case "hueso":
 					posOrgano.tipo = "hueso";
 					posOrgano.x = posOrganosJugadores[pos].posHueso[0];
 					posOrgano.y = posOrganosJugadores[pos].posHueso[1];
-					posOrgano.src = 'img/orgaImages/organoHuesoSF.png';					
+					posOrgano.src = 'img/cardImagesLQ/organos/orgaHueso.png';					
 					break;
 				case "organoComodin":
 				/** Aun no trabajamps con el comodn y no esta pensado donde dibujarse
@@ -367,7 +367,7 @@ function actualizarCanvasMID(){
 }
 
 function renderOrgano(posOrgano, estadoOrgano) {
-	console.log("Render organo-estado: "+posOrgano.tipo+"-"+estadoOrgano);
+	//console.log("Render organo-estado: "+posOrgano.tipo+"-"+estadoOrgano);
 	var x = posOrgano.x;
 	var y = posOrgano.y;
 	var widthOrgano = posOrgano.width;
@@ -481,21 +481,21 @@ function moveObjects(){
 	objetos.push({
 		x: posCartasUsuario[2][0], y: posCartasUsuario[2][1] + offsetCartasUsuario,
 		xOrigen: posCartasUsuario[2][0], yOrigen: posCartasUsuario[2][1] + offsetCartasUsuario,
-		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		width: posCartasUsuario[0], height: posCartasUsuario[1],
 		numCarta: 0,
 		src: cartasUsuario[0].picture
 	});
 	objetos.push({
 		x: posCartasUsuario[3][0], y: posCartasUsuario[3][1] + offsetCartasUsuario,
 		xOrigen: posCartasUsuario[3][0], yOrigen: posCartasUsuario[3][1] + offsetCartasUsuario,
-		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		width: posCartasUsuario[0], height: posCartasUsuario[1],
 		numCarta: 1,
 		src: cartasUsuario[1].picture
 	});
 	objetos.push({
 		x: posCartasUsuario[4][0], y: posCartasUsuario[4][1] + offsetCartasUsuario,
 		xOrigen: posCartasUsuario[4][0], yOrigen: posCartasUsuario[4][1] + offsetCartasUsuario,
-		width: posCartasUsuario[0], height: posCartasUsuario[0],
+		width: posCartasUsuario[0], height: posCartasUsuario[1],
 		numCarta: 2,
 		src: cartasUsuario[2].picture
 	});

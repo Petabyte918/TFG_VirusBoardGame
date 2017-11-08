@@ -16,6 +16,21 @@
 </head>
 
 <body>
+	<div id="settings" onclick="button_settings()"></div>
+	<div id="ranquing" onclick="button_ranquing()"></div>
+	<div id="login" onclick="button_login()">Login</div>
+	<div id="leave" style="display: none;" onclick="button_leave()">Leave</div>
+	<div id="register" onclick="button_registerForm()">Register</div>
+
+	<div id="registerForm" style="display: none;"/>
+		<form name="form_register_user" autocomplete="on" onsubmit="return form_register()"/>
+			<input class="registerInputs" type="text" name="registerName" class="field-text" placeholder="Nombre de usuario"/>
+			<input class="registerInputs" type="password" name="registerPass1" class="field-text" placeholder="Escribe una contraseña"/>
+			<input class="registerInputs" type="password" name="registerPass2" class="field-text" placeholder="Vuelve a introducirla"/>
+			<input class="registerInputs" type="submit" value="Enviar" readonly="readonly"/>
+		</form>
+	</div>
+
 	<div id="container_botones">
 		<a class="boton" id="boton_jugar" title="Jugar" onclick="joinPartida('','true')">Jugar</a>
 		<a class="boton" id="boton_crear" title="Crear Partida" onclick="button_create()">Crear Partida</a>
@@ -23,7 +38,7 @@
 	</div>
 
 	<div id="container_form_create" style="display: none;">
-		<form name="form_create_game" id="form_create_game" onsubmit="return form_createGame()">
+		<form name="form_create_game" id="form_create_game" onsubmit="return form_createGame()"/>
 			<ul class="form-style-1">
 			    <li class=li-marginTop>
 			    	<label class="label_form1">Escribe un nombre para tu partida<span class="required">*</span></label>

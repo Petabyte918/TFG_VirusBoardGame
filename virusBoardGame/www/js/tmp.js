@@ -1,3 +1,23 @@
+//PENDIENTE ANTES DEL MARTES
+1.- Settings
+2.- Ranquing
+3.- Login
+4.- Register
+5.- Leave-unlogin (o similar)
+6.- Imagenes cartas
+7.- Comentarios bocadillos primera vez al menos para los tres botones principales
+8.- Funcionalidad resto cartas
+9.- Poder descartar todas las cartas
+10.- Echar al jugador tras pasar tres turnos
+
+Edicion Imagenes
+1.-Mejorar nitidez
+2.-Exposicion 0-25-0-50-25
+3.-Suavizado 100
+4.-Suavizar 0-100
+5.-Cambiar tamaño 250px
+
+
 function renderImage(context){
 	// context.drawImage(img,x,y,width,height);
 	var currentImage = new Image();
