@@ -10,7 +10,7 @@ function playSound(soundResource){
 	}
 }
 
-var cv, cx, objetoActual = null;
+var cv, cx, objetoActual, touch = null;
 var cvMID, cxMID = null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
@@ -234,11 +234,19 @@ function indicarTurno(turno) {
 	cxMID.fillRect(posX, posY, widthJug, heightJug);
 
 	//Creamos el marco de 20 px de grosor
-	console.log("PosX: "+posX);
-	console.log("PosY: "+posY);
-	console.log("widthJug: "+widthJug);
-	console.log("heightJug: "+heightJug);
+	//console.log("PosX: "+posX);
+	//console.log("PosY: "+posY);
+	//console.log("widthJug: "+widthJug);
+	//console.log("heightJug: "+heightJug);
 	cxMID.clearRect(posX + 5, posY + 5, widthJug - 10, heightJug - 10);
+
+	/** Logs para dibujar espacio de descartes
+	posX = ((windowWidth / 6) * 1);
+	posY = ((windowHeight / 3) * 1);
+	widthJug =  (((windowWidth / 6) * 5) - posX);
+	heightJug = (((windowHeight / 3) * 2) - posY);
+	cxMID.fillStyle = 'red';
+	cxMID.fillRect(posX, posY, widthJug, heightJug);**/
 
 	actualizarCanvasMID();
 }
@@ -504,7 +512,7 @@ function moveObjects(){
 	//cv.ontouchstart = function(event) {
 		//var touch = event.touches[0];
 	cv.onmousedown = function(event) {
-		var touch = event;
+		touch = event;
 		//console.log("Onmousedown");
 		for (var i = 0; i < objetos.length; i++) {
 			if (objetos[i].x < touch.pageX
@@ -524,7 +532,7 @@ function moveObjects(){
 	//cv.ontouchmove = function(event) {
 		//var touch = event.touches[0];
 	cv.onmousemove = function(event) {
-		var touch = event;
+		touch = event;
 		//console.log("Onmousemove");
 		//Solo actualizamos si movemos y hay algun objeto seleccionado y cada cierta diferencia de pixeles
 		if (objetoActual != null) {
@@ -553,8 +561,9 @@ function moveObjects(){
 	}
 }
 
-//Devuelve el numero de la pos. donde ha habido colision, 0 si no la ha habido o -1 si hay error
-function checkCollision(){
+//Devuelve el numero de la pos. donde ha habido colision, 0 si descarte o -1 si hay error
+//Ahora hacemos la colision
+function checkCollision() {
 	//Si no es mi turno aunque pueda mover los objetos no proceso nada y devuelvo los obj a su origen
 	if (turno != usuario){
 		objetoActual.x = objetoActual.xOrigen;
@@ -562,71 +571,72 @@ function checkCollision(){
 		return;
 	}
 
-	var colision = 0;
-	//En orden de probabilidad de ocurrencia
-	//Posicion dejar la carta en su sitio
-	if ((objetoActual.x > posCartasUsuario[2][0]) &&
-		(objetoActual.x < (posCartasUsuario[4][0] + posCartasUsuario[0])) &&
-		(objetoActual.y > posCartasUsuario[2][1]) &&
-		(objetoActual.y < (posCartasUsuario[4][1] + posCartasUsuario[1]))) {
+	//Ojo con poner 3 y 5 antes de 2 y 6 respectivamente porque ayudan a excluir a estas ultimas pues los organos se colocan
+	//con respecto a a windowsHeight, anchura de organos y margenes
+	var colision = -1;
+	//Si la colision es en la zona donde dejamos las cartas, la contamos como -1
+	//posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+	if ((touch.pageX < (posCartasUsuario[4][0] + posCartasUsuario[0])) && //posCarta3.x + widthCarta
+		(touch.pageX > posCartasUsuario[2][0]) && //posCarta1.x
+		(touch.pageY < (posCartasUsuario[4][1] + posCartasUsuario[1])) && //posCarta3.y + heightCarta
+		(touch.pageY > posCartasUsuario[2][1])) { //posCarta2.y
+		//console.log("Colision zona zona dibujo cartas usuario");
 		colision = -1;
 	}
 	//Posicion 1
-	else if ((objetoActual.x < ((windowWidth / 6) * 4)) &&
-		(objetoActual.x > ((windowWidth / 6) * 2)) &&
-		(objetoActual.y > (windowHeight / 3) * 2)) {
+	else if ((touch.pageX < ((windowWidth / 6) * 4)) &&
+		(touch.pageX > ((windowWidth / 6) * 2)) &&
+		(touch.pageY > (windowHeight / 3) * 2)) {
 		//console.log("Colision zona 1");
 		colision = 1;
 	}
 	//Posicion 4
-	else if ((objetoActual.x < ((windowWidth / 6) * 4)) &&
-		(objetoActual.x > ((windowWidth / 6) * 2)) &&
-		(objetoActual.y < (windowHeight / 3))) {
+	else if ((touch.pageX < ((windowWidth / 6) * 4)) &&
+		(touch.pageX > ((windowWidth / 6) * 2)) &&
+		(touch.pageY < (windowHeight / 3) * 1)) {
 		//console.log("Colision zona 4");
 		colision = 4;
 	}
-	//Posicion 2
-	else if ((objetoActual.x < ((windowWidth / 6) * 1)) &&
-		(objetoActual.y > (windowHeight / 3))) {
-		//console.log("Colision zona 2");
-		colision = 2;
-	}
-	//Posicion 6
-	else if ((objetoActual.x > ((windowWidth / 6) * 5)) &&
-		(objetoActual.y > (windowHeight / 3))) {
-		//console.log("Colision zona 6");
-		colision = 6;
-	}
 	//Posicion 3
-	else if ((objetoActual.x < ((windowWidth / 6) * 2)) &&
-		(objetoActual.y < (windowHeight / 3))) {
+	else if ((touch.pageX < ((windowWidth / 6) * 2)) &&
+		(touch.pageY < (windowHeight / 3) * 1)) {
 		//console.log("Colision zona 3");
 		colision = 3;
 	}
+	//Posicion 2 - y no ha cumplido condicion de pos3
+	else if (touch.pageX < ((windowWidth / 6) * 1)) {
+		//console.log("Colision zona 2");
+		colision = 2;
+	}
 	//Posicion 5
-	else if ((objetoActual.x > ((windowWidth / 6) * 4)) &&
-		(objetoActual.y < (windowHeight / 3))) {
+	else if ((touch.pageX > ((windowWidth / 6) * 4)) &&
+		(touch.pageY < (windowHeight / 3) * 1)) {
 		//console.log("Colision zona 5");
 		colision = 5;
 	}
+	//Posicion 6 - y no ha cumplido condicion de pos5
+	else if (touch.pageX > ((windowWidth / 6) * 5)) {
+		//console.log("Colision zona 6");
+		colision = 6;
+	}
 	//Posicion 0 (central = descarte)
-	else if ((objetoActual.x < ((windowWidth / 6) * 5)) &&
-		(objetoActual.x > ((windowWidth / 6) * 1)) &&
-		(objetoActual.y > (windowHeight / 3) * 1) &&
-		(objetoActual.y < (windowHeight / 3) * 2)) {
+	else if ((touch.pageX < ((windowWidth / 6) * 5)) &&
+		(touch.pageX > (windowWidth / 6) * 1) &&
+		(touch.pageY > (windowHeight / 3) * 1) &&
+		(touch.pageY < (windowHeight / 3) * 2)) {
 		//console.log("Colision zona 0");
 		colision = 0;
 	}
 	//Posicion -1 - Redibujarmos otra vez
 	else {
 		colision = -1;
-		//Cuidado porque hay dos cuadrados de los 18 que no son colision con nada
-		//pero no impican movimiento invalido
-		alert("Movimiento invalido");
 	}
 
 	manejadorMov(colision, objetoActual.numCarta);
 
+	//Pase lo que pase siempre colocamos todo de nuevo
+	touch.pageX = null;
+	touch.pageY = null;
 	objetoActual.x = objetoActual.xOrigen;
 	objetoActual.y = objetoActual.yOrigen;
 }
