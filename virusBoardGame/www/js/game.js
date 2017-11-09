@@ -16,6 +16,8 @@ var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
 var windowWidth, windowHeight = 0;
 var objetos = [];
+var countDownSTO;
+var esperarMovSTO;
 
 function renderBGCards (){
 	var widthCarta = posCartasUsuario[0];
@@ -164,16 +166,15 @@ function renderCountDown(time, oldDate){
 		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8);
 	}
 
-	setTimeout(function(){ 
-		//checkin
-		if ((movJugador == "") && (time>0)){
+	countDownSTO = setTimeout(function(){ 
+
+		if (time > 0) {
 			renderCountDown(time, now);
 		} else {
-			if (time <= 0){
-				movJugador = "tiempo_agotado";
-			}
+			movJugador = "tiempo_agotado";
+			//Y nos chivamos al servidor
 		}
-	}, 100);
+	}, 250);
 }
 
 function indicarTurno(turno) {
@@ -378,18 +379,18 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	//Marco negro en fondo blanco
 	if (estadoOrgano == ""){
 		cxMID.fillStyle = 'black';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 		cxMID.fillStyle = 'white';
-		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
 
 	}
 
 	//Marco negro en fondo blanco y encima la imagen
 	if(estadoOrgano == "normal"){
 		cxMID.fillStyle = 'black';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
-		cxMID.fillStyle = 'white';
-		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+		/**cxMID.fillStyle = 'white';
+		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
 		img1.onload = function(){
@@ -401,9 +402,9 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	//Marco rojo en fondo blanco y encima la imagen
 	if (estadoOrgano == "enfermo"){
 		cxMID.fillStyle = 'red';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
-		cxMID.fillStyle = 'white';
-		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+		/**cxMID.fillStyle = 'white';
+		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
 		img1.onload = function(){
@@ -415,9 +416,9 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	//Marco azul en fondo blanco y encima la imagen
 	if (estadoOrgano == "vacunado"){
 		cxMID.fillStyle = 'blue';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
-		cxMID.fillStyle = 'white';
-		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+		/**cxMID.fillStyle = 'white';
+		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
 		img1.onload = function(){
@@ -429,19 +430,27 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	//Marco azul en fondo blanco, imagen y encima cuadrado azul semitransparente
 	if (estadoOrgano == "inmunizado"){
 		cxMID.fillStyle = 'blue';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
-		cxMID.fillStyle = 'white';
-		cxMID.fillRect(x+5, y+5, widthOrgano-10, heightOrgano-10);
+		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+		/**cxMID.fillStyle = 'white';
+		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
 		img1.onload = function(){
 			//console.log("objetos[0] :"+objetos[0]);
-			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+			cxMID.drawImage(img1, x-5, y-5, widthOrgano+10, heightOrgano+10);
+			var img2 = new Image();
+			img2.src = "img/cardImagesLQ/cadenas.png";
+			img2.onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cxMID.drawImage(img2, x, y, widthOrgano, heightOrgano);
+			}
 		}
+		/**
 		cxMID.globalAlpha = 0.2;
 		cxMID.fillStyle = 'blue';
 	    cxMID.fillRect(x, y, widthOrgano, heightOrgano);;
 	    cxMID.globalAlpha = 1.0;
+	    **/
 	}
 }
 

@@ -4,7 +4,7 @@
 3.- Login
 4.- Register
 5.- Leave-unlogin (o similar)
-6.- Imagenes cartas
+6.- DONE- Imagenes cartas
 7.- Comentarios bocadillos primera vez al menos para los tres botones principales
 8.- Funcionalidad resto cartas
 9.- Poder descartar todas las cartas

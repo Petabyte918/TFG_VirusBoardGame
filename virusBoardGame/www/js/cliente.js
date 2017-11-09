@@ -333,24 +333,13 @@ socket.on('prepararPartida', function(datos_iniciales){
 })
 
 function esperarMovimiento(){
-	setTimeout(function(){ 
-		//checkin
-		if (movJugador == ""){
+	esperarMovSTO = setTimeout(function(){ 
+		if (movJugador == "") {
 			console.log("Esperando movimiento");
 			esperarMovimiento();
 		} else {
-			//Comprobamos si hay ganador
-			var ganador = checkPartidaTerminada();
-			if (ganador != ""){
-				console.log("Hemos ganado");
-				var data = {
-					idPartida: idPartida
-				}
-				socket.emit('terminarPartida', data);
-			} else {
-				//Si no hay ganador seguimos con el juego
-				console.log("Robamos carta");
-				takeCard();
+
+			if (movJugador == "tiempo_agotado") {
 				var newDatos_partida = {
 					idPartida: idPartida,
 					jugadores: jugadores,
@@ -359,10 +348,35 @@ function esperarMovimiento(){
 					organosJugadoresCli: organosJugadoresCli,
 					movJugador: movJugador
 				};
-				socket.emit('siguienteTurnoSrv', newDatos_partida);
+				socket.emit('tiempo_agotado', newDatos_partida);
+			} 
+			if (turno == usuario) {
+				//Comprobamos si hay ganador
+				var ganador = checkPartidaTerminada();
+				if (ganador != "") {
+					console.log("Hemos ganado");
+					var data = {
+						idPartida: idPartida
+					}
+					socket.emit('terminarPartida', data);
+				} else {
+					//Si no hay ganador seguimos con el juego
+					console.log("Robamos carta y nuestro movimiento ha sido: "+movJugador);
+					//Esto de robar carta deberiamos comprobarlo.
+					takeCard();
+					var newDatos_partida = {
+						idPartida: idPartida,
+						jugadores: jugadores,
+						turno: turno,
+						deckOfCardsPartida: deckOfCards,
+						organosJugadoresCli: organosJugadoresCli,
+						movJugador: movJugador
+					};
+					socket.emit('siguienteTurnoSrv', newDatos_partida);
+				}
 			}
 		}
-	}, 1000);
+	}, 250);
 }
 
 function checkPartidaTerminada(){
@@ -409,6 +423,8 @@ function checkPartidaTerminada(){
 
 socket.on('siguienteTurnoCli', function(datos_partida){
 	console.log("siguienteTurnoCli");
+	clearTimeout(countDownSTO);
+	clearTimeout(esperarMovSTO);
 
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
@@ -436,13 +452,11 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	//Pendiente
 	//Una vez representado el movimiento del jugador, borramos el mov
 	movJugador = "";
-	indicarTurno(turno);
-	renderCountDown(30, new Date());
 
-	//console.log("Turno: "+turno+" - "+"Usuario: "+usuario);
-	if (turno == usuario) {
-		esperarMovimiento();
-	}
+	indicarTurno(turno);
+
+	esperarMovimiento(); //->setTimeOut
+	renderCountDown(30, new Date()); //->setTimeOut
 });
 
 function handleReconect(){
