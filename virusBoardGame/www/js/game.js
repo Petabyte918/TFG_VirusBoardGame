@@ -189,48 +189,37 @@ function indicarTurno(turno) {
 	//Limpiamos el canvas
 	cxMID.clearRect(0, 0, windowWidth, windowHeight);
 
+	//Dejamos 20px de margen por cada lado
+	posX = posOrganosJugadores[posJug].posCerebro[0]-5-20;
+	posY = posOrganosJugadores[posJug].posCerebro[1]-5-20;
+	//5px del marco del turno y 20px hasta borde de la pantalla
+	widthJug = (posOrganosJugadores[posJug].posComodin[0] - posOrganosJugadores[posJug].posCerebro[0]+posOrganosJugadores[posJug].widthOrgano)+5*2+20*2;
+	heightJug =  (posOrganosJugadores[posJug].posComodin[1] - posOrganosJugadores[posJug].posCerebro[1]+posOrganosJugadores[posJug].heightOrgano)+5*2+20*2;
+		
 	switch (posJug){
 	//Posicion 1
 	case 1:
-		posX = (windowWidth / 6) * 1;
-		posY = (windowHeight / 3) * 1;
-		widthJug = (windowWidth / 6) * 4;
-		heightJug =  (windowHeight / 3) * 2;
+		posY = posY-5;
 		break;
 	//Posicion 2
 	case 2:
-		posX = 0;
-		posY = (windowHeight / 3) * 1;
-		widthJug = (windowWidth / 6) * 1;
-		heightJug =  (windowHeight / 3) * 2;
+		posX = posX+5;
 		break;
 	//Posicion 3
 	case 3:
-		posX = 0;
-		posY = 0;
-		widthJug = (windowWidth / 6) * 2;
-		heightJug =  (windowHeight / 3) * 1;
+		posY = posY+5;
 		break;
 	//Posicion 4
 	case 4:
-		posX = (windowWidth / 6) * 2;
-		posY = 0;
-		widthJug = (windowWidth / 6) * 2;
-		heightJug =  (windowHeight / 3) * 1;
+		posY = posY+5;
 		break;
 	//Posicion 5
 	case 5:
-		posX = (windowWidth / 6) * 4;
-		posY = 0;
-		widthJug = (windowWidth / 6) * 2;
-		heightJug =  (windowHeight / 3) * 1;
+		posY = posY+5;
 		break;
 	//Posicion 6
 	case 6:
-		posX = (windowWidth / 6) * 5;
-		posY = (windowHeight / 3) * 1;
-		widthJug = (windowWidth / 6) * 1;
-		heightJug =  (windowHeight / 3) * 2;
+		posX = posX-5;
 		break;
 	default:
 		console.log("Error grave representando los turnos de los jugadores");
@@ -245,6 +234,10 @@ function indicarTurno(turno) {
 	cxMID.fillRect(posX, posY, widthJug, heightJug);
 
 	//Creamos el marco de 20 px de grosor
+	console.log("PosX: "+posX);
+	console.log("PosY: "+posY);
+	console.log("widthJug: "+widthJug);
+	console.log("heightJug: "+heightJug);
 	cxMID.clearRect(posX + 5, posY + 5, widthJug - 10, heightJug - 10);
 
 	actualizarCanvasMID();
