@@ -437,12 +437,12 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		img1.src = src;
 		img1.onload = function(){
 			//console.log("objetos[0] :"+objetos[0]);
-			cxMID.drawImage(img1, x-5, y-5, widthOrgano+10, heightOrgano+10);
+			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
 			var img2 = new Image();
 			img2.src = "img/cardImagesLQ/cadenas.png";
 			img2.onload = function(){
 				//console.log("objetos[0] :"+objetos[0]);
-				cxMID.drawImage(img2, x, y, widthOrgano, heightOrgano);
+				cxMID.drawImage(img2, x-5, y-5, widthOrgano+10, heightOrgano+10);
 			}
 		}
 		/**
