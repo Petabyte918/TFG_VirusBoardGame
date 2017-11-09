@@ -346,12 +346,10 @@ function actualizarCanvasMID(){
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaHueso.png';					
 					break;
 				case "organoComodin":
-				/** Aun no trabajamps con el comodn y no esta pensado donde dibujarse
 					posOrgano.tipo = "organoComodin";
 					posOrgano.x = posOrganosJugadores[pos].posComodin[0];
 					posOrgano.y = posOrganosJugadores[pos].posComodin[1];
-					posOrgano.src = 'img/orgaImages/organoComodinSF.png';
-					**/
+					posOrgano.src = 'img/cardImagesLQ/organos/orgaComodin.png';	
 					break;
 				default:
 					console.log("Fallo en actualizarCanvasMID switch elem-opcion extraña ha aparecido");
@@ -696,9 +694,11 @@ function manejadorMov(posDestino, numCarta){
 				}
 				break;
 			case "comodin":
-				//Mov valido pero de momento no hacemos nada
-				console.log("Comodin organo");
-				movValido = true;
+				if (organosJugadoresCli[jugDestino].orgaComodin == ""){
+					organosJugadoresCli[jugDestino].orgaComodin = "normal";
+					movValido = true;
+					break;
+				}
 				break;
 			default:
 				console.log("Error grave en manejadorMov()-switch organo");

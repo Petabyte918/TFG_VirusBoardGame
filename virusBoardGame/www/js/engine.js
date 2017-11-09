@@ -9,7 +9,7 @@ var movJugador = ""; //JugadorOrigen - JugDestino - Carta
 //Informacion exclusiva de cada cliente
 var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
 							//Busco pasandole la posicion del jugador
-var posOrganosJugadores = {}; //Informacion para dibujar los organos de los jugadores
+var posOrganosJugadores = {}; //posOrganosJugadores[posJug] Informacion para dibujar los organos de los jugadores
 var cartasUsuario = []; //Cartas que tiene en la mano cada jugador
 var posCartasUsuario = []; //Informacion para dibujar las cartas de la mano
 var posCubosDescarte = {};
@@ -145,128 +145,146 @@ Engine = new function () {
 		var widthDisponible, heightDisponible = 0;
 		var widthOrgano, heightOrgano = 0;
 		var posCerebro, posCorazon, posHueso, posHigado = 0;
+		var relTam = (1536/1013);
 		//Posiciones y tamaños estaran proporcionados con el tamaño de la pantalla
 
 		//POSICION 1
 		widthDisponible = windowWidth / 3;
-		//La separacion entre organos sera la mitad de un organo
+		//Los 20px solo afectan al tamanio de la carta
 		widthOrgano = widthDisponible / 6 - 20; 
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height, rotacion]
-		heightOrgano = widthOrgano * 1.5;
-		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2 - widthOrgano * 0.75, windowHeight - heightOrgano - 20];
-		posCorazon = [(windowWidth / 6) * 3 - widthOrgano * 1 - widthOrgano * 0.25, windowHeight - heightOrgano - 20];
-		posHueso = [(windowWidth / 6) * 3 + widthOrgano * 0.25, windowHeight - heightOrgano - 20];
-		posHigado = [(windowWidth / 6) * 3 + widthOrgano * 1 + widthOrgano * 0.75, windowHeight - heightOrgano - 20];
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		heightOrgano = widthOrgano * relTam;
+
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2.5 - 15 * 2, windowHeight - heightOrgano - 20];
+		posCorazon = [(windowWidth / 6) * 3  - widthOrgano * 1.5 - 15 * 1, windowHeight - heightOrgano - 20];
+		posHueso = [(windowWidth / 6) * 3  - widthOrgano * 0.5 - 15 * 0, windowHeight - heightOrgano - 20];
+		posHigado = [(windowWidth / 6) * 3  + widthOrgano * 0.5 + 15 * 1, windowHeight - heightOrgano - 20];
+		posComodin = [(windowWidth / 6) * 3  + widthOrgano * 1.5 + 15 * 2, windowHeight - heightOrgano - 20];
 		posOrganosJugadores[1] = {
 			widthOrgano: widthOrgano,
 			heightOrgano:heightOrgano,
 			posCerebro: posCerebro,
 			posCorazon: posCorazon,
 			posHueso: posHueso,
-			posHigado: posHigado
+			posHigado: posHigado,
+			posComodin: posComodin
 		};
 
 		//POSICION 2
 		widthDisponible = windowWidth / 3;
 		heightDisponible = windowHeight / 3;
-		//20px sera la separacion entre cartas * 2 = 40
-		heightOrgano = widthDisponible / 6 - 20;
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height]
-		widthOrgano = heightOrgano * 1.5;
-		posCerebro = [20, windowHeight / 2 - heightOrgano * 2 - heightOrgano * 0.75];
-		posCorazon = [20, windowHeight / 2 - heightOrgano * 1 - heightOrgano * 0.25];
-		posHueso = [20, windowHeight / 2 + heightOrgano * 0.25];
-		posHigado = [20, windowHeight / 2 + heightOrgano * 1 + heightOrgano * 0.75];
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		heightOrgano = widthDisponible / 6 - 20; 
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		widthOrgano = heightOrgano * relTam;
+
+		posCerebro = [20, windowHeight / 2 - heightOrgano * 2.5 - 15 * 2];
+		posCorazon = [20, windowHeight / 2 - heightOrgano * 1.5 - 15 * 1];
+		posHueso = [20, windowHeight / 2 - heightOrgano * 0.5 - 15 * 0];
+		posHigado = [20, windowHeight / 2 + heightOrgano * 0.5 + 15 * 1];
+		posComodin = [20, windowHeight / 2 + heightOrgano * 1.5 + 15 * 2];
 		posOrganosJugadores[2] = {
 			widthOrgano: widthOrgano,
 			heightOrgano:heightOrgano,
 			posCerebro: posCerebro,
 			posCorazon: posCorazon,
 			posHueso: posHueso,
-			posHigado: posHigado
+			posHigado: posHigado,
+			posComodin: posComodin
 		};
 
 		//POSICION 3
 		widthDisponible = windowWidth / 3;
-		//La separacion entre organos sera la mitad de un organo
+		//Los 20px solo afectan al tamanio de la carta
 		widthOrgano = widthDisponible / 6 - 20; 
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height, rotacion]
-		heightOrgano = widthOrgano * 1.5;
-		posCerebro = [(windowWidth / 6) * 1  - widthOrgano * 2 - widthOrgano * 0.75, 20];
-		posCorazon = [(windowWidth / 6) * 1 - widthOrgano * 1 - widthOrgano * 0.25, 20];
-		posHueso = [(windowWidth / 6) * 1 + widthOrgano * 0.25, 20];
-		posHigado = [(windowWidth / 6) * 1 + widthOrgano * 1 + widthOrgano * 0.75, 20];
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		heightOrgano = widthOrgano * relTam;
+
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		posCerebro = [(windowWidth / 6) * 1  - widthOrgano * 2.5 - 15 * 2, 20];
+		posCorazon = [(windowWidth / 6) * 1  - widthOrgano * 1.5 - 15 * 1, 20];
+		posHueso = [(windowWidth / 6) * 1  - widthOrgano * 0.5 - 15 * 0, 20];
+		posHigado = [(windowWidth / 6) * 1  + widthOrgano * 0.5 + 15 * 1, 20];
+		posComodin = [(windowWidth / 6) * 1  + widthOrgano * 1.5 + 15 * 2, 20];
 		posOrganosJugadores[3] = {
 			widthOrgano: widthOrgano,
 			heightOrgano:heightOrgano,
 			posCerebro: posCerebro,
 			posCorazon: posCorazon,
 			posHueso: posHueso,
-			posHigado: posHigado
-		};		
+			posHigado: posHigado,
+			posComodin: posComodin
+		};	
 
 		//POSICION 4
 		widthDisponible = windowWidth / 3;
-		//La separacion entre organos sera la mitad de un organo
+		//Los 20px solo afectan al tamanio de la carta
 		widthOrgano = widthDisponible / 6 - 20; 
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height, rotacion]
-		heightOrgano = widthOrgano * 1.5;
-		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2 - widthOrgano * 0.75, 20];
-		posCorazon = [(windowWidth / 6) * 3 - widthOrgano * 1 - widthOrgano * 0.25, 20];
-		posHueso = [(windowWidth / 6) * 3 + widthOrgano * 0.25, 20];
-		posHigado = [(windowWidth / 6) * 3 + widthOrgano * 1 + widthOrgano * 0.75, 20];
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		heightOrgano = widthOrgano * relTam;
+
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2.5 - 15 * 2, 20];
+		posCorazon = [(windowWidth / 6) * 3  - widthOrgano * 1.5 - 15 * 1, 20];
+		posHueso = [(windowWidth / 6) * 3  - widthOrgano * 0.5 - 15 * 0, 20];
+		posHigado = [(windowWidth / 6) * 3  + widthOrgano * 0.5 + 15 * 1, 20];
+		posComodin = [(windowWidth / 6) * 3  + widthOrgano * 1.5 + 15 * 2, 20];
 		posOrganosJugadores[4] = {
 			widthOrgano: widthOrgano,
 			heightOrgano:heightOrgano,
 			posCerebro: posCerebro,
 			posCorazon: posCorazon,
 			posHueso: posHueso,
-			posHigado: posHigado
+			posHigado: posHigado,
+			posComodin: posComodin
 		};
 
 		//POSICION 5
 		widthDisponible = windowWidth / 3;
-		//La separacion entre organos sera la mitad de un organo
+		//Los 20px solo afectan al tamanio de la carta
 		widthOrgano = widthDisponible / 6 - 20; 
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height, rotacion]
-		heightOrgano = widthOrgano * 1.5;
-		posCerebro = [(windowWidth / 6) * 5  - widthOrgano * 2 - widthOrgano * 0.75, 20];
-		posCorazon = [(windowWidth / 6) * 5 - widthOrgano * 1 - widthOrgano * 0.25, 20];
-		posHueso = [(windowWidth / 6) * 5 + widthOrgano * 0.25, 20];
-		posHigado = [(windowWidth / 6) * 5 + widthOrgano * 1 + widthOrgano * 0.75, 20];
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		heightOrgano = widthOrgano * relTam;
+
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		posCerebro = [(windowWidth / 6) * 5  - widthOrgano * 2.5 - 15 * 2, 20];
+		posCorazon = [(windowWidth / 6) * 5  - widthOrgano * 1.5 - 15 * 1, 20];
+		posHueso = [(windowWidth / 6) * 5  - widthOrgano * 0.5 - 15 * 0, 20];
+		posHigado = [(windowWidth / 6) * 5  + widthOrgano * 0.5 + 15 * 1, 20];
+		posComodin = [(windowWidth / 6) * 5  + widthOrgano * 1.5 + 15 * 2, 20];
 		posOrganosJugadores[5] = {
 			widthOrgano: widthOrgano,
 			heightOrgano:heightOrgano,
 			posCerebro: posCerebro,
 			posCorazon: posCorazon,
 			posHueso: posHueso,
-			posHigado: posHigado
-		};	
+			posHigado: posHigado,
+			posComodin: posComodin
+		};
 
 		//POSICION 6
 		widthDisponible = windowWidth / 3;
 		heightDisponible = windowHeight / 3;
-		//20px sera la separacion entre cartas * 2 = 40
-		heightOrgano = widthDisponible / 6 - 20;
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height]
-		widthOrgano = heightOrgano * 1.5;
-		posCerebro = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 2 - heightOrgano * 0.75];
-		posCorazon = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 1 - heightOrgano * 0.25];
-		posHueso = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 0.25];
-		posHigado = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 1 + heightOrgano * 0.75];
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		heightOrgano = widthDisponible / 6 - 20; 
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		widthOrgano = heightOrgano * relTam;
+
+		posCerebro = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 2.5 - 15 * 2];
+		posCorazon = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 1.5 - 15 * 1];
+		posHueso = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 0.5 - 15 * 0];
+		posHigado = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 0.5 + 15 * 1];
+		posComodin = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 1.5 + 15 * 2];
+
 		posOrganosJugadores[6] = {
 			widthOrgano: widthOrgano,
 			heightOrgano:heightOrgano,
 			posCerebro: posCerebro,
 			posCorazon: posCorazon,
 			posHueso: posHueso,
-			posHigado: posHigado
+			posHigado: posHigado,
+			posComodin: posComodin
 		};
 	}
 	this.initPosCartasUsuario = function(){
