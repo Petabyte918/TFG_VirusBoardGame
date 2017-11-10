@@ -335,7 +335,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 function esperarMovimiento(){
 	esperarMovSTO = setTimeout(function(){ 
 		if (movJugador == "") {
-			console.log("Esperando movimiento");
+			//console.log("Esperando movimiento");
 			esperarMovimiento();
 		} else {
 
@@ -422,7 +422,7 @@ function checkPartidaTerminada(){
 }
 
 socket.on('siguienteTurnoCli', function(datos_partida){
-	console.log("siguienteTurnoCli");
+	//console.log("siguienteTurnoCli");
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
 

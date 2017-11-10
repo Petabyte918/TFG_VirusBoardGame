@@ -178,7 +178,7 @@ function renderCountDown(time, oldDate){
 }
 
 function indicarTurno(turno) {
-	console.log("indicarTurno()-game.js");
+	//console.log("indicarTurno()-game.js");
 	var numJugadores = jugadores.length;
 	var index = jugadores.indexOf(turno);
 	var posX, posY, widthJug, heightJug = 0;
@@ -298,7 +298,7 @@ function nuevaCarta(numCarta){
 
 //En el canvas mid estan los turnos y los organos de los jugadores
 function actualizarCanvasMID(){
-	console.log("actualizarCanvasMID");
+	//console.log("actualizarCanvasMID");
 	var estadoOrgano, pos;
 	var posOrgano = {};
 	//Puedo recorrer los jugadores desde el array de jugadores o desde los indices de organosJugadoresCli
@@ -646,6 +646,13 @@ function checkCardColision(colision) {
 	var organoColision = "";
 	var posX, posY;
 
+	console.log("checkCardColision() - posPolision: "+colision);
+
+	//He soltado la carta en una posicion que no corresponde a ningún jugador
+	if (posOrganosJugadores[colision] == undefined) {
+		return;
+	}
+
 	var widthOrgano = posOrganosJugadores[colision].widthOrgano;
 	var heightOrgano = posOrganosJugadores[colision].heightOrgano;
 
@@ -694,7 +701,7 @@ function checkCardColision(colision) {
 		organoColision = "higado";
 	}
 
-	//Colision comodin
+	//Colision organoComodin
 	posX = posOrganosJugadores[colision].posComodin[0];
 	posY = posOrganosJugadores[colision].posComodin[1];
 
@@ -702,7 +709,7 @@ function checkCardColision(colision) {
 		(touch.pageX < (posX + widthOrgano + 5)) &&
 		(touch.pageY > (posY -5)) &&
 		(touch.pageY > (posY + heightOrgano + 5)) ) {
-		organoColision = "comodin";
+		organoColision = "organoComodin";
 	}
 
 	console.log("Colision concreta en organo: "+organoColision);
@@ -736,208 +743,55 @@ function manejadorMov(posDestino, organoColision, numCarta){
 
 	var movValido = false;
 
-	if (cardType == "organo") {
-		if (posDestino == 1){
-			switch (organType) {
-			case "cerebro":
-				if (organosJugadoresCli[jugDestino].cerebro == ""){
-					organosJugadoresCli[jugDestino].cerebro = "normal";
-					movValido = true;
-				}
-				break;
-			case "corazon":
-				if (organosJugadoresCli[jugDestino].corazon == ""){
-					organosJugadoresCli[jugDestino].corazon = "normal";
-					movValido = true;
-				}
-				break;
-			case "hueso":
-				if (organosJugadoresCli[jugDestino].hueso == ""){
-					organosJugadoresCli[jugDestino].hueso = "normal";
-					movValido = true;
-				}
-				break;
-			case "higado":
-				if (organosJugadoresCli[jugDestino].higado == ""){
-					organosJugadoresCli[jugDestino].higado = "normal";
-					movValido = true;
-				}
-				break;
-			case "comodin":
-				if (organosJugadoresCli[jugDestino].organoComodin == ""){
-					organosJugadoresCli[jugDestino].organoComodin = "normal";
-					movValido = true;
-				}
-				break;
-			default:
-				console.log("Error grave en manejadorMov()-switch organo");
-			}
+	//Si es un organo y la pos es la mia, evaluo si no lo tengo
+	if ((cardType == "organo") && (posDestino == 1)) {
+		console.log("organosJugadoresCli[jugDestino][organType]: "+organosJugadoresCli[jugDestino][organType]);
+		console.log("jugDestino: "+jugDestino);
+		console.log("organtype: "+organType);
+		if (organosJugadoresCli[jugDestino][organType] == ""){
+			organosJugadoresCli[jugDestino][organType] = "normal";
+			movValido = true;
 		} else {
-			console.log("Movimiento no valido");
+			console.log("manejadorMov() - Organo repetido");
 		}
 	}
 
-	if (cardType == "medicina") {
-		//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
-		switch (organType) {
-		case "cerebro":
-			if (organosJugadoresCli[jugDestino].cerebro == "enfermo"){
-				organosJugadoresCli[jugDestino].cerebro = "normal";
+	//Si el tipo de organo de la carta es igual al lugar del organo donde la he soltado evaluo
+	//O si es tipo comodin evaluo en el sitio donde he soltado
+	//O si donde la he soltado es el organo comodin tambien evaluo
+	//organType-> tipo del organo de la carta que he jugado
+	//organoColision-> tipo del organo del organo destino
+	if ((organType == organoColision) || (organType == "comodin") || (organoColision == "organoComodin")) {
+		if (cardType == "medicina") {
+			//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
+			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
+				organosJugadoresCli[jugDestino][organoColision] = "normal";
 				movValido = true;
-			}
-			break;
-			if (organosJugadoresCli[jugDestino].cerebro == "normal"){
-				organosJugadoresCli[jugDestino].cerebro = "vacunado";
+			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
+				organosJugadoresCli[jugDestino][organoColision] = "vacunado";
 				movValido = true;
-			}
-			break;
-			if (organosJugadoresCli[jugDestino].cerebro == "vacunado"){
-				organosJugadoresCli[jugDestino].cerebro = "inmunizado";
+			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
+				organosJugadoresCli[jugDestino][organoColision] = "inmunizado";
 				movValido = true;
+			} else {
+				console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
 			}
-			break;
-		case "corazon":
-			if (organosJugadoresCli[jugDestino].corazon == "enfermo"){
-				organosJugadoresCli[jugDestino].corazon = "normal";
+		}
+			
+		if (cardType == "virus") {
+			//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
+			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
+				organosJugadoresCli[jugDestino][organoColision] = "";
 				movValido = true;
-			}
-			break;
-			if (organosJugadoresCli[jugDestino].corazon == "normal"){
-				organosJugadoresCli[jugDestino].corazon = "vacunado";
+			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
+				organosJugadoresCli[jugDestino][organoColision] = "enfermo";
 				movValido = true;
-			}
-			break;
-			if (organosJugadoresCli[jugDestino].corazon == "vacunado"){
-				organosJugadoresCli[jugDestino].corazon = "inmunizado";
+			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
+				organosJugadoresCli[jugDestino][organoColision] = "normal";
 				movValido = true;
+			} else {
+				console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
 			}
-			break;
-		case "hueso":
-			if (organosJugadoresCli[jugDestino].hueso == "enfermo"){
-				organosJugadoresCli[jugDestino].hueso = "normal";
-				movValido = true;
-			}
-			break;
-			if (organosJugadoresCli[jugDestino].hueso == "normal"){
-				organosJugadoresCli[jugDestino].hueso = "vacunado";
-				movValido = true;
-			}
-			break;
-			if (organosJugadoresCli[jugDestino].hueso == "vacunado"){
-				organosJugadoresCli[jugDestino].hueso = "inmunizado";
-				movValido = true;
-			}
-			break;
-			console.log("Movimiento no valido");
-			break;
-		case "higado":
-			if (organosJugadoresCli[jugDestino].higado == "enfermo"){
-				organosJugadoresCli[jugDestino].higado = "normal";
-				movValido = true;
-			}
-			break;
-			if (organosJugadoresCli[jugDestino].higado == "normal"){
-				organosJugadoresCli[jugDestino].higado = "vacunado";
-				movValido = true;
-			}
-			break;
-			if (organosJugadoresCli[jugDestino].higado == "vacunado"){
-				organosJugadoresCli[jugDestino].higado = "inmunizado";
-				movValido = true;
-			}
-			break;
-		case "comodin":
-			//Mov valido pero de momento no hacemos nada
-			console.log("Comodin medicina");
-			movValido = true;
-			break;
-		default:
-			console.log("Error grave en manejadorMov()-switch medicina");
-		}		
-	}
-
-	if (cardType == "virus") {
-		//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
-		switch (organType) {
-		case "cerebro":
-			if (organosJugadoresCli[jugDestino].cerebro == "enfermo"){
-				organosJugadoresCli[jugDestino].cerebro = "";
-				movValido = true;
-				break;
-			}
-			if (organosJugadoresCli[jugDestino].cerebro == "normal"){
-				organosJugadoresCli[jugDestino].cerebro = "enfermo";
-				movValido = true;
-				break;
-			}
-			if (organosJugadoresCli[jugDestino].cerebro == "vacunado"){
-				organosJugadoresCli[jugDestino].cerebro = "normal";
-				movValido = true;
-				break;
-			}
-			console.log("Movimiento no valido");
-			break;
-		case "corazon":
-			if (organosJugadoresCli[jugDestino].corazon == "enfermo"){
-				organosJugadoresCli[jugDestino].corazon = "";
-				movValido = true;
-				break;
-			}
-			if (organosJugadoresCli[jugDestino].corazon == "normal"){
-				organosJugadoresCli[jugDestino].corazon = "enfermo";
-				movValido = true;
-				break;
-			}
-			if (organosJugadoresCli[jugDestino].corazon == "vacunado"){
-				organosJugadoresCli[jugDestino].corazon = "normal";
-				movValido = true;
-				break;
-			}
-			console.log("Movimiento no valido");
-			break;
-		case "hueso":
-			if (organosJugadoresCli[jugDestino].hueso == "enfermo"){
-				organosJugadoresCli[jugDestino].hueso = "";
-				movValido = true;
-				break;
-			}
-			if (organosJugadoresCli[jugDestino].hueso == "normal"){
-				organosJugadoresCli[jugDestino].hueso = "enfermo";
-				movValido = true;
-				break;
-			}
-			if (organosJugadoresCli[jugDestino].hueso == "vacunado"){
-				organosJugadoresCli[jugDestino].hueso = "normal";
-				movValido = true;
-				break;
-			}
-			console.log("Movimiento no valido");
-			break;
-		case "higado":
-			if (organosJugadoresCli[jugDestino].higado == "enfermo"){
-				organosJugadoresCli[jugDestino].higado = "";
-				movValido = true;
-				break;
-			}
-			if (organosJugadoresCli[jugDestino].higado == "normal"){
-				organosJugadoresCli[jugDestino].higado = "enfermo";
-				movValido = true;
-				break;
-			}
-			if (organosJugadoresCli[jugDestino].higado == "vacunado"){
-				organosJugadoresCli[jugDestino].higado = "normal";
-				movValido = true;
-				break;
-			}
-			console.log("Movimiento no valido");
-			break;
-		case "comodin":
-			//Mov valido pero de momento no hacemos nada
-			console.log("Comodin virus");
-			movValido = true;
-			break;
-		default:
-			console.log("Error grave en manejadorMov()-switch virus");
 		}
 	}
 
@@ -981,7 +835,6 @@ function manejadorMov(posDestino, organoColision, numCarta){
 	} else {
 		console.log("Movimiento no valido");
 	}
-	
 }
 
 $(document).ready(function(){
