@@ -407,9 +407,9 @@ function checkPartidaTerminada(){
 			
 			totalOrganosCompletos++;
 		}
-		if ((organosJugadoresCli[jugador].comodin == "normal") ||
-			(organosJugadoresCli[jugador].comodin == "vacunado") ||
-			(organosJugadoresCli[jugador].comodin == "inmunizado")) {
+		if ((organosJugadoresCli[jugador].organoComodin == "normal") ||
+			(organosJugadoresCli[jugador].organoComodin == "vacunado") ||
+			(organosJugadoresCli[jugador].organoComodin == "inmunizado")) {
 			
 			totalOrganosCompletos++;
 		}

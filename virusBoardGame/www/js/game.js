@@ -632,7 +632,8 @@ function checkCollision() {
 		colision = -1;
 	}
 
-	manejadorMov(colision, objetoActual.numCarta);
+	var organoColision = checkCardColision(colision);
+	manejadorMov(colision, organoColision, objetoActual.numCarta);
 
 	//Pase lo que pase siempre colocamos todo de nuevo
 	touch.pageX = null;
@@ -641,7 +642,75 @@ function checkCollision() {
 	objetoActual.y = objetoActual.yOrigen;
 }
 
-function manejadorMov(posDestino, numCarta){
+function checkCardColision(colision) {
+	var organoColision = "";
+	var posX, posY;
+
+	var widthOrgano = posOrganosJugadores[colision].widthOrgano;
+	var heightOrgano = posOrganosJugadores[colision].heightOrgano;
+
+	//Restamos 5 a cada posX-posY y a widthOrgano y heightOrgano para expresar el borde de la carta
+	//Colision cerebro
+	posX = posOrganosJugadores[colision].posCerebro[0];
+	posY = posOrganosJugadores[colision].posCerebro[1];
+
+	if ( (touch.pageX > (posX - 5)) &&
+		(touch.pageX < (posX + widthOrgano + 5)) &&
+		(touch.pageY > (posY -5)) &&
+		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		organoColision = "cerebro";
+	}
+
+	//Colision corazon
+	posX = posOrganosJugadores[colision].posCorazon[0];
+	posY = posOrganosJugadores[colision].posCorazon[1];
+
+	if ( (touch.pageX > (posX - 5)) &&
+		(touch.pageX < (posX + widthOrgano + 5)) &&
+		(touch.pageY > (posY -5)) &&
+		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		organoColision = "corazon";
+	}
+
+	//Colision hueso
+	posX = posOrganosJugadores[colision].posHueso[0];
+	posY = posOrganosJugadores[colision].posHueso[1];
+
+	if ( (touch.pageX > (posX - 5)) &&
+		(touch.pageX < (posX + widthOrgano + 5)) &&
+		(touch.pageY > (posY -5)) &&
+		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		organoColision = "hueso";
+	}
+
+	//Colision higado
+	posX = posOrganosJugadores[colision].posHigado[0];
+	posY = posOrganosJugadores[colision].posHigado[1];
+
+	if ( (touch.pageX > (posX - 5)) &&
+		(touch.pageX < (posX + widthOrgano + 5)) &&
+		(touch.pageY > (posY -5)) &&
+		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		organoColision = "higado";
+	}
+
+	//Colision comodin
+	posX = posOrganosJugadores[colision].posComodin[0];
+	posY = posOrganosJugadores[colision].posComodin[1];
+
+	if ( (touch.pageX > (posX - 5)) &&
+		(touch.pageX < (posX + widthOrgano + 5)) &&
+		(touch.pageY > (posY -5)) &&
+		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		organoColision = "comodin";
+	}
+
+	console.log("Colision concreta en organo: "+organoColision);
+
+	return organoColision;
+}
+
+function manejadorMov(posDestino, organoColision, numCarta){
 	console.log("Pos destino del movimiento: "+posDestino);
 
 	//Descarte
@@ -674,33 +743,30 @@ function manejadorMov(posDestino, numCarta){
 				if (organosJugadoresCli[jugDestino].cerebro == ""){
 					organosJugadoresCli[jugDestino].cerebro = "normal";
 					movValido = true;
-					break;
 				}
+				break;
 			case "corazon":
 				if (organosJugadoresCli[jugDestino].corazon == ""){
 					organosJugadoresCli[jugDestino].corazon = "normal";
 					movValido = true;
-					break;
 				}
+				break;
 			case "hueso":
 				if (organosJugadoresCli[jugDestino].hueso == ""){
 					organosJugadoresCli[jugDestino].hueso = "normal";
 					movValido = true;
-					break;
 				}
 				break;
 			case "higado":
 				if (organosJugadoresCli[jugDestino].higado == ""){
 					organosJugadoresCli[jugDestino].higado = "normal";
 					movValido = true;
-					break;
 				}
 				break;
 			case "comodin":
-				if (organosJugadoresCli[jugDestino].orgaComodin == ""){
-					organosJugadoresCli[jugDestino].orgaComodin = "normal";
+				if (organosJugadoresCli[jugDestino].organoComodin == ""){
+					organosJugadoresCli[jugDestino].organoComodin = "normal";
 					movValido = true;
-					break;
 				}
 				break;
 			default:
@@ -718,73 +784,67 @@ function manejadorMov(posDestino, numCarta){
 			if (organosJugadoresCli[jugDestino].cerebro == "enfermo"){
 				organosJugadoresCli[jugDestino].cerebro = "normal";
 				movValido = true;
-				break;
 			}
+			break;
 			if (organosJugadoresCli[jugDestino].cerebro == "normal"){
 				organosJugadoresCli[jugDestino].cerebro = "vacunado";
 				movValido = true;
-				break;
 			}
+			break;
 			if (organosJugadoresCli[jugDestino].cerebro == "vacunado"){
 				organosJugadoresCli[jugDestino].cerebro = "inmunizado";
 				movValido = true;
-				break;
 			}
-			console.log("Movimiento no valido");
 			break;
 		case "corazon":
 			if (organosJugadoresCli[jugDestino].corazon == "enfermo"){
 				organosJugadoresCli[jugDestino].corazon = "normal";
 				movValido = true;
-				break;
 			}
+			break;
 			if (organosJugadoresCli[jugDestino].corazon == "normal"){
 				organosJugadoresCli[jugDestino].corazon = "vacunado";
 				movValido = true;
-				break;
 			}
+			break;
 			if (organosJugadoresCli[jugDestino].corazon == "vacunado"){
 				organosJugadoresCli[jugDestino].corazon = "inmunizado";
 				movValido = true;
-				break;
 			}
-			console.log("Movimiento no valido");
 			break;
 		case "hueso":
 			if (organosJugadoresCli[jugDestino].hueso == "enfermo"){
 				organosJugadoresCli[jugDestino].hueso = "normal";
 				movValido = true;
-				break;
 			}
+			break;
 			if (organosJugadoresCli[jugDestino].hueso == "normal"){
 				organosJugadoresCli[jugDestino].hueso = "vacunado";
 				movValido = true;
-				break;
 			}
+			break;
 			if (organosJugadoresCli[jugDestino].hueso == "vacunado"){
 				organosJugadoresCli[jugDestino].hueso = "inmunizado";
 				movValido = true;
-				break;
 			}
+			break;
 			console.log("Movimiento no valido");
 			break;
 		case "higado":
 			if (organosJugadoresCli[jugDestino].higado == "enfermo"){
 				organosJugadoresCli[jugDestino].higado = "normal";
 				movValido = true;
-				break;
 			}
+			break;
 			if (organosJugadoresCli[jugDestino].higado == "normal"){
 				organosJugadoresCli[jugDestino].higado = "vacunado";
 				movValido = true;
-				break;
 			}
+			break;
 			if (organosJugadoresCli[jugDestino].higado == "vacunado"){
 				organosJugadoresCli[jugDestino].higado = "inmunizado";
 				movValido = true;
-				break;
 			}
-			console.log("Movimiento no valido");
 			break;
 		case "comodin":
 			//Mov valido pero de momento no hacemos nada

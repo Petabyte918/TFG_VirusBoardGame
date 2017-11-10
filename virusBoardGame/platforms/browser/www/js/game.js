@@ -240,12 +240,13 @@ function indicarTurno(turno) {
 	//console.log("heightJug: "+heightJug);
 	cxMID.clearRect(posX + 5, posY + 5, widthJug - 10, heightJug - 10);
 
+	/** Logs para dibujar espacio de descartes
 	posX = ((windowWidth / 6) * 1);
 	posY = ((windowHeight / 3) * 1);
 	widthJug =  (((windowWidth / 6) * 5) - posX);
 	heightJug = (((windowHeight / 3) * 2) - posY);
 	cxMID.fillStyle = 'red';
-	cxMID.fillRect(posX, posY, widthJug, heightJug);
+	cxMID.fillRect(posX, posY, widthJug, heightJug);**/
 
 	actualizarCanvasMID();
 }
@@ -631,6 +632,10 @@ function checkCollision() {
 		colision = -1;
 	}
 
+	console.log("Pos carta 1.x: "+posCartasUsuario[2][0]);
+	console.log("Pos carta 1.y: "+posCartasUsuario[2][1]);
+	console.log("touchX: "+touch.pageX);
+	console.log("touchY: "+touch.pageY);
 	manejadorMov(colision, objetoActual.numCarta);
 
 	//Pase lo que pase siempre colocamos todo de nuevo
@@ -696,8 +701,8 @@ function manejadorMov(posDestino, numCarta){
 				}
 				break;
 			case "comodin":
-				if (organosJugadoresCli[jugDestino].orgaComodin == ""){
-					organosJugadoresCli[jugDestino].orgaComodin = "normal";
+				if (organosJugadoresCli[jugDestino].organoComodin == ""){
+					organosJugadoresCli[jugDestino].organoComodin = "normal";
 					movValido = true;
 					break;
 				}

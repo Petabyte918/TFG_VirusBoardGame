@@ -175,3 +175,31 @@ function ponerJugadores(){
 		}
 	}
 }
+
+
+	//Fondo
+	cxMID.beginPath();
+	cxMID.strokeStyle = '#09303a';
+	cxMID.lineWidth = 10;
+	cxMID.lineCap = 'black';
+	cxMID.shadowBlur = 0;
+	cxMID.shadowColor = '#09303a';
+
+	gradient = cxMID.createRadialGradient(250, 250, 5, 250, 250, 300);
+	gradient.addColorStop(0, '#09303a');
+	gradient.addColorStop(1, 'black');
+	cxMID.fillStyle = gradient;
+	cxMID.arc(xCountDown,yCountDown,radius, 0, degToRad(360),false);
+	cxMID.fill();
+	cxMID.stroke();
+
+	//Arco
+	cxMID.beginPath();
+	cxMID.strokeStyle = '#28d1fa';
+	cxMID.lineWidth = 10;
+	cxMID.lineCap = 'round';
+	cxMID.shadowBlur = 2;
+	cxMID.shadowColor = '#28d1fa';
+
+	cxMID.arc(xCountDown,yCountDown,radius, degToRad(270), degToRad(((time*6)*ajuste)-90),false);
+	cxMID.stroke();
