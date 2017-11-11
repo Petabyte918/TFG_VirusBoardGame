@@ -110,6 +110,11 @@ a.num_jugadores {
 	z-index: 10;
 }
 
+#descartes_boton {
+	position: absolute;
+	z-index: 10;
+}
+
 #container_form_create {
 	position: absolute;
 	max-width: 50%;

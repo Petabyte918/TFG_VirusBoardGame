@@ -171,6 +171,8 @@ function renderCountDown(time, oldDate){
 		if (time > 0) {
 			renderCountDown(time, now);
 		} else {
+			//Por si se nos ha pasado el tiempo en medio de un descarte
+			fin_descarte();
 			movJugador = "tiempo_agotado";
 			//Y nos chivamos al servidor
 		}
@@ -457,7 +459,7 @@ function actualizarCanvas(){
 	//console.log("Actualizar canvas");
 	cx.clearRect(0, 0, windowWidth, windowHeight);
 	var img1 = new Image();
-	if (objetos[0].src != ""){
+	if ((objetos[0].src != "") && (descartes[0] == false)){
 		img1.src = objetos[0].src;
 		img1.onload = function(){
 			//console.log("objetos[0] :"+objetos[0]);
@@ -465,7 +467,7 @@ function actualizarCanvas(){
 		}
 	}
 	var img2 = new Image();
-	if (objetos[1].src != ""){
+	if ((objetos[1].src != "") && (descartes[1] == false)){
 		img2.src = objetos[1].src;
 		img2.onload = function(){
 			//console.log("objetos[1] :"+objetos[1]);
@@ -473,7 +475,7 @@ function actualizarCanvas(){
 		}
 	}
 	var img3 = new Image();
-	if (objetos[2].src != ""){
+	if ((objetos[2].src != "") && (descartes[2] == false)){
 		img3.src = objetos[2].src;
 		img3.onload = function(){
 			//console.log("objetos[2] :"+objetos[2]);
@@ -539,8 +541,8 @@ function moveObjects(){
 			objetoActual.x = touch.pageX - inicioX;
 			objetoActual.y = touch.pageY - inicioY;
 			//console.log("ObjetoActual.x: "+objetoActual.x);
-			console.log("touch.pageX: "+touch.pageX);
-			console.log("touch.pageY: "+touch.pageY);
+			//console.log("touch.pageX: "+touch.pageX);
+			//console.log("touch.pageY: "+touch.pageY);
 			//console.log("inicioX :"+inicioX);
 			actualizarCanvas();
 		}
@@ -718,16 +720,18 @@ function checkCardColision(colision) {
 	return organoColision;
 }
 
-function manejadorMov(posDestino, organoColision, numCarta){
+function manejadorMov(posDestino, organoColision, numCarta) {
 	console.log("Pos destino del movimiento: "+posDestino);
-
+	console.log("numCarta-typeOf(numcarta): "+numCarta+("-")+typeof(numCarta));
 	//Descarte
 	if (posDestino == 0) {
-		//En realidad puedes descartar cualquier numero de cartas en una jugada->Por implementar
-		//console.log("Carta descartada - Movimiento valido");
-		movJugador = "algo";
-		nuevaCarta(numCarta);
-		//Si es un descarte no seguimos evaluando nada mas!!
+		finDescarte = false;
+		descartes[numCarta] = true;
+		actualizarCanvas();
+		$("#descartes_boton").css("display","inline");
+	}
+	//Descarte-block Si estamos en proceso de descarte no podemos hacer otra cosa hasta acabar
+	if (finDescarte == false) {
 		return;
 	}
 
@@ -836,6 +840,26 @@ function manejadorMov(posDestino, organoColision, numCarta){
 	} else {
 		console.log("Movimiento no valido");
 	}
+}
+
+function fin_descarte() {
+	finDescarte = true;
+	$("#descartes_boton").css("display","none");
+	if (descartes[0] == true) {
+		nuevaCarta(0);
+	}
+	if (descartes[1] == true) {
+		nuevaCarta(1);
+	}
+	if (descartes[2] == true) {
+		nuevaCarta(2);
+	}
+
+	descartes[0] = false;
+	descartes[1] = false;
+	descartes[2] = false;
+	movJugador = "algo";
+	actualizarCanvas();
 }
 
 $(document).ready(function(){

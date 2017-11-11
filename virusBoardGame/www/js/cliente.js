@@ -318,6 +318,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initPosOrganosJugadores();
 	Engine.initCubosDescarte();
 	Engine.initPosCartasUsuario();
+	Engine.initFinDescartesButton();
 
 	renderBGCards();
 
@@ -452,7 +453,6 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	//Pendiente
 	//Una vez representado el movimiento del jugador, borramos el mov
 	movJugador = "";
-
 	indicarTurno(turno);
 
 	esperarMovimiento(); //->setTimeOut
@@ -493,6 +493,7 @@ function handleReconect(){
 	Engine.initPosOrganosJugadores();
 	Engine.initCubosDescarte();
 	Engine.initPosCartasUsuario();
+	Engine.initFinDescartesButton();
 
 	renderBGCards();
 

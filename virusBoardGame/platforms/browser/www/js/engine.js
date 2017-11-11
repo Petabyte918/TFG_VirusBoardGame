@@ -16,6 +16,8 @@ var posCubosDescarte = {};
 var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
 var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
+var finDescarte = false; //Indica si estoy en proceso de descarte
+var descartes = {0: false, 1: false, 2: false}; //
 
 function aleatorioRGBrange(inferior,superior) {
 	var numPosibilidades = superior - inferior;
@@ -324,6 +326,12 @@ Engine = new function () {
 		var posCarta3 = [windowWidth/2 + widthCarta*0.5 + 10, posY];
 		posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
 
+	}
+	this.initFinDescartesButton = function() {
+		var posX = posCartasUsuario[4][0] + posCartasUsuario[0] + 20;
+		var posY = posCartasUsuario[4][1] + 20;
+
+		$("#descartes_boton").css({"top": posY, "left": posX});
 	}
 }
 
