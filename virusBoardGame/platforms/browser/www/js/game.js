@@ -510,7 +510,7 @@ function moveObjects(){
 
 	//Movil - ordenador
 	//cv.ontouchstart = function(event) {
-		//var touch = event.touches[0];
+		//touch = event.touches[0];
 	cv.onmousedown = function(event) {
 		touch = event;
 		//console.log("Onmousedown");
@@ -530,7 +530,7 @@ function moveObjects(){
 
 	//Movil - ordenador
 	//cv.ontouchmove = function(event) {
-		//var touch = event.touches[0];
+		//touch = event.touches[0];
 	cv.onmousemove = function(event) {
 		touch = event;
 		//console.log("Onmousemove");
@@ -539,7 +539,8 @@ function moveObjects(){
 			objetoActual.x = touch.pageX - inicioX;
 			objetoActual.y = touch.pageY - inicioY;
 			//console.log("ObjetoActual.x: "+objetoActual.x);
-			//console.log("touch.pageX: "+touch.pageX);
+			console.log("touch.pageX: "+touch.pageX);
+			console.log("touch.pageY: "+touch.pageY);
 			//console.log("inicioX :"+inicioX);
 			actualizarCanvas();
 		}
@@ -663,8 +664,8 @@ function checkCardColision(colision) {
 
 	if ( (touch.pageX > (posX - 5)) &&
 		(touch.pageX < (posX + widthOrgano + 5)) &&
-		(touch.pageY > (posY -5)) &&
-		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		(touch.pageY > (posY - 5)) &&
+		(touch.pageY < (posY + heightOrgano + 5)) ) {
 		organoColision = "cerebro";
 	}
 
@@ -674,8 +675,8 @@ function checkCardColision(colision) {
 
 	if ( (touch.pageX > (posX - 5)) &&
 		(touch.pageX < (posX + widthOrgano + 5)) &&
-		(touch.pageY > (posY -5)) &&
-		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		(touch.pageY > (posY - 5)) &&
+		(touch.pageY < (posY + heightOrgano + 5)) ) {
 		organoColision = "corazon";
 	}
 
@@ -685,8 +686,8 @@ function checkCardColision(colision) {
 
 	if ( (touch.pageX > (posX - 5)) &&
 		(touch.pageX < (posX + widthOrgano + 5)) &&
-		(touch.pageY > (posY -5)) &&
-		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		(touch.pageY > (posY - 5)) &&
+		(touch.pageY < (posY + heightOrgano + 5)) ) {
 		organoColision = "hueso";
 	}
 
@@ -696,8 +697,8 @@ function checkCardColision(colision) {
 
 	if ( (touch.pageX > (posX - 5)) &&
 		(touch.pageX < (posX + widthOrgano + 5)) &&
-		(touch.pageY > (posY -5)) &&
-		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		(touch.pageY > (posY - 5)) &&
+		(touch.pageY < (posY + heightOrgano + 5)) ) {
 		organoColision = "higado";
 	}
 
@@ -707,8 +708,8 @@ function checkCardColision(colision) {
 
 	if ( (touch.pageX > (posX - 5)) &&
 		(touch.pageX < (posX + widthOrgano + 5)) &&
-		(touch.pageY > (posY -5)) &&
-		(touch.pageY > (posY + heightOrgano + 5)) ) {
+		(touch.pageY > (posY - 5)) &&
+		(touch.pageY < (posY + heightOrgano + 5)) ) {
 		organoColision = "organoComodin";
 	}
 

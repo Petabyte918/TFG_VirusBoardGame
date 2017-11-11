@@ -287,30 +287,6 @@ Engine = new function () {
 			posComodin: posComodin
 		};
 	}
-	this.initPosCartasUsuario = function(){
-		var widthDisponible, heightDisponible = 0;
-		var widthOrgano, heightOrgano = 0;
-
-		widthDisponible = windowWidth / 3;
-		heightDisponible = windowHeight / 3;
-
-		//Esto esta para separarlo de la parte de abajo
-		widthOrgano = widthDisponible / 8 - 20; 
-		heightOrgano = widthOrgano * (1536/1013);
-
-		//20px sera la separacion entre cartas * 2 = 40
-		var widthCarta = widthDisponible / 3 - 20;
-
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height]
-		var heightCarta = widthCarta * (1536/1013);
-
-		var posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, windowHeight - heightCarta*1.5 - heightOrgano - 40];
-		var posCarta2 = [windowWidth / 2 - widthCarta * 0.5, windowHeight - heightCarta*1.5 - heightOrgano - 40];
-		var posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, windowHeight - heightCarta*1.5 - heightOrgano - 40];
-		posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-
-	}
 	this.initCubosDescarte = function(){
 		var widthCubo = ((windowWidth / 6) * 0.65) - 20;
 		var heightCubo = (widthCubo * 0.9) //(180/201) Para mantener la prop de la imagen
@@ -335,5 +311,19 @@ Engine = new function () {
 			y: ((windowHeight / 3) + 30)
 		}
 	}	
+	this.initPosCartasUsuario = function(){
+		//La posY sera 5px debajo de los cubos
+		var posY = posCubosDescarte[1].y + posCubosDescarte.heightCubo - 20;
+		//La altura de las cartas del usuario sera el espacio entre los cubos y los organos del usuario
+		var heightCarta = posOrganosJugadores[1].posCerebro[1] - posY - 70;
+		//La anchura de las cartas del usuario esta en proporcion con (1536/1013)
+		var widthCarta = heightCarta * (1013/1536);
+
+		var posCarta1 = [windowWidth/2 - widthCarta*1.5 - 10, posY];
+		var posCarta2 = [windowWidth/2 - widthCarta*0.5, posY];
+		var posCarta3 = [windowWidth/2 + widthCarta*0.5 + 10, posY];
+		posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+
+	}
 }
 

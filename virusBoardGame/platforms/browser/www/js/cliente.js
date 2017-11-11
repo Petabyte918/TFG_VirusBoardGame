@@ -316,8 +316,8 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	Engine.initPosCartasUsuario();
 	Engine.initCubosDescarte();
+	Engine.initPosCartasUsuario();
 
 	renderBGCards();
 
@@ -491,8 +491,8 @@ function handleReconect(){
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	Engine.initPosCartasUsuario();
 	Engine.initCubosDescarte();
+	Engine.initPosCartasUsuario();
 
 	renderBGCards();
 
