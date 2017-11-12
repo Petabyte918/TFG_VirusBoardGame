@@ -7,7 +7,13 @@
 6.- DONE- Imagenes cartas
 7.- Comentarios bocadillos primera vez al menos para los tres botones principales
 8.- Funcionalidad resto cartas
-9.- Poder descartar todas las cartas
+	Especiales:
+		-Cambiar el panel de descarte a arriba por ejemplo
+		-Cada vez que una carta especial es arrastrada, un cuadro de instrucciones
+		aparece a la derecha del cubo. Se puede cerrar si la carta vuelve a su sitio o al final del turno
+		por si solo. Y en settings se puede ajustar como ayuda débil.
+		-Con un span cada vez que la carta de use mal, podemos remarcar con otro color lo que se ha incumplido
+9.- DONE- Poder descartar todas las cartas
 10.- Echar al jugador tras pasar tres turnos
 
 Edicion Imagenes

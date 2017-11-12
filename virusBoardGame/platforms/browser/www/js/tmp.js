@@ -7,7 +7,7 @@
 6.- DONE- Imagenes cartas
 7.- Comentarios bocadillos primera vez al menos para los tres botones principales
 8.- Funcionalidad resto cartas
-9.- Poder descartar todas las cartas
+9.- DONE- Poder descartar todas las cartas
 10.- Echar al jugador tras pasar tres turnos
 
 Edicion Imagenes
