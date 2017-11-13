@@ -4,7 +4,7 @@ var usuario = "";
 var idPartida = "";
 var jugadores = [];
 var deckOfCards = [];
-var movJugador = ""; //JugadorOrigen - JugDestino - Carta
+var movJugador = "";
 
 //Informacion exclusiva de cada cliente
 var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
@@ -18,6 +18,7 @@ var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
 var finDescarte = false; //Indica si estoy en proceso de descarte
 var descartes = {0: false, 1: false, 2: false}; //
+var transplante = {enProceso: false, organoDest: {organo: "", jugDestino: -1}, organoProp: {organo: "", jugDestino: -1}};
 
 function aleatorioRGBrange(inferior,superior) {
 	var numPosibilidades = superior - inferior;

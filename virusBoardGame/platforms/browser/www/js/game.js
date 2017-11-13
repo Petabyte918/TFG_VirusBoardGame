@@ -173,6 +173,8 @@ function renderCountDown(time, oldDate){
 		} else {
 			//Por si se nos ha pasado el tiempo en medio de un descarte
 			fin_descarte();
+			//Por si se nos ha pasado el tiempo en medio de un transplante
+			fin_transplante();
 			movJugador = "tiempo_agotado";
 			//Y nos chivamos al servidor
 		}
@@ -722,7 +724,14 @@ function checkCardColision(colision) {
 
 function manejadorMov(posDestino, organoColision, numCarta) {
 	console.log("Pos destino del movimiento: "+posDestino);
-	console.log("numCarta-typeOf(numcarta): "+numCarta+("-")+typeof(numCarta));
+	//console.log("numCarta-typeOf(numcarta): "+numCarta+("-")+typeof(numCarta));
+
+	//Transplante-block. Si estamos en proceso de transplante no podemos hacer otra cosa hasta acabar
+	if (transplante.enProceso == true) {
+		console.log("Transplante en proceso");
+		return;
+	}
+
 	//Descarte
 	if (posDestino == 0) {
 		finDescarte = false;
@@ -730,8 +739,9 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		actualizarCanvas();
 		$("#descartes_boton").css("display","inline");
 	}
-	//Descarte-block Si estamos en proceso de descarte no podemos hacer otra cosa hasta acabar
+	//Descarte-block. Si estamos en proceso de descarte no podemos hacer otra cosa hasta acabar
 	if (finDescarte == false) {
+		console.log("Descarte en proceso");
 		return;
 	}
 
@@ -746,8 +756,6 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	var cardType = cartasUsuario[numCarta].cardType;
 	var organType = cartasUsuario[numCarta].organType;
 
-	var movValido = false;
-
 	//Si es un organo y la pos es la mia, evaluo si no lo tengo
 	if ((cardType == "organo") && (posDestino == 1)) {
 		console.log("organosJugadoresCli[jugDestino][organType]: "+organosJugadoresCli[jugDestino][organType]);
@@ -755,7 +763,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		console.log("organtype: "+organType);
 		if (organosJugadoresCli[jugDestino][organType] == ""){
 			organosJugadoresCli[jugDestino][organType] = "normal";
-			movValido = true;
+			movJugador = "algo";
 		} else {
 			console.log("manejadorMov() - Organo repetido");
 		}
@@ -771,13 +779,13 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
 				organosJugadoresCli[jugDestino][organoColision] = "normal";
-				movValido = true;
+				movJugador = "algo";
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
 				organosJugadoresCli[jugDestino][organoColision] = "vacunado";
-				movValido = true;
+				movJugador = "algo";
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
 				organosJugadoresCli[jugDestino][organoColision] = "inmunizado";
-				movValido = true;
+				movJugador = "algo";
 			} else {
 				console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
 			}
@@ -787,15 +795,15 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
 				organosJugadoresCli[jugDestino][organoColision] = "";
-				movValido = true;
+				movJugador = "algo";
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
 				organosJugadoresCli[jugDestino][organoColision] = "enfermo";
-				movValido = true;
+				movJugador = "algo";
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
 				organosJugadoresCli[jugDestino][organoColision] = "normal";
-				movValido = true;
+				movJugador = "algo";
 			} else {
-				console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
+				console.log("manejadorMov() - Virus. Organo inmunizado o no existe");
 			}
 		}
 	}
@@ -804,39 +812,96 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 		switch (organType) {
 		case "error medico":
-			//Mov valido pero de momento no hacemos nada
-			console.log("Error medico");
-			movValido = true;
+			console.log("manejadorMov() - Error medico");
+			var auxCerebro = organosJugadoresCli[jugDestino].cerebro;
+			var auxCorazon = organosJugadoresCli[jugDestino].corazon;
+			var auxHigado = organosJugadoresCli[jugDestino].higado;
+			var auxHueso = organosJugadoresCli[jugDestino].hueso;
+			var auxOrganoComodin = organosJugadoresCli[jugDestino].organoComodin;
+			organosJugadoresCli[jugDestino].cerebro = organosJugadoresCli[1].cerebro;
+			organosJugadoresCli[jugDestino].corazon = organosJugadoresCli[1].corazon;
+			organosJugadoresCli[jugDestino].higado = organosJugadoresCli[1].higado;
+			organosJugadoresCli[jugDestino].hueso = organosJugadoresCli[1].hueso;
+			organosJugadoresCli[jugDestino].organoComodin = organosJugadoresCli[1].organoComodin;
+			organosJugadoresCli[1].cerebro = auxCerebro;
+			organosJugadoresCli[1].corazon = auxCorazon;
+			organosJugadoresCli[1].higado = auxHigado;
+			organosJugadoresCli[1].hueso = auxHueso;
+			organosJugadoresCli[1].organoComodin = auxOrganoComodin;
+
+			movJugador = "algo";
 			break;
 		case "guante de latex":
-			//Mov valido pero de momento no hacemos nada
-			console.log("Guante de latex");
-			movValido = true;
+			console.log("manejadorMov() - Guante de latex");
+			movJugador = "guante_de_latex";
 			break;
 		case "transplante":
-			//Mov valido pero de momento no hacemos nada
-			console.log("Transplante");
-			movValido = true;
+			console.log("manejadorMov() - Transplante");
+			//Guardo el intercambio
+			if (jugDestino == 1) {
+				transplante.organoProp.organo = organoColision;
+				transplante.organoProp.numJug = jugDestino;
+			} else {
+				transplante.organoDest.organo = organoColision;
+				transplante.organoDest.numJug = jugDestino;
+			}
+			//Evaluo si la jugada esta completa
+			if (((transplante.organoProp.organo != "") && (transplante.organoProp.numJug != -1)) &&
+				((transplante.organoDest.organo != "") && (transplante.organoDest.numJug != -1))) {
+
+				var organoDest = transplante.organoDest.organo;
+				var jugDest = transplante.organoDest.numJug;
+				var estadoOrganoDest = organosJugadoresCli[jugDest][organoDest];
+				var organoOrigen = transplante.organoProp.organo;
+
+				//Dos condiciones
+				//1: que el tipo de organos sea el mismo (y distintos de "")
+				if (transplante.organoProp.organo == transplante.organoDest.organo) {
+
+					organosJugadoresCli[jugDest][organoDest] = organosJugadoresCli[1][organoOrigen];
+					organosJugadoresCli[1][organoOrigen] = estadoOrganoDest;
+					movJugador = "true";
+					fin_transplante();
+				}
+				//2: si no que los organos, para el cambio esten vacios
+				if ((organosJugadoresCli[jugDest][organoOrigen] == "")
+					&& (organosJugadoresCli[1][organoDest] == "")) {
+
+					organosJugadoresCli[jugDest][organoDest] = organosJugadoresCli[1][organoOrigen];
+					organosJugadoresCli[1][organoOrigen] = estadoOrganoDest;
+					movJugador = "true";
+					fin_transplante();
+				}
+			}
 			break;
 		case "ladron de organos":
-			//Mov valido pero de momento no hacemos nada
-			console.log("Ladron de organos");
-			movValido = true;
+			console.log("manejadorMov() - Ladron de organos");
+			//Si no tengo el organo destino y se puede lo robo
+			if (organosJugadoresCli[1][organoColision] == "") {
+				var estadoOrgano = organosJugadoresCli[jugDestino][organoColision];
+				if ((estadoOrgano == "vacunado") ||
+					(estadoOrgano == "normal") ||
+					(estadoOrgano == "enfermo")) {
+
+					organosJugadoresCli[1][organoColision] = estadoOrgano;
+					organosJugadoresCli[jugDestino][organoColision] == "";
+					movJugador = "true";
+				}
+			}
 			break;
 		case "contagio":
 			//Mov valido pero de momento no hacemos nada
 			console.log("Contagio");
-			movValido = true;
+			movJugador = "true";
 			break;
 		default:
 			console.log("Error grave en manejadorMov()-switch tratamiento");
 		}
 	}
 	
-	if (movValido) {
+	if (movJugador != "") {
 		console.log("Movimiento valido");
 		nuevaCarta(numCarta);
-		movJugador = "algo";
 	} else {
 		console.log("Movimiento no valido");
 	}
@@ -860,6 +925,14 @@ function fin_descarte() {
 	descartes[2] = false;
 	movJugador = "algo";
 	actualizarCanvas();
+}
+
+function fin_transplante() {
+	transplante.enProceso = false;
+	transplante.organoProp.organo = "";
+	transplante.organoProp.numJug = -1;
+	transplante.organoDest.organo = "";
+	transplante.organoDest.numJug = -1;
 }
 
 $(document).ready(function(){

@@ -724,10 +724,11 @@ function checkCardColision(colision) {
 
 function manejadorMov(posDestino, organoColision, numCarta) {
 	console.log("Pos destino del movimiento: "+posDestino);
-	console.log("numCarta-typeOf(numcarta): "+numCarta+("-")+typeof(numCarta));
+	//console.log("numCarta-typeOf(numcarta): "+numCarta+("-")+typeof(numCarta));
 
 	//Transplante-block. Si estamos en proceso de transplante no podemos hacer otra cosa hasta acabar
 	if (transplante.enProceso == true) {
+		console.log("Transplante en proceso");
 		return;
 	}
 
@@ -740,6 +741,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	}
 	//Descarte-block. Si estamos en proceso de descarte no podemos hacer otra cosa hasta acabar
 	if (finDescarte == false) {
+		console.log("Descarte en proceso");
 		return;
 	}
 
@@ -753,8 +755,6 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 
 	var cardType = cartasUsuario[numCarta].cardType;
 	var organType = cartasUsuario[numCarta].organType;
-
-	var movJugador = "";
 
 	//Si es un organo y la pos es la mia, evaluo si no lo tengo
 	if ((cardType == "organo") && (posDestino == 1)) {
@@ -826,7 +826,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			organosJugadoresCli[1].cerebro = auxCerebro;
 			organosJugadoresCli[1].corazon = auxCorazon;
 			organosJugadoresCli[1].higado = auxHigado;
-			organosJugadoresCli[1].hueso; = auxHueso;
+			organosJugadoresCli[1].hueso = auxHueso;
 			organosJugadoresCli[1].organoComodin = auxOrganoComodin;
 
 			movJugador = "algo";
@@ -902,7 +902,6 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	if (movJugador != "") {
 		console.log("Movimiento valido");
 		nuevaCarta(numCarta);
-
 	} else {
 		console.log("Movimiento no valido");
 	}

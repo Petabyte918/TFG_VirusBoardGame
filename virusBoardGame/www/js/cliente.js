@@ -92,22 +92,30 @@ function form_register() {
 
 	if (registerPass1 != registerPass2) {
 		console.log("Las contraseñas no coinciden");
+		document.getElementById("registerCorrection").innerHTML = "Las contraseñas no coinciden";
+		document.form_register_user.registerPass1.value = "";
+		document.form_register_user.registerPass2.value = "";
+	} else if (registerName != "") {
+		socket.emit('register_user', {usuario: registerName, pass: registerPass1});
 	} else {
-		socket.emit('register_user', {user: registerName, pass: registerPass1});
+		console.log('Usuario == ""');
 	}
 
 	return false;
 }
 
-socket.on('register_user-OK', function() {
+socket.on('register_user-OK', function(message) {
 	console.log("register_user-OK");
+	document.getElementById("registerCorrection").innerHTML = "";
+	document.form_register_user.registerPass1.value = "";
+	document.form_register_user.registerPass2.value = "";
+	$("#registerForm").css("display", "none");
 });
 
-socket.on('register_user-KO', function(data) {
-	console.log("register_user-KO");
-	if (data.usuarioRepetido == "true") {
-		console.log("Usuario ya en uso");
-	}
+socket.on('register_user-KO', function(message) {
+	console.log("register_user-KO: "+message);
+	document.getElementById("registerCorrection").innerHTML = "Usuario repetido";
+	document.form_register_user.registerName.value = "";
 });
 
 function form_createGame() {
@@ -454,6 +462,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		objetos[0].src = "";
 		objetos[1].src = "";
 		objetos[2].src = "";
+		actualizarCanvas();
 	}
 
 	representarMov(movJugador);

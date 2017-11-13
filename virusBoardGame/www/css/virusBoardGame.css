@@ -274,7 +274,7 @@ input.botonCrearPartida {
 	top: 80px;
 	left: 5px;
 	width: 25%;
-	height: 40%;
+	height: 50%;
 
     background-color: rgba(128, 0, 0, 0.8);
     -webkit-transition-property: width, height; /* Safari */
@@ -308,4 +308,21 @@ input.botonCrearPartida {
     margin-top: 5px;
 }
 
+.tittle_register {
+	margin-bottom: 10px;
+	padding: 2px;
+	text-decoration: underline;
+	font-size: x-large;
+}
+
+.bigButton {
+	height: 3em;
+    margin-top: 2em;
+}
+
+#registerCorrection {
+	color: red;
+	margin-top: 1em;
+	font-size: x-large;
+}
 

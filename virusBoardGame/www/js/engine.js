@@ -4,7 +4,7 @@ var usuario = "";
 var idPartida = "";
 var jugadores = [];
 var deckOfCards = [];
-var movJugador = ""; //JugadorOrigen - JugDestino - Carta
+var movJugador = "";
 
 //Informacion exclusiva de cada cliente
 var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total

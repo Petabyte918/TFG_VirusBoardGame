@@ -15,6 +15,9 @@
 		-Con un span cada vez que la carta de use mal, podemos remarcar con otro color lo que se ha incumplido
 9.- DONE- Poder descartar todas las cartas
 10.- Echar al jugador tras pasar tres turnos
+11.- Representar movimientos
+12.- Virus comodin puede ser curado por cualquier medicina
+13.- Medicina comodin puede ser infectado por cualquier virus
 
 Edicion Imagenes
 1.-Mejorar nitidez

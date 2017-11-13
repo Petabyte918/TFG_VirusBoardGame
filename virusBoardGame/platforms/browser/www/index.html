@@ -24,10 +24,15 @@
 
 	<div id="registerForm" style="display: none;"/>
 		<form name="form_register_user" autocomplete="on" onsubmit="return form_register()"/>
+			<label class="label_form1 tittle_register">Registrando un nuevo usuario</label>
+			<label class="label_form1">Elige un nombre de usuario</label>
 			<input class="registerInputs" type="text" name="registerName" class="field-text" placeholder="Nombre de usuario"/>
+			<label class="label_form1">Escribe una contraseña</label>
 			<input class="registerInputs" type="password" name="registerPass1" class="field-text" placeholder="Escribe una contraseña"/>
-			<input class="registerInputs" type="password" name="registerPass2" class="field-text" placeholder="Vuelve a introducirla"/>
-			<input class="registerInputs" type="submit" value="Enviar" readonly="readonly"/>
+			<label class="label_form1">Repite la contraseña</label>
+			<input class="registerInputs" type="password" name="registerPass2" class="field-text" placeholder="Vuelve a introducir la contraseña"/>
+			<input class="registerInputs bigButton" type="submit" value="Enviar" readonly="readonly"/>
+			<div id="registerCorrection" class="label_form1"></div>
 		</form>
 	</div>
 

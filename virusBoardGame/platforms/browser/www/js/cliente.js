@@ -92,22 +92,30 @@ function form_register() {
 
 	if (registerPass1 != registerPass2) {
 		console.log("Las contraseñas no coinciden");
+		document.getElementById("registerCorrection").innerHTML = "Las contraseñas no coinciden";
+		document.form_register_user.registerPass1.value = "";
+		document.form_register_user.registerPass2.value = "";
+	} else if (registerName != "") {
+		socket.emit('register_user', {usuario: registerName, pass: registerPass1});
 	} else {
-		socket.emit('register_user', {user: registerName, pass: registerPass1});
+		console.log('Usuario == ""');
 	}
 
 	return false;
 }
 
-socket.on('register_user-OK', function() {
+socket.on('register_user-OK', function(message) {
 	console.log("register_user-OK");
+	document.getElementById("registerCorrection").innerHTML = "";
+	document.form_register_user.registerPass1.value = "";
+	document.form_register_user.registerPass2.value = "";
+	$("#registerForm").css("display", "none");
 });
 
-socket.on('register_user-KO', function(data) {
-	console.log("register_user-KO");
-	if (data.usuarioRepetido == "true") {
-		console.log("Usuario ya en uso");
-	}
+socket.on('register_user-KO', function(message) {
+	console.log("register_user-KO: "+message);
+	document.getElementById("registerCorrection").innerHTML = "Usuario repetido";
+	document.form_register_user.registerName.value = "";
 });
 
 function form_createGame() {
@@ -448,16 +456,40 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 
 	movJugador = datos_partida.movJugador;
+	//Ajustar sabiendo que el que usa la carta no se descarta
+	//Cuando usemos movJugador como un objeto se hará solo
+	if (movJugador == "guante_de_latex") {
+		objetos[0].src = "";
+		objetos[1].src = "";
+		objetos[2].src = "";
+		actualizarCanvas();
+	}
+
+	representarMov(movJugador);
 	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
 	//enviado por el servidor)
 	//Pendiente
 	//Una vez representado el movimiento del jugador, borramos el mov
 	movJugador = "";
+
+	checkCards();
 	indicarTurno(turno);
 
 	esperarMovimiento(); //->setTimeOut
 	renderCountDown(30, new Date()); //->setTimeOut
 });
+
+function representarMov(movJugador) {
+
+}
+
+function checkCards() {
+	for (var i = 0; i < objetos.length; i++) {
+		if (objetos[i].src == ""){
+			nuevaCarta(i);
+		}
+	}
+}
 
 function handleReconect(){
 	console.log("handleReconect");
