@@ -2,7 +2,7 @@
 1.- Settings
 2.- Ranquing
 3.- Login
-4.- Register
+4.- DONE- Register
 5.- Leave-unlogin (o similar)
 6.- DONE- Imagenes cartas
 7.- Comentarios bocadillos primera vez al menos para los tres botones principales
@@ -212,3 +212,87 @@ function ponerJugadores(){
 
 	cxMID.arc(xCountDown,yCountDown,radius, degToRad(270), degToRad(((time*6)*ajuste)-90),false);
 	cxMID.stroke();
+
+function handleReconect(){
+	console.log("handleReconect");
+
+	//No guardamos al usuario antes, no nos hace falta e igualmente debemos guardalo aqui si tenemos un idPartida
+	//guardado pero el servidor ya ha eliminado la partida o nos ha eliminado de la partida
+	localStorage.setItem('usuario', usuario);
+	localStorage.setItem('idPartida', idPartida);
+
+	var carta1 = takeCard();
+	var carta2 = takeCard();
+	if (carta2 == null) {
+		console.log("handleReconect - La carta 2 es null");
+		carta2 = carta1;
+	}
+	var carta3 = takeCard();
+		if (carta3 == null) {
+		console.log("handleReconect - La carta 3 es null");
+		carta3 = carta1;
+	}
+
+	//Un poco tricky porque:
+	//1.- Si no es tu turno, otro tipo robara de nuevo cartas que has robado
+	//2.- Si no hay suficientes cartas en el mazo al menos puedes robar una y la repites
+	//Solucion: tener una baraja entera y robar cartas aleatorias de ahi
+	cartasUsuario.push(carta1);
+	cartasUsuario.push(carta2);
+	cartasUsuario.push(carta3);
+
+	//Animacion de repartir cartas
+	Engine.initCanvas();
+	Engine.initJugadores();
+	Engine.initPosOrganosJugadores();
+	Engine.initCubosDescarte();
+	Engine.initPosCartasUsuario();
+	Engine.initFinDescartesButton();
+
+	renderBGCards();
+
+	//Crea dos arrays para poder buscar informacion comodamente.
+	asignarJugadoresAPosiciones();
+	asignarPosicionesAJugadores();
+
+	prepararOrganosJugadoresCli();
+	moveObjects();
+
+	actualizarCanvas();
+	//actualizarCanvasMID();
+}
+
+
+
+function checkMatchRunning(){
+	var idPartidaStored = localStorage.getItem('idPartida');
+
+	if ((idPartidaStored != undefined) && (idPartidaStored != "") && (idPartidaStored != null)) {
+		console.log("Hay una partida abandonada");
+		console.log("Tratamos de entrar de nuevo");
+		var usuarioAntiguo = localStorage.getItem('usuario', usuario);
+
+		//Preguntamos al servidor si en el id de partida que tenemos guardado, esta nuestro nuevo id o el antiguo
+		console.log("idPartida: "+idPartidaStored);
+		console.log("usuario: "+usuario);
+		console.log("usuarioAntiguo: "+usuarioAntiguo);
+		var datos = {
+			idPartida: idPartidaStored,
+			usuario: usuario,
+			usuarioAntiguo: usuarioAntiguo
+		}
+		socket.emit('checkMatchRunning', datos);
+			//Si es que si pedimos al servidor que cambie de sus variables el antiguo id por el nuevo
+			//Pedimos datos de la partida->Si he ido programando bien, con que nos pase prepararPartida deberia valer
+	} else {
+		console.log("No hay partidas empezadas");
+	}
+}
+
+socket.on('checkMatchRunningKO', function(){
+	//Aunque el usuario tiene guardada la partida, el servidor no.
+	//Puede ser porque la partida ha terminado o porque el servidor le ha expulsado de la partida definitivamente
+	//o porque el usuario ha salido de la app bruscamente y no se ha borrado correctamente el localStorage
+	console.log("checkMatchRunningKO");
+	localStorage.removeItem('idPartida');
+})

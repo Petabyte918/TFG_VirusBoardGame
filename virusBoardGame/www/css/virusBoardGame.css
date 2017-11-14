@@ -132,6 +132,16 @@ a.num_jugadores {
 	margin-top: 0.3em;
 }
 
+.label_form2 {
+	display: inherit;
+	margin-top: 0.1em;
+	margin-bottom: 0.2em;
+	font-size: small;
+	padding-left: 6px;
+    padding-right: 6px;
+
+}
+
 .field-text {
 	height: 2em;
 	margin: 0.2em;
@@ -269,7 +279,27 @@ input.botonCrearPartida {
 	padding: 15px 25px;
 }
 
-#registerForm {
+#userNameContainer {
+	float: left;
+	background: rgba(0,0,0,0.5);
+
+	border: solid #330000 2px;
+    -ms-border-radius:8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+
+	color:red;
+	display: block;
+	font-family: 'Oleo Script', Arial, sans-serif;
+	font-size: 25px;
+	line-height: 1;
+
+	padding: 15px 25px;
+	margin-top: 0.4em;
+}
+
+#registerForm, #loginForm {
 	position: absolute;
 	top: 80px;
 	left: 5px;
@@ -295,20 +325,47 @@ input.botonCrearPartida {
 	color: #fff;
 	font-size: 1.1em;
 	line-height: 1;
-
 }
 
-#registerForm > form {
+#settingsForm {
+	position: absolute;
+	top: 80px;
+	right: 5px;
+	width: 25%;
+	height: 60%;
+
+    background-color: rgba(128, 0, 0, 0.8);
+    -webkit-transition-property: width, height; /* Safari */
+    -webkit-transition-duration: 2s; /* Safari */
+    transition-property: width, height;
+    transition-duration: 2s;
+
+    border: solid #330000 2px;
+    -ms-border-radius:8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: inset 0px 0px 8px 4px #4d0000, 1px 1px 10px 5px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 8px 4px #4d0000, 1px 1px 10px 5px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 0px 4px #4d0000, 1px 1px 10px 5px rgba(0,0,0,0.75);
+
+	font-family: 'Oleo Script', Arial, sans-serif;
+	color: #fff;
+	font-size: 1.1em;
+	line-height: 1;
+}
+
+#registerForm > form, #loginForm > form, #settingsForm > form {
 	text-align: center;
 }
 
-.registerInputs {
+.registerInputs, .loginInputs, .settingsInputs {
 	display: inline;
 	width: 80%;
     margin-top: 5px;
 }
 
-.tittle_register {
+.tittle_register, .tittle_login, .tittle_settings {
 	margin-bottom: 10px;
 	padding: 2px;
 	text-decoration: underline;
@@ -320,9 +377,65 @@ input.botonCrearPartida {
     margin-top: 2em;
 }
 
-#registerCorrection {
+#registerCorrection, #loginCorrection {
 	color: red;
 	margin-top: 1em;
 	font-size: x-large;
 }
 
+/** sliders **/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 20px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 44px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2dc234;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2dc234;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(-40px);
+  -ms-transform: translateX(-40px);
+  transform: translateX(-40px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

@@ -8,7 +8,7 @@ var enPartidaEsperando = false;
 //Local
 var socket = io.connect('localhost:8080');
 socket.on('Connection OK', function (data) {
-   	//console.log("Cliente conectado. Player_id: "+data.player_id);
+   	console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
 });
 /** -------------------- **/
@@ -24,6 +24,7 @@ function button_create() {
 	$("#lista_partidas").css("display", "none");
 	$("#canvas_container").css("display", "none");
 	$("#registerForm").css("display", "none");
+	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "none");
 	$("#login").css("display", "none");
 	$("#leave").css("display", "none");
@@ -38,6 +39,7 @@ function button_lista_partidas() {
 	$("#lista_partidas").css("display", "inline");
 	$("#canvas_container").css("display", "none");
 	$("#registerForm").css("display", "none");
+	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "none");
 	$("#login").css("display", "none");
 	$("#leave").css("display", "none");
@@ -51,14 +53,22 @@ function backTo_InitMenu() {
 	$("#lista_partidas").css("display", "none");
 	$("#canvas_container").css("display", "none");
 	$("#registerForm").css("display", "none");
+	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "inline");
 	$("#login").css("display", "inline");
 	$("#leave").css("display", "inline");
 	$("#register").css("display", "inline");
 }
 
-function button_login () {
+function button_loginForm () {
 	console.log("button_login()");
+	if ($("#loginForm").css("display") == "block") {
+		$("#loginForm").css("display", "none");
+		$("#registerForm").css("display","none");
+	} else {
+		$("#loginForm").css("display", "block");
+		$("#registerForm").css("display","none");
+	}
 }
 
 function button_registerForm () {
@@ -66,8 +76,10 @@ function button_registerForm () {
 	//console.log("Display: "+$("#registerForm").css("display"));
 	if ($("#registerForm").css("display") == "block") {
 		$("#registerForm").css("display","none");
+		$("#loginForm").css("display", "none");
 	} else {
 		$("#registerForm").css("display","block");
+		$("#loginForm").css("display", "none");
 	}
 }
 
@@ -85,7 +97,39 @@ function button_settings () {
 /** -------------------- **/
 
 /** Interaccion con el servidor de los botones iniciales **/
+function form_login() {
+	console.log("form_login()")
+	var loginName = document.form_login_user.loginName.value;
+	var loginPass = document.form_login_user.loginPass.value;
+
+	socket.emit('login_user', {usuario: loginName, pass: loginPass});
+	return false;
+}
+
+socket.on('login_user-OK', function(message) {
+	console.log("login_user-OK");
+	//localStorage.setItem('usuario', usuario);
+	//localStorage.setItem('idPartida', idPartida);
+	document.getElementById("userNameContainer").innerHTML = "Usuario-->"+document.form_login_user.loginName.value;
+	document.getElementById("loginCorrection").innerHTML = "";
+	document.form_login_user.loginPass.value = "";
+	$("#userNameContainer").css("display", "block");
+	$("#registerForm").css("display", "none");
+	$("#loginForm").css("display", "none");
+	$("#register").css("display", "none");
+	$("#login").css("display", "none");
+	$("#leave").css("display", "block");
+});
+
+socket.on('login_user-KO', function(message) {
+	console.log("login_user-KO: "+message);
+	document.getElementById("loginCorrection").innerHTML = "Usuario o contraseña incorrectos";
+	document.form_register_user.loginName.value = "";
+	document.form_login_user.loginPass.value = "";
+});
+
 function form_register() {
+	console.log("form_register()");
 	var registerName = document.form_register_user.registerName.value;
 	var registerPass1 = document.form_register_user.registerPass1.value;
 	var registerPass2 = document.form_register_user.registerPass2.value;
@@ -106,10 +150,14 @@ function form_register() {
 
 socket.on('register_user-OK', function(message) {
 	console.log("register_user-OK");
+	document.form_register_user.loginName.value = document.form_register_user.registerName.value;
+	document.form_login_user.loginPass.value = document.form_register_user.registerPass1.value;
 	document.getElementById("registerCorrection").innerHTML = "";
+	document.form_register_user.registerName.value = "";
 	document.form_register_user.registerPass1.value = "";
 	document.form_register_user.registerPass2.value = "";
 	$("#registerForm").css("display", "none");
+	$("#loginForm").css("display", "block");
 });
 
 socket.on('register_user-KO', function(message) {
@@ -274,38 +322,6 @@ function leavePartida(idPartida) {
 /** -------------------- **/
 
 /** Interaccion con el servidor de la partida **/
-function checkMatchRunning(){
-	var idPartidaStored = localStorage.getItem('idPartida');
-
-	if ((idPartidaStored != undefined) && (idPartidaStored != "") && (idPartidaStored != null)) {
-		console.log("Hay una partida abandonada");
-		console.log("Tratamos de entrar de nuevo");
-		var usuarioAntiguo = localStorage.getItem('usuario', usuario);
-
-		//Preguntamos al servidor si en el id de partida que tenemos guardado, esta nuestro nuevo id o el antiguo
-		console.log("idPartida: "+idPartidaStored);
-		console.log("usuario: "+usuario);
-		console.log("usuarioAntiguo: "+usuarioAntiguo);
-		var datos = {
-			idPartida: idPartidaStored,
-			usuario: usuario,
-			usuarioAntiguo: usuarioAntiguo
-		}
-		socket.emit('checkMatchRunning', datos);
-			//Si es que si pedimos al servidor que cambie de sus variables el antiguo id por el nuevo
-			//Pedimos datos de la partida->Si he ido programando bien, con que nos pase prepararPartida deberia valer
-	} else {
-		console.log("No hay partidas empezadas");
-	}
-}
-
-socket.on('checkMatchRunningKO', function(){
-	//Aunque el usuario tiene guardada la partida, el servidor no.
-	//Puede ser porque la partida ha terminado o porque el servidor le ha expulsado de la partida definitivamente
-	//o porque el usuario ha salido de la app bruscamente y no se ha borrado correctamente el localStorage
-	console.log("checkMatchRunningKO");
-	localStorage.removeItem('idPartida');
-})
 
 socket.on('prepararPartida', function(datos_iniciales){
 	console.log("prepararPartida");
@@ -313,8 +329,6 @@ socket.on('prepararPartida', function(datos_iniciales){
 	idPartida = datos_iniciales.idPartida;
 	//No guardamos al usuario antes, no nos hace falta e igualmente debemos guardalo aqui si tenemos un idPartida
 	//guardado pero el servidor ya ha eliminado la partida o nos ha eliminado de la partida
-	localStorage.setItem('usuario', usuario);
-	localStorage.setItem('idPartida', idPartida);
 	jugadores = datos_iniciales.jugadores;
 	cartasUsuario.push(datos_iniciales.carta1);
 	cartasUsuario.push(datos_iniciales.carta2);
@@ -491,59 +505,9 @@ function checkCards() {
 	}
 }
 
-function handleReconect(){
-	console.log("handleReconect");
-
-	//No guardamos al usuario antes, no nos hace falta e igualmente debemos guardalo aqui si tenemos un idPartida
-	//guardado pero el servidor ya ha eliminado la partida o nos ha eliminado de la partida
-	localStorage.setItem('usuario', usuario);
-	localStorage.setItem('idPartida', idPartida);
-
-	var carta1 = takeCard();
-	var carta2 = takeCard();
-	if (carta2 == null) {
-		console.log("handleReconect - La carta 2 es null");
-		carta2 = carta1;
-	}
-	var carta3 = takeCard();
-		if (carta3 == null) {
-		console.log("handleReconect - La carta 3 es null");
-		carta3 = carta1;
-	}
-
-	//Un poco tricky porque:
-	//1.- Si no es tu turno, otro tipo robara de nuevo cartas que has robado
-	//2.- Si no hay suficientes cartas en el mazo al menos puedes robar una y la repites
-	//Solucion: tener una baraja entera y robar cartas aleatorias de ahi
-	cartasUsuario.push(carta1);
-	cartasUsuario.push(carta2);
-	cartasUsuario.push(carta3);
-
-	//Animacion de repartir cartas
-	Engine.initCanvas();
-	Engine.initJugadores();
-	Engine.initPosOrganosJugadores();
-	Engine.initCubosDescarte();
-	Engine.initPosCartasUsuario();
-	Engine.initFinDescartesButton();
-
-	renderBGCards();
-
-	//Crea dos arrays para poder buscar informacion comodamente.
-	asignarJugadoresAPosiciones();
-	asignarPosicionesAJugadores();
-
-	prepararOrganosJugadoresCli();
-	moveObjects();
-
-	actualizarCanvas();
-	//actualizarCanvasMID();
-}
-
 socket.on('terminarPartida', function(data){
 	console.log("Terminar Partida");
 	console.log("Ganador: "+data.ganador);
-	localStorage.removeItem('idPartida');
 	button_lista_partidas();
 })
 /** -------------------- **/

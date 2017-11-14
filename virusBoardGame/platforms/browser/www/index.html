@@ -18,9 +18,22 @@
 <body>
 	<div id="settings" onclick="button_settings()"></div>
 	<div id="ranquing" onclick="button_ranquing()"></div>
-	<div id="login" onclick="button_login()">Login</div>
+	<div id="login" onclick="button_loginForm()">Login</div>
 	<div id="leave" style="display: none;" onclick="button_leave()">Leave</div>
+	<div id="userNameContainer" style="display: none;"></div>
 	<div id="register" onclick="button_registerForm()">Register</div>
+
+	<div id="loginForm" style="display: none;"/>
+		<form name="form_login_user" autocomplete="on" onsubmit="return form_login()"/>
+			<label class="label_form1 tittle_login">Logging usuario</label>
+			<label class="label_form1">Escribe tu nombre de usuario</label>
+			<input class="loginInputs" type="text" name="loginName" class="field-text" placeholder="Nombre de usuario"/>
+			<label class="label_form1">Escribe tu contraseña</label>
+			<input class="loginInputs" type="password" name="loginPass" class="field-text" placeholder="Escribe tu contraseña"/>
+			<input class="loginInputs bigButton" type="submit" value="Enviar" readonly="readonly"/>
+			<div id="loginCorrection" class="label_form1"></div>
+		</form>
+	</div>
 
 	<div id="registerForm" style="display: none;"/>
 		<form name="form_register_user" autocomplete="on" onsubmit="return form_register()"/>
@@ -33,6 +46,30 @@
 			<input class="registerInputs" type="password" name="registerPass2" class="field-text" placeholder="Vuelve a introducir la contraseña"/>
 			<input class="registerInputs bigButton" type="submit" value="Enviar" readonly="readonly"/>
 			<div id="registerCorrection" class="label_form1"></div>
+		</form>
+	</div>
+
+	<div id="settingsForm">
+		<form name="form_settings" onsubmit="return form_settings()"/>
+			<label class="label_form1 tittle_settings">Settings</label>
+			<label class="label_form1">Activar ayuda debil</label>
+			<label class="label_form1 switch">
+			  	<input type="checkbox" checked>
+			  	<span class="slider round"></span>
+			</label>
+			<label class="label_form2">Ayuda sobre todo a usar las cartas especiales. Se recomiendo dejar activado</label>
+			<label class="label_form1">Activar ayuda fuerte</label>
+			<label class="label_form1 switch">
+			  	<input type="checkbox" checked>
+			  	<span class="slider round"></span>
+			</label>
+			<label class="label_form2">Consiste en cuadros de ayuda explicando el funcionamiento de la mayoria de las funcionalidades del juego</label>
+			<label class="label_form1">Permanecer logueado</label>
+			<label class="label_form1 switch">
+			  	<input type="checkbox" checked>
+			  	<span class="slider round"></span>
+			</label>
+			<input class="settingsInputs bigButton" type="submit" value="Guardar" readonly="readonly"/>
 		</form>
 	</div>
 
