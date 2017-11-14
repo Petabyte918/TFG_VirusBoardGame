@@ -3,6 +3,8 @@
 var lista_partidas = {};
 var idPartidaEsperando = "";
 var enPartidaEsperando = false;
+var ayudaFuerte;
+var ayudaDebil;
 /** Establecimiento de la conexion con el servidor **/
 //var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 //Local
@@ -10,9 +12,46 @@ var socket = io.connect('localhost:8080');
 socket.on('Connection OK', function (data) {
    	console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
+   	configInicial();
 });
 /** -------------------- **/
 
+function configInicial() {
+	console.log("configInicial()");
+	var autoLogin = localStorage.getItem('autologin');
+	if (autoLogin == "") {
+		console.log("AutoLogin no guardado");
+		localStorage.setItem('autologin', "true");
+	} else if (autologin == "true") {
+		var loginName = localStorage.getItem('loginName');
+		var loginPass = localStorage.getItem('loginPass');
+		if (loginName == true) {
+			socket.emit('login_user', {usuario: loginName, pass: loginPass});
+		}
+	}
+
+	ayudaDebil = localStorage.getItem('ayudaDebil');
+	if (ayudaDebil == "") {
+		console.log("Ayuda debil no guardada");
+		localStorage.setItem('ayudaDebil', 'true');
+		ayudaDebil = true;
+	} else if (ayudaDebil == "true") {
+		ayudaDebil = true;
+	} else if (ayudaDebil == "false") {
+		ayudaDebil == false
+	}
+
+	ayudaFuerte = localStorage.getItem('ayudaFuerte');
+	if (ayudaFuerte == "") {
+		console.log("Ayuda fuerte no guardada");
+		localStorage.setItem('ayudaFuerte', 'true');
+		ayudaFuerte = true;
+	} else if (ayudaFuerte == "true") {
+		ayudaFuerte = true;
+	} else if (ayudaFuerte == "false") {
+		ayudaFuerte == false
+	}
+}
 //Comprobamos si hemos abandonado una partida en curso
 //checkMatchRunning();
 
@@ -115,11 +154,16 @@ function form_login() {
 
 socket.on('login_user-OK', function(message) {
 	console.log("login_user-OK");
-	//localStorage.setItem('usuario', usuario);
-	//localStorage.setItem('idPartida', idPartida);
+	//Guardamos usuario y contraseña
+	Echar un ojo a esto ya que es diferente cuando el formulario se ha mandado solo con el autoLogin
+	(los campos estan vacios) o cuando utilizamos el boton de enviar
+	localStorage.getItem('loginName', document.getElementById("userNameContainer").innerHTML );
+	localStorage.getItem('loginPass', document.form_login_user.loginPass.value);
+	//Borramos formulario
 	document.getElementById("userNameContainer").innerHTML = "Usuario-->"+document.form_login_user.loginName.value;
 	document.getElementById("loginCorrection").innerHTML = "";
 	document.form_login_user.loginPass.value = "";
+
 	$("#userNameContainer").css("display", "block");
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "none");
