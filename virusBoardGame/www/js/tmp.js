@@ -1,9 +1,9 @@
 //PENDIENTE ANTES DEL MARTES
-1.- Settings
+1.- DONE- Settings
 2.- Ranquing
-3.- Login
+3.- DONE- Login
 4.- DONE- Register
-5.- Leave-unlogin (o similar)
+5.- DONE- Leave-unlogin (o similar)
 6.- DONE- Imagenes cartas
 7.- Comentarios bocadillos primera vez al menos para los tres botones principales
 8.- Funcionalidad resto cartas

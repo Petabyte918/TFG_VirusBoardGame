@@ -134,6 +134,12 @@ function button_registerForm () {
 
 function button_leave () {
 	console.log("button_leave()");
+	$("#login").css("display", "block");
+	$("#register").css("display", "block");
+	$("#userNameContainer").css("display", "none");
+	document.getElementById("userNameContainer").innerHTML == "";
+	document.form_login_user.loginName.value = "";
+	document.form_login_user.loginPass.value = "";
 }
 
 function button_ranquing () {
