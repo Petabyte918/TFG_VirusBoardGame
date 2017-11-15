@@ -136,7 +136,7 @@ a.num_jugadores {
 	display: inherit;
 	margin-top: 0.1em;
 	margin-bottom: 0.2em;
-	font-size: x-small;
+	font-size: small;
 	padding-left: 6px;
     padding-right: 6px;
 
@@ -431,7 +431,7 @@ input:checked + .slider:before {
   transform: translateX(-40px);
 }
 
-/* Rounded sliders */
+/** Rounded sliders **/
 .slider.round {
   border-radius: 34px;
 }

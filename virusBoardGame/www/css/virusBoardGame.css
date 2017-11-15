@@ -431,7 +431,7 @@ input:checked + .slider:before {
   transform: translateX(-40px);
 }
 
-/* Rounded sliders */
+/** Rounded sliders **/
 .slider.round {
   border-radius: 34px;
 }

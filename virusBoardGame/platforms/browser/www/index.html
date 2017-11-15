@@ -50,23 +50,23 @@
 	</div>
 
 	<div id="settingsForm">
-		<form name="form_settings" onsubmit="return form_settings()"/>
+		<form name="form_settings_user" onsubmit="return form_settings()"/>
 			<label class="label_form1 tittle_settings">Settings</label>
 			<label class="label_form1">Activar ayuda debil</label>
 			<label class="label_form1 switch">
-			  	<input type="checkbox" checked>
+			  	<input type="checkbox" name="ayudaDebilName" checked>
 			  	<span class="slider round"></span>
 			</label>
 			<label class="label_form2">Ayuda sobre todo a usar las cartas especiales. Se recomiendo dejar activado</label>
 			<label class="label_form1">Activar ayuda fuerte</label>
 			<label class="label_form1 switch">
-			  	<input type="checkbox" checked>
+			  	<input type="checkbox" name="ayudaFuerteName" checked>
 			  	<span class="slider round"></span>
 			</label>
 			<label class="label_form2">Consiste en cuadros de ayuda explicando el funcionamiento de la mayoria de las funcionalidades del juego</label>
 			<label class="label_form1">Permanecer logueado</label>
 			<label class="label_form1 switch">
-			  	<input type="checkbox" checked>
+			  	<input type="checkbox" name="autoLoginName" checked>
 			  	<span class="slider round"></span>
 			</label>
 			<input class="settingsInputs bigButton" type="submit" value="Guardar" readonly="readonly"/>

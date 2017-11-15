@@ -18,38 +18,48 @@ socket.on('Connection OK', function (data) {
 
 function configInicial() {
 	console.log("configInicial()");
-	var autoLogin = localStorage.getItem('autologin');
+	var autoLogin = localStorage.getItem('autoLogin');
 	if (autoLogin == "") {
+		document.form_settings_user.autoLoginName.checked = true;
 		console.log("AutoLogin no guardado");
 		localStorage.setItem('autologin', "true");
-	} else if (autologin == "true") {
+	} else if (autoLogin == "true") {
+		document.form_settings_user.autoLoginName.checked = true;
 		var loginName = localStorage.getItem('loginName');
 		var loginPass = localStorage.getItem('loginPass');
-		if (loginName == true) {
+		if (loginName == true) { //true o != de ""
 			socket.emit('login_user', {usuario: loginName, pass: loginPass});
 		}
+	} else {
+		document.form_settings_user.autoLoginName.checked = false;
 	}
 
 	ayudaDebil = localStorage.getItem('ayudaDebil');
 	if (ayudaDebil == "") {
+		document.form_settings_user.ayudaDebilName.checked = true;
 		console.log("Ayuda debil no guardada");
 		localStorage.setItem('ayudaDebil', 'true');
 		ayudaDebil = true;
 	} else if (ayudaDebil == "true") {
+		document.form_settings_user.ayudaDebilName.checked = true;
 		ayudaDebil = true;
 	} else if (ayudaDebil == "false") {
-		ayudaDebil == false
+		document.form_settings_user.ayudaDebilName.checked = false;
+		ayudaDebil == false;
 	}
 
 	ayudaFuerte = localStorage.getItem('ayudaFuerte');
 	if (ayudaFuerte == "") {
+		document.form_settings_user.ayudaFuerteName.checked = true;
 		console.log("Ayuda fuerte no guardada");
 		localStorage.setItem('ayudaFuerte', 'true');
 		ayudaFuerte = true;
 	} else if (ayudaFuerte == "true") {
+		document.form_settings_user.ayudaFuerteName.checked = true;
 		ayudaFuerte = true;
 	} else if (ayudaFuerte == "false") {
-		ayudaFuerte == false
+		document.form_settings_user.ayudaFuerteName.checked = false;
+		ayudaFuerte == false;
 	}
 }
 //Comprobamos si hemos abandonado una partida en curso
@@ -147,6 +157,9 @@ function form_login() {
 	console.log("form_login()")
 	var loginName = document.form_login_user.loginName.value;
 	var loginPass = document.form_login_user.loginPass.value;
+	//Guardamos usuario y contraseña
+	localStorage.setItem('loginName', loginName);
+	localStorage.setItem('loginPass', loginPass);
 
 	socket.emit('login_user', {usuario: loginName, pass: loginPass});
 	return false;
@@ -154,14 +167,11 @@ function form_login() {
 
 socket.on('login_user-OK', function(message) {
 	console.log("login_user-OK");
-	//Guardamos usuario y contraseña
-	Echar un ojo a esto ya que es diferente cuando el formulario se ha mandado solo con el autoLogin
-	(los campos estan vacios) o cuando utilizamos el boton de enviar
-	localStorage.getItem('loginName', document.getElementById("userNameContainer").innerHTML );
-	localStorage.getItem('loginPass', document.form_login_user.loginPass.value);
-	//Borramos formulario
-	document.getElementById("userNameContainer").innerHTML = "Usuario-->"+document.form_login_user.loginName.value;
+
+	document.getElementById("userNameContainer").innerHTML = "Usuario: "+document.form_login_user.loginName.value;
+	//Borramos el formulario
 	document.getElementById("loginCorrection").innerHTML = "";
+	document.form_login_user.loginPass.value = "";
 	document.form_login_user.loginPass.value = "";
 
 	$("#userNameContainer").css("display", "block");
@@ -173,6 +183,9 @@ socket.on('login_user-OK', function(message) {
 });
 
 socket.on('login_user-KO', function(message) {
+	localStorage.removeItem('loginName');
+	localStorage.removeItem('loginPass');
+
 	console.log("login_user-KO: "+message);
 	document.getElementById("loginCorrection").innerHTML = "Usuario o contraseña incorrectos";
 	document.form_register_user.loginName.value = "";
@@ -201,7 +214,7 @@ function form_register() {
 
 socket.on('register_user-OK', function(message) {
 	console.log("register_user-OK");
-	document.form_register_user.loginName.value = document.form_register_user.registerName.value;
+	document.form_login_user.loginName.value = document.form_register_user.registerName.value;
 	document.form_login_user.loginPass.value = document.form_register_user.registerPass1.value;
 	document.getElementById("registerCorrection").innerHTML = "";
 	document.form_register_user.registerName.value = "";
@@ -216,6 +229,21 @@ socket.on('register_user-KO', function(message) {
 	document.getElementById("registerCorrection").innerHTML = "Usuario repetido";
 	document.form_register_user.registerName.value = "";
 });
+
+function form_settings() {
+	console.log("form_settings()");
+	ayudaDebil = document.form_settings_user.ayudaDebilName.checked;
+	localStorage.setItem('ayudaDebil', ayudaDebil);
+	//console.log("Ayuda Debil: "+ayudaDebil);
+	ayudaFuerte = document.form_settings_user.ayudaFuerteName.checked;
+	localStorage.setItem('ayudaFuerte', ayudaFuerte);
+	//console.log("Ayuda Fuerte: "+ayudaFuerte);
+	var autoLogin = document.form_settings_user.autoLoginName.checked;
+	localStorage.setItem('autoLogin', autoLogin);
+	//console.log("Autologin: "+autoLogin);
+
+	return false;
+}
 
 function form_createGame() {
 	//console.log("form_createGame()");
