@@ -145,6 +145,14 @@ function button_leave () {
 
 function button_ranquing () {
 	console.log("button_ranquing()");
+	if ($("#ranquingList").css("display") == "block") {
+		$("#settingsForm").css("display","none");
+		$("#ranquingForm").css("display", "none");
+	} else {
+		$("#settingsForm").css("display","none");
+		$("#ranquingForm").css("display", "block");
+	}
+	socket.emit('request_users', {request: 'create_ranquing'});
 }
 
 function button_settings () {
@@ -251,6 +259,23 @@ function form_settings() {
 
 	return false;
 }
+
+socket.on('create_ranquing', function(data) {
+	//User fields
+	//	{"usuario": data.usuario,
+	//	"pass": data.pass,
+	//	"stats": {
+	//		"wins": 0,
+	//		"losts": 0,
+	//		"draws": 0,
+	//		"total": 0,
+	//		"retired": 0
+	//		}
+	//	};
+	for (var i in data) {
+		
+	}
+})
 
 function form_createGame() {
 	//console.log("form_createGame()");

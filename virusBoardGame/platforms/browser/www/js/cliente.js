@@ -136,6 +136,7 @@ function button_leave () {
 	console.log("button_leave()");
 	$("#login").css("display", "block");
 	$("#register").css("display", "block");
+	$("#leave").css("display", "none");
 	$("#userNameContainer").css("display", "none");
 	document.getElementById("userNameContainer").innerHTML == "";
 	document.form_login_user.loginName.value = "";
@@ -144,6 +145,14 @@ function button_leave () {
 
 function button_ranquing () {
 	console.log("button_ranquing()");
+	if ($("#ranquingList").css("display") == "block") {
+		$("#settingsForm").css("display","none");
+		$("#ranquingForm").css("display", "none");
+	} else {
+		$("#settingsForm").css("display","none");
+		$("#ranquingForm").css("display", "block");
+	}
+	socket.emit('request_users', {request: 'create_ranquing'});
 }
 
 function button_settings () {
@@ -250,6 +259,10 @@ function form_settings() {
 
 	return false;
 }
+
+socket.on('create_ranquing', function(data) {
+
+})
 
 function form_createGame() {
 	//console.log("form_createGame()");
