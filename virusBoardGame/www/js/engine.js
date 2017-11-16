@@ -49,6 +49,22 @@ function shuffle(array) {
   return array;
 }
 
+//Use it for extend a object without Jquery. Return a object built merging second into first
+function extend(first, second) {
+    for (var secondProp in second) {
+        var secondVal = second[secondProp];
+        // Is this value an object?  If so, iterate over its properties, copying them over
+        if (secondVal && Object.prototype.toString.call(secondVal) === "[object Object]") {
+            first[secondProp] = first[secondProp] || {};
+            extend(first[secondProp], secondVal);
+        }
+        else {
+            first[secondProp] = secondVal;
+        }
+    }
+    return first;
+};
+
 //
 function prepararOrganosJugadoresCli(){
 	var posicion = null;

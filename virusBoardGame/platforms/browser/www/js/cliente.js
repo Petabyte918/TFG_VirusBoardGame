@@ -261,6 +261,71 @@ function form_settings() {
 }
 
 socket.on('create_ranquing', function(data) {
+	//User fields
+	//	{"usuario": data.usuario,
+	//	"pass": data.pass,
+	//	"stats": {
+	//		"wins": 0,
+	//		"losts": 0,
+	//		"draws": 0,
+	//		"total": 0,
+	//		"retired": 0
+	//		}
+	//	};
+
+	var clasificacion = "victorias";
+	var sortedObj = {};
+	var objIndex = 0;
+	//Si hay la longitud del objeto de usuario es menor que el numero de gente del ranquing que queremos mostrar
+	keysObj = Object.keys(data);
+	lengthObj = keysObj.length;
+	if (lengthObj < 10) {
+		maxLoop = lengthObj;
+	} else {
+		maxLoop = 10;
+	}
+
+	if (clasificacion == "victorias") {
+		var topWin = -1;
+		var win = -1;
+		for (var cont = 0; cont < maxLoop; cont++) {
+			for (var i in data) {
+				win = data[i].stats.wins;
+				if (win > topWin) {
+					topWin = win;
+					objIndex = i;
+				}
+			}
+			var auxObj = $.extend(true,{},data[objIndex]);
+			delete data[objIndex];
+			sortedObj[cont] = auxObj;
+			topWin = -1;
+			win = -1;
+			objIndex = 0;
+		}
+	} else if (clasificacion == "porcentaje") {
+		var topPercent = -1;
+		var percent = -1;
+		for (var cont = 0; cont < maxLoop; cont++) {
+			for (var i in data) {
+				percent = data[i].stats.wins / data[i].stats.total;
+				if (percent > topPercent) {
+					topPercent = percent;
+					objIndex = i;
+				}
+			}
+			var auxObj = $.extend(true,{},data[objIndex]);
+			delete data[objIndex];
+			sortedObj[cont] = auxObj;
+			topWin = -1;
+			win = -1;
+			objIndex = 0;
+		}
+	}
+
+	for (var j in sortedObj) {
+		console.log("Pos: "+j+" - Usuario: "+sortedObj[j].usuario+" - Victorias: "+ sortedObj[j].stats.wins);
+	}
 
 })
 
