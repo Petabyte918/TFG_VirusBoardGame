@@ -355,7 +355,116 @@ input.botonCrearPartida {
 	line-height: 1;
 }
 
-#registerForm > form, #loginForm > form, #settingsForm > form {
+.ranquingUser {
+	margin: 0.1em;
+	float: left;
+	width: 100%;
+}
+
+.ranquingOwnUser {
+	margin-top: 0.2em;
+	float: left;
+	width: 100%;
+	border-top: 3px solid white;
+	border-style: dashed;
+}
+
+.ranquingNormal {
+	border: solid white 1px;
+    width: 1em;
+    height: 1em;
+    padding: 0.3em;
+    padding-top: 0.35em;
+    padding-bottom: 0.35em;
+    margin-left: 1em;
+    float: left;
+
+    -ms-border-radius:4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+	-webkit-box-shadow: inset 1px -2px 5px 4px rgb(0,0,0), 1px 1px 7px 2px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 1px -2px 5px 4px rgb(0,0,0), 1px 1px 7px 2px rgba(0,0,0,0.75);
+	box-shadow: inset 1px -2px 5px 4px rgb(0,0,0), 1px 1px 7px 2px rgba(0,0,0,0.75);
+}
+
+.ranquingUser > .ranquingPrimero {
+	background-color: rgba(230, 172, 0, 0.8);
+    -webkit-transition-property: width, height; /* Safari */
+    -webkit-transition-duration: 2s; /* Safari */
+    transition-property: width, height;
+    transition-duration: 2s;
+
+    border: solid white 1px;
+
+    -ms-border-radius:4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+	-webkit-box-shadow: inset 1px -2px 5px 4px #997300, 1px 1px 7px 2px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 1px -2px 5px 4px #997300, 1px 1px 7px 2px rgba(0,0,0,0.75);
+	box-shadow: inset 1px -2px 5px 4px #997300, 1px 1px 7px 2px rgba(0,0,0,0.75);
+}
+
+.ranquingUser > .ranquingSegundo {
+	background-color: rgba(179, 179, 179, 0.8);
+    -webkit-transition-property: width, height; /* Safari */
+    -webkit-transition-duration: 2s; /* Safari */
+    transition-property: width, height;
+    transition-duration: 2s;
+
+    border: solid white 1px;
+
+    -ms-border-radius:4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+	-webkit-box-shadow: inset 1px -2px 5px 4px #595959, 1px 1px 7px 2px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 1px -2px 5px 4px #595959, 1px 1px 7px 2px rgba(0,0,0,0.75);
+	box-shadow: inset 1px -2px 5px 4px #595959, 1px 1px 7px 2px rgba(0,0,0,0.75);
+}
+
+.ranquingUser > .ranquingTercero {
+	background-color: rgba(204, 102, 0, 0.8);
+    -webkit-transition-property: width, height; /* Safari */
+    -webkit-transition-duration: 2s; /* Safari */
+    transition-property: width, height;
+    transition-duration: 2s;
+
+    border: solid white 1px;
+
+    -ms-border-radius:4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+	-webkit-box-shadow: inset 1px -2px 5px 4px #993300, 1px 1px 7px 2px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 1px -2px 5px 4px #993300, 1px 1px 7px 2px rgba(0,0,0,0.75);
+	box-shadow: inset 1px -2px 5px 4px #993300, 1px 1px 7px 2px rgba(0,0,0,0.75);
+}
+
+.ranquingUsuario {
+	float: left;
+    padding-top: 0.40em;
+	margin-left: 1em;
+}
+
+.ranquingVictorias {
+	float: right;
+	margin-right: 0.5em;
+    padding-top: 0.40em;
+}
+
+.ranquingTotal {
+	float: right;
+    padding-top: 0.40em;
+	margin-right: 1em;
+}
+
+#registerForm > form, #loginForm > form, #settingsForm > form , #ranquingList{
 	text-align: center;
 }
 
@@ -365,7 +474,7 @@ input.botonCrearPartida {
     margin-top: 5px;
 }
 
-.tittle_register, .tittle_login, .tittle_settings {
+.tittle_register, .tittle_login, .tittle_settings, .tittle_ranquing {
 	margin-bottom: 10px;
 	padding: 2px;
 	text-decoration: underline;
@@ -439,3 +548,4 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
