@@ -327,12 +327,19 @@ input.botonCrearPartida {
 	line-height: 1;
 }
 
+#ranquingList {
+	height: 80%;
+}
+
+#settingsForm {
+	height: 60%;
+} 
+
 #settingsForm, #ranquingList {
 	position: absolute;
 	top: 80px;
 	right: 5px;
 	width: 25%;
-	height: 60%;
 
     background-color: rgba(128, 0, 0, 0.8);
     -webkit-transition-property: width, height; /* Safari */
@@ -362,11 +369,15 @@ input.botonCrearPartida {
 }
 
 .ranquingOwnUser {
-	margin-top: 0.2em;
-	float: left;
-	width: 100%;
-	border-top: 3px solid white;
-	border-style: dashed;
+    margin-top: 0.2em;
+    margin-left: 0.15em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    float: left;
+    width: 95%;
+    border-top: 3px solid white;
+    border-style: dashed;
+    background: darkslategray;
 }
 
 .ranquingNormal {

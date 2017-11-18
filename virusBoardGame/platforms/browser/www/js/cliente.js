@@ -413,18 +413,18 @@ socket.on('create_ranquing', function(data) {
 		if (clasificacion == "victorias") {
 			percent = data[posUser].stats.wins / data[posUser].stats.total;
 			for (var i in data) {
-				if (data[i].stats.wins > data[posUser].stats.wins) {
+				if (data[i].stats.wins < data[posUser].stats.wins) {
 					contOwnRanquing++;
 				}
 			}
 			ownRanquing = lengthObj - contOwnRanquing;
 		} else if (clasificacion == "porcentaje") {
 			for (var i in data) {
-				if ((data[i].stats.wins / data[i].stats.total) > percent) {
+				if ((data[i].stats.wins / data[i].stats.total) < percent) {
 					contOwnRanquing++;
 				}
 			}
-			ownRanquing = lengthObj - contOwnRanquing;
+			ownRanquing = contOwnRanquing;
 		}
 
 		$("#ranquingList").append(
