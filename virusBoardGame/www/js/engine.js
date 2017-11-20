@@ -18,7 +18,7 @@ var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
 var finDescarte = false; //Indica si estoy en proceso de descarte
 var descartes = {0: false, 1: false, 2: false}; //
-var transplante = {enProceso: false, organoDest: {organo: "", jugDestino: -1}, organoProp: {organo: "", jugDestino: -1}};
+var transplante = {enProceso: false, organo1: {organo: "", numJug: -1}, organo2: {organo: "", numJug: -1}};
 
 function aleatorioRGBrange(inferior,superior) {
 	var numPosibilidades = superior - inferior;

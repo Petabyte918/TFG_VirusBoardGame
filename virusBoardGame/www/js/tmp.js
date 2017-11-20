@@ -1,6 +1,6 @@
 //PENDIENTE ANTES DEL MARTES
 1.- DONE- Settings
-2.- Ranquing
+2.- DONE- Ranquing
 3.- DONE- Login
 4.- DONE- Register
 5.- DONE- Leave-unlogin (o similar)
