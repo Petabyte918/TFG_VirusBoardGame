@@ -6,9 +6,9 @@ var enPartidaEsperando = false;
 var ayudaFuerte;
 var ayudaDebil;
 /** Establecimiento de la conexion con el servidor **/
-//var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 //Local
-var socket = io.connect('localhost:8080');
+//var socket = io.connect('localhost:8080');
 socket.on('Connection OK', function (data) {
    	console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
@@ -77,8 +77,10 @@ function button_create() {
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "none");
+	$("#ranquing").css("display", "none");
 	$("#login").css("display", "none");
 	$("#leave").css("display", "none");
+	$("#userNameContainer").css("display", "none");
 	$("#register").css("display", "none");
 }
 
@@ -92,8 +94,10 @@ function button_lista_partidas() {
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "none");
+	$("#ranquing").css("display", "none");
 	$("#login").css("display", "none");
 	$("#leave").css("display", "none");
+	$("#userNameContainer").css("display", "none");
 	$("#register").css("display", "none");
 }
 
@@ -106,6 +110,7 @@ function backTo_InitMenu() {
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "inline");
+	$("#ranquing").css("display", "inline");
 	var logged = localStorage.getItem("logged");
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
@@ -124,6 +129,7 @@ function button_loginForm () {
 	} else {
 		$("#loginForm").css("display", "block");
 		$("#registerForm").css("display","none");
+		document.getElementById("loginCorrection").innerHTML = "";
 	}
 }
 
@@ -148,6 +154,7 @@ function button_leave () {
 	document.getElementById("userNameContainer").innerHTML == "";
 	document.form_login_user.loginName.value = "";
 	document.form_login_user.loginPass.value = "";
+	localStorage.setItem("logged", "false");
 }
 
 function button_ranquing () {
@@ -210,12 +217,12 @@ socket.on('login_user-OK', function(message) {
 socket.on('login_user-KO', function(message) {
 	localStorage.removeItem('loginName');
 	localStorage.removeItem('loginPass');
-	localStorage.setItem("false");
+	localStorage.setItem("logged", "false");
 
 	console.log("login_user-KO: "+message);
 	document.getElementById("loginCorrection").innerHTML = "Usuario o contraseña incorrectos";
 	document.getElementById("userNameContainer").innerHTML = ""
-	document.form_register_user.loginName.value = "";
+	document.form_login_user.loginName.value = "";
 	document.form_login_user.loginPass.value = "";
 });
 
@@ -346,7 +353,7 @@ socket.on('create_ranquing', function(data) {
 	$("#ranquingList").empty();
 	//Ponemos el titulo
 	$("#ranquingList").append(
-		'<label class="label_form1 tittle_ranquing">Ranquing</label>'
+		'<label class="label_form1 tittle_ranquing">Clasificacion</label>'
 	);
 	//Ponemos el primero
 	if (sortedObj[0] != false) {

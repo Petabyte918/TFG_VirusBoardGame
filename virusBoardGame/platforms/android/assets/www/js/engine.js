@@ -1,25 +1,37 @@
 
-function aleatorioRGBrange(inferior,superior){
+//Informacion que se intercambia con el servidor o se pide
+var usuario = "";
+var idPartida = "";
+var jugadores = [];
+var deckOfCards = [];
+var movJugador = "";
+
+//Informacion exclusiva de cada cliente
+var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
+							//Busco pasandole la posicion del jugador
+var posOrganosJugadores = {}; //posOrganosJugadores[posJug] Informacion para dibujar los organos de los jugadores
+var cartasUsuario = []; //Cartas que tiene en la mano cada jugador
+var posCartasUsuario = []; //Informacion para dibujar las cartas de la mano
+var posCubosDescarte = {};
+var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
+var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
+var posPorJugador = {}; //Dado un jugador te devuelve una posicion
+var finDescarte = false; //Indica si estoy en proceso de descarte
+var descartes = {0: false, 1: false, 2: false}; //
+var transplante = {enProceso: false, organo1: {organo: "", numJug: -1}, organo2: {organo: "", numJug: -1}};
+
+function aleatorioRGBrange(inferior,superior) {
 	var numPosibilidades = superior - inferior;
 	var aleat = Math.random() * numPosibilidades;
 	aleat = Math.floor(aleat);
 	return parseInt(inferior) + aleat;
 }
-function colorAleatorio(){
+function colorAleatorio() {
    return "rgb(" + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + "," + aleatorioRGBrange(0,255) + ")";
 }
 
-var cardType = {organo: 'organo', virus: 'virus', medicina:'medicina', tratamiento: 'tratamiento'}
-function card (cardType, organType, picture){
-	this.cardType = cardType;
-	this.organType = organType;
-	this.picture = picture;
-}
-
-card.prototype.toString = function () {
-	var value = "";
-	value += "Carta: "+this.cardType+" "+this.organType;
-	return value;
+function cambiaApass(caja) {
+	console.log("cambiaApass()-"+caja);
 }
 
 function shuffle(array) {
@@ -37,32 +49,89 @@ function shuffle(array) {
   return array;
 }
 
-var usuario = ""; //Nombre de usuario
-var numHumanos, numMaquinas, numJugadores = 0;
-var jugadores = []; //Nombres humanos
-var deckOfCards = []; //Array que contiene todas las cartas
-var posJugadores = []; //Dependiendo del numero de jugadores, huecos de la mesa usaremos
-var posOrganosJugadores = []; //Que pintamos y donde en cada hueco
-var cartasUsuario = [];
-var posCartasUsuario = [];
+//Use it for extend a object without Jquery. Return a object built merging second into first
+function extend(first, second) {
+    for (var secondProp in second) {
+        var secondVal = second[secondProp];
+        // Is this value an object?  If so, iterate over its properties, copying them over
+        if (secondVal && Object.prototype.toString.call(secondVal) === "[object Object]") {
+            first[secondProp] = first[secondProp] || {};
+            extend(first[secondProp], secondVal);
+        }
+        else {
+            first[secondProp] = secondVal;
+        }
+    }
+    return first;
+};
+
+//
+function prepararOrganosJugadoresCli(){
+	var posicion = null;
+	for (var i = 0; i < jugadores.length; i++){
+		//Estados: vacio, normal, enfermo, vacunado, inmunizado
+		posicion = posPorJugador[jugadores[i]].posicion;
+		organosJugadoresCli[jugadores[i]] = {
+			jugador: jugadores[i],
+			posicion: posicion,
+			cerebro: "",
+			corazon: "",
+			higado: "",
+			hueso: "",
+			organoComodin: ""
+		};
+	}
+}
+
+function gestionarMov(movJugador){
+
+}
+
+function takeCard(){
+    if (deckOfCards.length != 0){
+    	var drawedCard = deckOfCards.shift();
+    	//console.log(drawedCard.toString());
+    	return drawedCard;
+    } else {
+    	alert("Oh! No quedan cartas en el mazo!");
+        return null;
+    }
+}
+
 Engine = new function () {
 	//Responsive canvas
 	this.initCanvas = function(){
-		//Only purpose adapt the canvas to full screen or show a initial menu etc etc
-		/**if (Modernizr.canvas){
-			var canvas = document.getElementById("canvas");
-			var context = canvas.getContext("2d");
+		windowWidth = window.innerWidth;
+		windowHeight = window.innerHeight;
 
-			if (context){
-				var currentCard = takeCard();
-				if (currentCard) {
-					alert(currentCard.toString());
-				}
-				renderImage(context);
-			}
-		} else {
-			alert("Canvas is not supported");
-		}**/
+		//Canvas principal - cosas que se mueven (se borra continuamente)
+		cv = document.getElementById('canvas');
+		cv.width = windowWidth;
+		cv.height = windowHeight;
+		cx = cv.getContext('2d');
+		cx.fillStyle = "rgba(0,0,255,0)";
+		cx.fillRect(0,0,windowWidth,windowHeight);
+
+		//Canvas del medio - turnos y estado tablero (se borra a veces)
+		cvMID = document.getElementById('canvasMID');
+		cvMID.width = windowWidth;
+		cvMID.height = windowHeight;
+		cxMID = cvMID.getContext('2d');
+		cxMID.fillStyle = "rgba(0,0,255,0)";
+		cxMID.fillRect(0,0,windowWidth,windowHeight);
+
+		//Canvas en background - fondo y cosas permanentes (no se borra nunca o casi nunca)
+		cvBG = document.getElementById('canvasBG');
+		cvBG.width = windowWidth;
+		cvBG.height = windowHeight;
+		cxBG = cvBG.getContext('2d');
+		cxBG.fillStyle = 'MediumSeaGreen';
+		cxBG.fillRect(0,0,windowWidth,windowHeight);
+
+		$("#container_botones").css("display", "none");
+		$("#container_form_create").css("display", "none");
+		$("#lista_partidas").css("display", "none");
+		$("#canvas_container").css("display", "inline");
 	}
 	this.initJugadores = function(){
 		//Servidor: Esta funcion debe pedir al servidor los jugadores
@@ -70,7 +139,7 @@ Engine = new function () {
 		//Y saber como colocarlos en la mesa
 		//6 posiciones libres. La propia, una a la izq, tres enfrente y otra a la dcha
 		var pos1, pos2, pos3, pos4, pos5, pos6 = [];
-		switch(numJugadores){
+		switch(jugadores.length){
 		case 2:
 			posJugadores = [1, 4];
 			break;
@@ -95,146 +164,191 @@ Engine = new function () {
 		var widthDisponible, heightDisponible = 0;
 		var widthOrgano, heightOrgano = 0;
 		var posCerebro, posCorazon, posHueso, posHigado = 0;
+		var relTam = (1536/1013);
 		//Posiciones y tamaños estaran proporcionados con el tamaño de la pantalla
 
 		//POSICION 1
 		widthDisponible = windowWidth / 3;
-		//La separacion entre organos sera la mitad de un organo
+		//Los 20px solo afectan al tamanio de la carta
 		widthOrgano = widthDisponible / 6 - 20; 
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height, rotacion]
-		heightOrgano = widthOrgano * 1.5;
-		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2 - widthOrgano * 0.75, windowHeight - heightOrgano - 20];
-		posCorazon = [(windowWidth / 6) * 3 - widthOrgano * 1 - widthOrgano * 0.25, windowHeight - heightOrgano - 20];
-		posHueso = [(windowWidth / 6) * 3 + widthOrgano * 0.25, windowHeight - heightOrgano - 20];
-		posHigado = [(windowWidth / 6) * 3 + widthOrgano * 1 + widthOrgano * 0.75, windowHeight - heightOrgano - 20];
-		var posOrganosJug1 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug1);
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		heightOrgano = widthOrgano * relTam;
+
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2.5 - 15 * 2, windowHeight - heightOrgano - 20];
+		posCorazon = [(windowWidth / 6) * 3  - widthOrgano * 1.5 - 15 * 1, windowHeight - heightOrgano - 20];
+		posHueso = [(windowWidth / 6) * 3  - widthOrgano * 0.5 - 15 * 0, windowHeight - heightOrgano - 20];
+		posHigado = [(windowWidth / 6) * 3  + widthOrgano * 0.5 + 15 * 1, windowHeight - heightOrgano - 20];
+		posComodin = [(windowWidth / 6) * 3  + widthOrgano * 1.5 + 15 * 2, windowHeight - heightOrgano - 20];
+		posOrganosJugadores[1] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado,
+			posComodin: posComodin
+		};
 
 		//POSICION 2
 		widthDisponible = windowWidth / 3;
 		heightDisponible = windowHeight / 3;
-		//20px sera la separacion entre cartas * 2 = 40
-		heightOrgano = widthDisponible / 6 - 20;
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height]
-		widthOrgano = heightOrgano * 1.5;
-		posCerebro = [20, windowHeight / 2 - heightOrgano * 2 - heightOrgano * 0.75];
-		posCorazon = [20, windowHeight / 2 - heightOrgano * 1 - heightOrgano * 0.25];
-		posHueso = [20, windowHeight / 2 + heightOrgano * 0.25];
-		posHigado = [20, windowHeight / 2 + heightOrgano * 1 + heightOrgano * 0.75];
-		var posOrganosJug2 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug2);
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		heightOrgano = widthDisponible / 6 - 20; 
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		widthOrgano = heightOrgano * relTam;
+
+		posCerebro = [20, windowHeight / 2 - heightOrgano * 2.5 - 15 * 2];
+		posCorazon = [20, windowHeight / 2 - heightOrgano * 1.5 - 15 * 1];
+		posHueso = [20, windowHeight / 2 - heightOrgano * 0.5 - 15 * 0];
+		posHigado = [20, windowHeight / 2 + heightOrgano * 0.5 + 15 * 1];
+		posComodin = [20, windowHeight / 2 + heightOrgano * 1.5 + 15 * 2];
+		posOrganosJugadores[2] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado,
+			posComodin: posComodin
+		};
 
 		//POSICION 3
 		widthDisponible = windowWidth / 3;
-		//La separacion entre organos sera la mitad de un organo
+		//Los 20px solo afectan al tamanio de la carta
 		widthOrgano = widthDisponible / 6 - 20; 
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height, rotacion]
-		heightOrgano = widthOrgano * 1.5;
-		posCerebro = [(windowWidth / 6) * 1  - widthOrgano * 2 - widthOrgano * 0.75, 20];
-		posCorazon = [(windowWidth / 6) * 1 - widthOrgano * 1 - widthOrgano * 0.25, 20];
-		posHueso = [(windowWidth / 6) * 1 + widthOrgano * 0.25, 20];
-		posHigado = [(windowWidth / 6) * 1 + widthOrgano * 1 + widthOrgano * 0.75, 20];
-		var posOrganosJug3 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug3);		
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		heightOrgano = widthOrgano * relTam;
+
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		posCerebro = [(windowWidth / 6) * 1  - widthOrgano * 2.5 - 15 * 2, 20];
+		posCorazon = [(windowWidth / 6) * 1  - widthOrgano * 1.5 - 15 * 1, 20];
+		posHueso = [(windowWidth / 6) * 1  - widthOrgano * 0.5 - 15 * 0, 20];
+		posHigado = [(windowWidth / 6) * 1  + widthOrgano * 0.5 + 15 * 1, 20];
+		posComodin = [(windowWidth / 6) * 1  + widthOrgano * 1.5 + 15 * 2, 20];
+		posOrganosJugadores[3] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado,
+			posComodin: posComodin
+		};	
 
 		//POSICION 4
 		widthDisponible = windowWidth / 3;
-		//La separacion entre organos sera la mitad de un organo
+		//Los 20px solo afectan al tamanio de la carta
 		widthOrgano = widthDisponible / 6 - 20; 
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height, rotacion]
-		heightOrgano = widthOrgano * 1.5;
-		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2 - widthOrgano * 0.75, 20];
-		posCorazon = [(windowWidth / 6) * 3 - widthOrgano * 1 - widthOrgano * 0.25, 20];
-		posHueso = [(windowWidth / 6) * 3 + widthOrgano * 0.25, 20];
-		posHigado = [(windowWidth / 6) * 3 + widthOrgano * 1 + widthOrgano * 0.75, 20];
-		var posOrganosJug4 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug4);
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		heightOrgano = widthOrgano * relTam;
+
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		posCerebro = [(windowWidth / 6) * 3  - widthOrgano * 2.5 - 15 * 2, 20];
+		posCorazon = [(windowWidth / 6) * 3  - widthOrgano * 1.5 - 15 * 1, 20];
+		posHueso = [(windowWidth / 6) * 3  - widthOrgano * 0.5 - 15 * 0, 20];
+		posHigado = [(windowWidth / 6) * 3  + widthOrgano * 0.5 + 15 * 1, 20];
+		posComodin = [(windowWidth / 6) * 3  + widthOrgano * 1.5 + 15 * 2, 20];
+		posOrganosJugadores[4] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado,
+			posComodin: posComodin
+		};
 
 		//POSICION 5
 		widthDisponible = windowWidth / 3;
-		//La separacion entre organos sera la mitad de un organo
+		//Los 20px solo afectan al tamanio de la carta
 		widthOrgano = widthDisponible / 6 - 20; 
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height, rotacion]
-		heightOrgano = widthOrgano * 1.5;
-		posCerebro = [(windowWidth / 6) * 5  - widthOrgano * 2 - widthOrgano * 0.75, 20];
-		posCorazon = [(windowWidth / 6) * 5 - widthOrgano * 1 - widthOrgano * 0.25, 20];
-		posHueso = [(windowWidth / 6) * 5 + widthOrgano * 0.25, 20];
-		posHigado = [(windowWidth / 6) * 5 + widthOrgano * 1 + widthOrgano * 0.75, 20];
-		var posOrganosJug5 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug5);	
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		heightOrgano = widthOrgano * relTam;
+
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		posCerebro = [(windowWidth / 6) * 5  - widthOrgano * 2.5 - 15 * 2, 20];
+		posCorazon = [(windowWidth / 6) * 5  - widthOrgano * 1.5 - 15 * 1, 20];
+		posHueso = [(windowWidth / 6) * 5  - widthOrgano * 0.5 - 15 * 0, 20];
+		posHigado = [(windowWidth / 6) * 5  + widthOrgano * 0.5 + 15 * 1, 20];
+		posComodin = [(windowWidth / 6) * 5  + widthOrgano * 1.5 + 15 * 2, 20];
+		posOrganosJugadores[5] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado,
+			posComodin: posComodin
+		};
 
 		//POSICION 6
 		widthDisponible = windowWidth / 3;
 		heightDisponible = windowHeight / 3;
-		//20px sera la separacion entre cartas * 2 = 40
-		heightOrgano = widthDisponible / 6 - 20;
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height]
-		widthOrgano = heightOrgano * 1.5;
-		posCerebro = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 2 - heightOrgano * 0.75];
-		posCorazon = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 1 - heightOrgano * 0.25];
-		posHueso = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 0.25];
-		posHigado = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 1 + heightOrgano * 0.75];
-		var posOrganosJug6 = [widthOrgano, heightOrgano, posCerebro, posCorazon, posHueso, posHigado];
-		posOrganosJugadores.push(posOrganosJug6);
-	}
-	this.initPosCartasUsuario = function(){
-		var widthDisponible, heightDisponible = 0;
-		var widthOrgano, heightOrgano = 0;
+		//La separacion entre organos sera 15px (real 5px pues 5px de borde del organo izq, 5 de borde de organo dcho y 5px de separacion)
+		heightOrgano = widthDisponible / 6 - 20; 
+		//La altura de la carta va en relacion a su anchura para que no se deforme (1536/1013);
+		widthOrgano = heightOrgano * relTam;
 
-		widthDisponible = windowWidth / 3;
-		heightDisponible = windowHeight / 3;
-		widthOrgano = widthDisponible / 6 - 20; 
-		heightOrgano = widthOrgano * 1.5;
-		//20px sera la separacion entre cartas * 2 = 40
-		var widthCarta = widthDisponible / 3 - 20;
-		//La altura de la carta va en relacion a su anchura para que no se deforme (1-1.5)
-		//posCartaX = [width, height]
-		var heightCarta = widthCarta * 1.5;
-		var posCarta1 = [windowWidth / 2 - widthCarta * 1.5 - 20, windowHeight - heightCarta - heightOrgano - 40];
-		var posCarta2 = [windowWidth / 2 - widthCarta * 0.5, windowHeight - heightCarta - heightOrgano - 40];
-		var posCarta3 = [windowWidth / 2 + widthCarta * 0.5 + 20, windowHeight - heightCarta - heightOrgano - 40];
+		posCerebro = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 2.5 - 15 * 2];
+		posCorazon = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 1.5 - 15 * 1];
+		posHueso = [windowWidth - widthOrgano - 20, windowHeight / 2 - heightOrgano * 0.5 - 15 * 0];
+		posHigado = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 0.5 + 15 * 1];
+		posComodin = [windowWidth - widthOrgano - 20, windowHeight / 2 + heightOrgano * 1.5 + 15 * 2];
+
+		posOrganosJugadores[6] = {
+			widthOrgano: widthOrgano,
+			heightOrgano:heightOrgano,
+			posCerebro: posCerebro,
+			posCorazon: posCorazon,
+			posHueso: posHueso,
+			posHigado: posHigado,
+			posComodin: posComodin
+		};
+	}
+	this.initCubosDescarte = function(){
+		var widthCubo = ((windowWidth / 6) * 0.65) - 20;
+		var heightCubo = (widthCubo * 0.9) //(180/201) Para mantener la prop de la imagen
+
+		posCubosDescarte.widthCubo = widthCubo;
+		posCubosDescarte.heightCubo = heightCubo;
+
+		posCubosDescarte[1] = {
+			x: ((windowWidth / 2) - widthCubo * 2 - 30),
+			y: ((windowHeight / 3) + 30)
+		}
+		posCubosDescarte[2] = {
+			x: ((windowWidth / 2) - widthCubo * 1 - 10),
+			y: ((windowHeight / 3) + 30)
+		}
+		posCubosDescarte[3] = {
+			x: ((windowWidth / 2) + widthCubo * 0 + 10),
+			y: ((windowHeight / 3) + 30)
+		}
+		posCubosDescarte[4] = {
+			x: ((windowWidth / 2) + widthCubo * 1 + 30),
+			y: ((windowHeight / 3) + 30)
+		}
+	}	
+	this.initPosCartasUsuario = function(){
+		//La posY sera 5px debajo de los cubos
+		var posY = posCubosDescarte[1].y + posCubosDescarte.heightCubo - 20;
+		//La altura de las cartas del usuario sera el espacio entre los cubos y los organos del usuario
+		var heightCarta = posOrganosJugadores[1].posCerebro[1] - posY - 70;
+		//La anchura de las cartas del usuario esta en proporcion con (1536/1013)
+		var widthCarta = heightCarta * (1013/1536);
+
+		var posCarta1 = [windowWidth/2 - widthCarta*1.5 - 10, posY];
+		var posCarta2 = [windowWidth/2 - widthCarta*0.5, posY];
+		var posCarta3 = [windowWidth/2 + widthCarta*0.5 + 10, posY];
 		posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
 
 	}
-	this.initDeckOfCards = function(){
-		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.organo, 'pulmon', 'img/cardImages/organoHueso.png'));
-			deckOfCards.push(new card(cardType.organo, 'corazon', 'img/cardImages/organoCorazon.png'));
-			deckOfCards.push(new card(cardType.organo, 'higado', 'img/cardImages/organoHigado.png'));
-			deckOfCards.push(new card(cardType.organo, 'cerebro', 'img/cardImages/organoCerebro.png'));
-		}
-		for (var i = 0; i < 5; i++) {
-			deckOfCards.push(new card(cardType.medicina, 'pulmon', 'img/cardImages/medicinaPulmon.png'));
-			deckOfCards.push(new card(cardType.medicina, 'corazon', 'img/cardImages/medicinaCorazon.png'));
-			deckOfCards.push(new card(cardType.medicina, 'higado', 'img/cardImages/medicinaHigado.png'));
-			deckOfCards.push(new card(cardType.medicina, 'cerebro', 'img/cardImages/medicinaCerebro.png'));
-		}
-		for (var i = 0; i < 4; i++) {
-			deckOfCards.push(new card(cardType.virus, 'pulmon', 'img/cardImages/virusPulmon.png'));
-			deckOfCards.push(new card(cardType.virus, 'corazon', 'img/cardImages/virusCorazon.png'));
-			deckOfCards.push(new card(cardType.virus, 'higado', 'img/cardImages/virusHigado.png'));
-			deckOfCards.push(new card(cardType.virus, 'cerebro', 'img/cardImages/virusCerebro.png'));
-		}
-		for (var i = 0; i < 2; i++) {
-			deckOfCards.push(new card(cardType.tratamiento, 'error medico', 'img/cardImages/errorMedico.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'guante de latex', 'img/cardImages/guanteDeLatex.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'transplante', 'img/cardImages/transplante.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'ladron de organos', 'img/cardImages/ladronDeOrganos.png'));
-			deckOfCards.push(new card(cardType.tratamiento, 'contagio', 'img/cardImages/contagio.png'));
-		}
-		for (var i = 0; i < 1; i++) {
-			deckOfCards.push(new card(cardType.organo, 'comodin', 'img/cardImages/organoComodin.png'));
-			deckOfCards.push(new card(cardType.medicina, 'comodin', 'img/cardImages/medicinaComodin.png'));
-			deckOfCards.push(new card(cardType.virus, 'comodin', 'img/cardImages/virusComodin.png'));
-		}
+	this.initFinDescartesButton = function() {
+		var posX = posCartasUsuario[4][0] + posCartasUsuario[0] + 20;
+		var posY = posCartasUsuario[4][1] + 20;
+
+		$("#descartes_boton").css({"top": posY, "left": posX});
 	}
 }
-
-
 

@@ -512,57 +512,89 @@ function moveObjects(){
 		src: cartasUsuario[2].picture
 	});
 
-	//Movil - ordenador
-	//cv.ontouchstart = function(event) {
-		//touch = event.touches[0];
-	cv.onmousedown = function(event) {
-		touch = event;
-		//console.log("Onmousedown");
-		for (var i = 0; i < objetos.length; i++) {
-			if (objetos[i].x < touch.pageX
-			  && (objetos[i].width + objetos[i].x > touch.pageX)
-			  && objetos[i].y < touch.pageY
-			  && (objetos[i].height + objetos[i].y > touch.pageY)) {
-				objetoActual = objetos[i];
-				//console.log("Objeto "+i+" TOCADO");
-				inicioY = touch.pageY - objetos[i].y;
-				inicioX = touch.pageX - objetos[i].x;
-				break;
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	    //console.log('Esto es un dispositivo móvil');
+		cv.ontouchstart = function(event) {
+			touch = event.touches[0];
+			for (var i = 0; i < objetos.length; i++) {
+				if (objetos[i].x < touch.pageX
+				  && (objetos[i].width + objetos[i].x > touch.pageX)
+				  && objetos[i].y < touch.pageY
+				  && (objetos[i].height + objetos[i].y > touch.pageY)) {
+					objetoActual = objetos[i];
+					//console.log("Objeto "+i+" TOCADO");
+					inicioY = touch.pageY - objetos[i].y;
+					inicioX = touch.pageX - objetos[i].x;
+					break;
+				}
 			}
 		}
-	}
 
-	//Movil - ordenador
-	//cv.ontouchmove = function(event) {
-		//touch = event.touches[0];
-	cv.onmousemove = function(event) {
-		touch = event;
-		//console.log("Onmousemove");
-		//Solo actualizamos si movemos y hay algun objeto seleccionado y cada cierta diferencia de pixeles
-		if (objetoActual != null) {
-			objetoActual.x = touch.pageX - inicioX;
-			objetoActual.y = touch.pageY - inicioY;
-			//console.log("ObjetoActual.x: "+objetoActual.x);
-			//console.log("touch.pageX: "+touch.pageX);
-			//console.log("touch.pageY: "+touch.pageY);
-			//console.log("inicioX :"+inicioX);
-			actualizarCanvas();
+		cv.ontouchmove = function(event) {
+			touch = event.touches[0];
+			if (objetoActual != null) {
+				objetoActual.x = touch.pageX - inicioX;
+				objetoActual.y = touch.pageY - inicioY;
+				actualizarCanvas();
+			}
 		}
-	}
 
-	//Movil - ordenador
-	//cv.ontouchend = function(event) {
-	cv.onmouseup = function(event) {
-		//console.log("Onmouseup");
-		if (objetoActual != null){
-			checkCollision();
-			objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
-			actualizarCanvas();
+		cv.ontouchend = function(event) {
+			if (objetoActual != null){
+				checkCollision();
+				objetoActual = null;
+				actualizarCanvas();
+			}
+			objetoActual = null;
 		}
-		//	2Eliminar o no objeto
-		//	3Agregarlo o no a algun sitio
-		//4restablecer coordenadas iniciale
-		objetoActual = null;
+	} else {
+		//console.log('Esto es un navegador de ordenador');
+		//Movil - ordenador
+		cv.onmousedown = function(event) {
+			touch = event;
+			//console.log("Onmousedown");
+			for (var i = 0; i < objetos.length; i++) {
+				if (objetos[i].x < touch.pageX
+				  && (objetos[i].width + objetos[i].x > touch.pageX)
+				  && objetos[i].y < touch.pageY
+				  && (objetos[i].height + objetos[i].y > touch.pageY)) {
+					objetoActual = objetos[i];
+					//console.log("Objeto "+i+" TOCADO");
+					inicioY = touch.pageY - objetos[i].y;
+					inicioX = touch.pageX - objetos[i].x;
+					break;
+				}
+			}
+		}
+
+		//Movil - ordenador
+		cv.onmousemove = function(event) {
+			touch = event;
+			//console.log("Onmousemove");
+			//Solo actualizamos si movemos y hay algun objeto seleccionado y cada cierta diferencia de pixeles
+			if (objetoActual != null) {
+				objetoActual.x = touch.pageX - inicioX;
+				objetoActual.y = touch.pageY - inicioY;
+				//console.log("ObjetoActual.x: "+objetoActual.x);
+				//console.log("touch.pageX: "+touch.pageX);
+				//console.log("touch.pageY: "+touch.pageY);
+				//console.log("inicioX :"+inicioX);
+				actualizarCanvas();
+			}
+		}
+
+		cv.onmouseup = function(event) {
+			//console.log("Onmouseup");
+			if (objetoActual != null){
+				checkCollision();
+				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
+				actualizarCanvas();
+			}
+			//	2Eliminar o no objeto
+			//	3Agregarlo o no a algun sitio
+			//4restablecer coordenadas iniciale
+			objetoActual = null;
+		}
 	}
 }
 
@@ -838,37 +870,39 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		case "transplante":
 			console.log("manejadorMov() - Transplante");
 			//Guardo el intercambio
-			if (jugDestino == 1) {
-				transplante.organoProp.organo = organoColision;
-				transplante.organoProp.numJug = jugDestino;
-			} else {
-				transplante.organoDest.organo = organoColision;
-				transplante.organoDest.numJug = jugDestino;
+			if (transplante.organo1.jugDest1 == -1) {
+				transplante.organo1.organo = organoColision;
+				transplante.organo1.numJug = jugDestino;
+			} else if (transplante.organo2.jugDest2 == -1) {
+				transplante.organo2.organo = organoColision;
+				transplante.organo2.numJug = jugDestino;
 			}
 			//Evaluo si la jugada esta completa
-			if (((transplante.organoProp.organo != "") && (transplante.organoProp.numJug != -1)) &&
-				((transplante.organoDest.organo != "") && (transplante.organoDest.numJug != -1))) {
+			if (((transplante.organo1.organo != "") && (transplante.organo1.numJug != -1)) &&
+				((transplante.organo2.organo != "") && (transplante.organo2.numJug != -1))) {
 
-				var organoDest = transplante.organoDest.organo;
-				var jugDest = transplante.organoDest.numJug;
-				var estadoOrganoDest = organosJugadoresCli[jugDest][organoDest];
-				var organoOrigen = transplante.organoProp.organo;
+				var jug1 = transplante.organo1.numJug;
+				var jug2 = transplante.organo2.numJug;
+				var organo1 = transplante.organo1.organo;
+				var organo2 = transplante.organo2.organo;
+				var estadoOrgano1 = organosJugadoresCli[jug1][organo1];
+				var estadoOrgano2 = organosJugadoresCli[jug2][organo2];
 
 				//Dos condiciones
 				//1: que el tipo de organos sea el mismo (y distintos de "")
-				if (transplante.organoProp.organo == transplante.organoDest.organo) {
+				if (organo1 == organo2) {
 
-					organosJugadoresCli[jugDest][organoDest] = organosJugadoresCli[1][organoOrigen];
-					organosJugadoresCli[1][organoOrigen] = estadoOrganoDest;
+					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
+					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
 					movJugador = "true";
 					fin_transplante();
 				}
 				//2: si no que los organos, para el cambio esten vacios
-				if ((organosJugadoresCli[jugDest][organoOrigen] == "")
-					&& (organosJugadoresCli[1][organoDest] == "")) {
+				if ((organosJugadoresCli[jug1][organo2] == "")
+					&& (organosJugadoresCli[jug2][organo1] == "")) {
 
-					organosJugadoresCli[jugDest][organoDest] = organosJugadoresCli[1][organoOrigen];
-					organosJugadoresCli[1][organoOrigen] = estadoOrganoDest;
+					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
+					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
 					movJugador = "true";
 					fin_transplante();
 				}
@@ -929,10 +963,10 @@ function fin_descarte() {
 
 function fin_transplante() {
 	transplante.enProceso = false;
-	transplante.organoProp.organo = "";
-	transplante.organoProp.numJug = -1;
-	transplante.organoDest.organo = "";
-	transplante.organoDest.numJug = -1;
+	transplante.organo1.organo = "";
+	transplante.organo1.numJug = -1;
+	transplante.organo2.organo = "";
+	transplante.organo2.numJug = -1;
 }
 
 $(document).ready(function(){
