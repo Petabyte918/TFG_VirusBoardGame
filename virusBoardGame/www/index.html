@@ -77,7 +77,7 @@
 	</div>
 
 	<div id="container_botones">
-		<a class="boton" id="boton_jugar" title="Jugar" onclick="joinPartida('','true')">Jugar</a>
+		<a class="boton" id="boton_jugar" title="Jugar" onclick="joinPartida('','true')">Juego rápido</a>
 		<a class="boton" id="boton_crear" title="Crear Partida" onclick="button_create()">Crear Partida</a>
 		<a class="boton" id="boton_lista" title="Lista de partidas" onclick="button_lista_partidas()">Lista de partidas</a>
 	</div>
@@ -121,6 +121,13 @@
 				<a class="num_jugadores">4 / 6</a>
 			</li>-->
 		</ul>
+	</div>
+
+	<div id="cuadroPartidaRapida" style="display: none;">
+		<a class="notaEncabezado">(Juega en la partida con más posibilidades de empezar antes)</a>
+		<a class="tituloCartaIzq">Actualmente:</a>
+		<a id="partidaRapidaNombre">-Partida: Partida de Perry maison</a>
+		<a id="partidaRapidaJugadores">-(Necesarios 2 jugadores)</a>
 	</div>
 
 	<div id="canvas_container" style="position: relative; display: none;">

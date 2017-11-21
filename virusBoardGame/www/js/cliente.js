@@ -6,13 +6,14 @@ var enPartidaEsperando = false;
 var ayudaFuerte;
 var ayudaDebil;
 /** Establecimiento de la conexion con el servidor **/
-var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 //Local
-//var socket = io.connect('localhost:8080');
+var socket = io.connect('localhost:8080');
 socket.on('Connection OK', function (data) {
    	console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
    	configInicial();
+   	actualizar_partidas();
 });
 /** -------------------- **/
 
@@ -63,6 +64,17 @@ function configInicial() {
 		document.form_settings_user.ayudaFuerteName.checked = false;
 		ayudaFuerte == false;
 	}
+
+	//Posicion Cuadros ayuda
+	//Partida Rapida
+	var elemBotJug = document.getElementById('boton_jugar');
+	var posBotJug = elemBotJug.getBoundingClientRect();
+	var posX = (Math.floor(posBotJug.left + posBotJug.width + 10)).toString()+"px";
+	var posY = (Math.floor(posBotJug.top + posBotJug.height -110)).toString()+"px";
+	console.log("posX: "+posX+", posY: "+posY);
+	$("#cuadroPartidaRapida").css("left", posX);
+	$("#cuadroPartidaRapida").css("top", posY);
+	$("#cuadroPartidaRapida").css("display", "block");
 }
 //Comprobamos si hemos abandonado una partida en curso
 //checkMatchRunning();
@@ -82,6 +94,7 @@ function button_create() {
 	$("#leave").css("display", "none");
 	$("#userNameContainer").css("display", "none");
 	$("#register").css("display", "none");
+	$("#cuadroPartidaRapida").css("display", "none");
 }
 
 function button_lista_partidas() {
@@ -99,6 +112,7 @@ function button_lista_partidas() {
 	$("#leave").css("display", "none");
 	$("#userNameContainer").css("display", "none");
 	$("#register").css("display", "none");
+	$("#cuadroPartidaRapida").css("display", "none");
 }
 
 function backTo_InitMenu() {
@@ -111,6 +125,7 @@ function backTo_InitMenu() {
 	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "inline");
 	$("#ranquing").css("display", "inline");
+	$("#cuadroPartidaRapida").css("display", "inline");
 	var logged = localStorage.getItem("logged");
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
@@ -461,18 +476,33 @@ function form_createGame() {
 	return false;
 }
 
-socket.on('create_game-OK', function(data){
+socket.on('create_game-OK', function(data) {
 	//console.log("Recibido: create_game-OK");
 	idPartidaEsperando = data.idPartida;
 	enPartidaEsperando = true;
 	button_lista_partidas();
 })
 
-socket.on('create_game-KO', function(){
+socket.on('create_game-KO', function() {
 	//console.log("Recibido: create game-KO");
 	alert("Ya has creado o ya estas dentro de alguna partida");
 	button_lista_partidas();
 })
+
+socket.on('new_player_joined', function() {
+	console.log("new_player_joined");
+	actualizar_partidas();
+})
+
+socket.on('new_game_available', function() {
+	console.log("new_game_available");
+	actualizar_partidas();
+})
+
+socket.on('player_leaved', function() {
+	console.log("player_leaved");
+	actualizar_partidas();
+}); 
 
 function actualizar_partidas(){
 	//console.log("function actualizar_partidas()");
@@ -486,6 +516,29 @@ socket.on('actualizar_partidas', function(data){
 })
 
 function actualizar_listaPartidas() {
+	//Actualizamos partida rapida
+	var mejorDif = 9999;
+	var dif = 0;
+	var idPartida = "";
+	for (var id in lista_partidas) {
+		if (lista_partidas[id].estado == "esperando") {
+			dif = lista_partidas[id].gameNumPlayers - lista_partidas[id].gamePlayers.length;
+			if (dif < mejorDif) {
+				mejorDif = dif;
+				idPartida = id;
+			}
+		}
+	}
+	if (idPartida == "") {
+		document.getElementById("partidaRapidaNombre").innerHTML = "No hay partidas";
+		document.getElementById("partidaRapidaJugadores").innerHTML = "-----";
+	} else {
+		document.getElementById("partidaRapidaNombre").innerHTML = 
+			"-Partida: "+lista_partidas[idPartida].gameName;
+		document.getElementById("partidaRapidaJugadores").innerHTML = 
+			"-(Necesarios "+mejorDif+" jugadores)";
+	}
+
 	//console.log("function actualizar_listaPartidas()");
 	//Eliminamos primero los eventos asociados a los nodos hijos pues remove/empty no lo hace
 	//y en un mal escenario puedes tener millones de eventos disparandose cada vez
@@ -499,6 +552,7 @@ function actualizar_listaPartidas() {
 	$('.partida').attr('onClick','');
 	$('.partida').attr('onclick','');**/
 	
+	//Actualizamos la lista de partidas
 	$("#container_partidas").empty();
 	for (var id in lista_partidas) {
 		if (enPartidaEsperando == false) {
