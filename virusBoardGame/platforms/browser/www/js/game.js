@@ -178,12 +178,15 @@ function renderCountDown(time, oldDate){
 		if (time > 0) {
 			renderCountDown(time, now);
 		} else {
+			console.log("renderCountDown: el tiempo ha llegado a cero");
+			//Y nos chivamos al servidor
+			comunicarTiempoAgotado();
 			//Por si se nos ha pasado el tiempo en medio de un descarte
 			fin_descarte();
 			//Por si se nos ha pasado el tiempo en medio de un transplante
 			fin_transplante();
 			movJugador = "tiempo_agotado";
-			//Y nos chivamos al servidor
+
 		}
 	}, 250);
 }

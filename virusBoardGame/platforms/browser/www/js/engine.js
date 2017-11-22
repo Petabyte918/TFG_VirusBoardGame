@@ -3,6 +3,7 @@
 var usuario = "";
 var idPartida = "";
 var numTurno;
+var turno;
 var jugadores = [];
 var deckOfCards = [];
 var movJugador = "";

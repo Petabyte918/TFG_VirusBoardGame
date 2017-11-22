@@ -71,7 +71,7 @@ function configInicial() {
 	var posBotJug = elemBotJug.getBoundingClientRect();
 	var posX = (Math.floor(posBotJug.left + posBotJug.width + 10)).toString()+"px";
 	var posY = (Math.floor(posBotJug.top + posBotJug.height -110)).toString()+"px";
-	console.log("posX: "+posX+", posY: "+posY);
+	//console.log("posX: "+posX+", posY: "+posY);
 	$("#cuadroPartidaRapida").css("left", posX);
 	$("#cuadroPartidaRapida").css("top", posY);
 	$("#cuadroPartidaRapida").css("display", "block");
@@ -720,9 +720,7 @@ function esperarMovimiento(){
 					socket.emit('terminarPartida', data);
 				} else {
 					//Si no hay ganador seguimos con el juego
-					console.log("Robamos carta y nuestro movimiento ha sido: "+movJugador);
-					//Esto de robar carta deberiamos comprobarlo.
-					takeCard();
+					console.log("Nuestro movimiento ha sido: "+movJugador);
 					var newDatos_partida = {
 						idPartida: idPartida,
 						jugadores: jugadores,
@@ -738,6 +736,41 @@ function esperarMovimiento(){
 		}
 	}, 250);
 }
+
+function comunicarTiempoAgotado () {
+	datos = {
+		idPartida: idPartida,
+		turno: turno,
+		numTurno: numTurno
+	}
+	console.log("Avisamos al servidor que puede haber un jugador inactivo");
+	socket.emit('tiempo_agotado', datos);
+}
+
+socket.on('tiempo_agotadoOK', function() {
+	console.log("Servidor ha recibido correctamente el turno perdido. Retransmitimos avanzar turno");
+	//Avanzamos turno - NO -> En principio ya avanzamos turno en el servidor
+	/**var index = jugadores.indexOf(turno);
+	if (index < (jugadores.length -1)) {
+		index++;
+	} else {
+		index = 0;
+	}
+	turno = jugadores[index];
+	numTurno = numTurno++;**/
+
+	//Avisamos al servidor que retransmita el cambio de turno
+	var newDatos_partida = {
+		idPartida: idPartida,
+		jugadores: jugadores,
+		turno: turno,
+		numTurno : numTurno,
+		deckOfCardsPartida: deckOfCards,
+		organosJugadoresCli: organosJugadoresCli,
+		movJugador: movJugador
+	};
+	socket.emit('siguienteTurnoSrv', newDatos_partida);
+});
 
 function checkPartidaTerminada(){
 	var totalOrganosCompletos;
@@ -786,9 +819,17 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
 
+	//Si el anterior jugador ha perdido el turno, llegaran uno o varios mensajes
+	//Usamos el primero y saltamos el resto
+	//Si el turno que teniamos guardado, es igual al turno que nos llega es que el turno ya ha sido procesado
+	if (turno == datos_partida.turno) {
+		console.log("Mensajes retrasados de pierde turno");
+		return;
+	}
+
+	turno = datos_partida.turno;
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
-	turno = datos_partida.turno;
 	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 
@@ -808,6 +849,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 
 	movJugador = datos_partida.movJugador;
+
 	//Ajustar sabiendo que el que usa la carta no se descarta
 	//Cuando usemos movJugador como un objeto se hará solo
 	if (movJugador == "guante_de_latex") {
