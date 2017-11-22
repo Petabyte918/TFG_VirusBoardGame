@@ -700,6 +700,7 @@ function esperarMovimiento(){
 					idPartida: idPartida,
 					jugadores: jugadores,
 					turno: turno,
+					numTurno : numTurno,
 					deckOfCardsPartida: deckOfCards,
 					organosJugadoresCli: organosJugadoresCli,
 					movJugador: movJugador
@@ -724,6 +725,7 @@ function esperarMovimiento(){
 						idPartida: idPartida,
 						jugadores: jugadores,
 						turno: turno,
+						numTurno : numTurno,
 						deckOfCardsPartida: deckOfCards,
 						organosJugadoresCli: organosJugadoresCli,
 						movJugador: movJugador
@@ -785,6 +787,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
 	turno = datos_partida.turno;
+	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 
 	//Comprobamos si nos estamos reenchando a la partida

@@ -166,8 +166,15 @@ function renderCountDown(time, oldDate){
 		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8);
 	}
 
-	countDownSTO = setTimeout(function(){ 
+	//Texto numTurnos (Eliminamos difuminado, color y algunas cosas)
+	cxMID.font = "25px Arial Bold";
+	cxMID.fillStyle = '#09303a';
+	cxMID.shadowBlur = 1;
+	cxMID.shadowColor = 'white';
+	cxMID.fillText("Turno "+numTurno, xCountDown - 1.3*radius, yCountDown - 45);
 
+
+	countDownSTO = setTimeout(function(){ 
 		if (time > 0) {
 			renderCountDown(time, now);
 		} else {

@@ -2,6 +2,7 @@
 //Informacion que se intercambia con el servidor o se pide
 var usuario = "";
 var idPartida = "";
+var numTurno;
 var jugadores = [];
 var deckOfCards = [];
 var movJugador = "";
@@ -16,7 +17,7 @@ var posCubosDescarte = {};
 var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
 var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
-var finDescarte = false; //Indica si estoy en proceso de descarte
+var finDescarte = true; //Indica si estoy en proceso de descarte
 var descartes = {0: false, 1: false, 2: false}; //
 var transplante = {enProceso: false, organo1: {organo: "", numJug: -1}, organo2: {organo: "", numJug: -1}};
 

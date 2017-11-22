@@ -2,6 +2,7 @@
 //Informacion que se intercambia con el servidor o se pide
 var usuario = "";
 var idPartida = "";
+var numTurno;
 var jugadores = [];
 var deckOfCards = [];
 var movJugador = "";
