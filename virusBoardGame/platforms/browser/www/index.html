@@ -111,7 +111,7 @@
 
 	<div id="lista_partidas" style="display: none;">
 		<input class="boton backBotonListaPartidas" value="BACK" onclick="backTo_InitMenu()" readonly="readonly"/>
-		<input class="boton actBotonListaPartidas" value="ACTUALIZAR" onclick="button_lista_partidas()" readonly="readonly"/>
+		
 		<ul id="container_partidas">
 			<!--<li class="partida">
 				<a class="nombre_partida">Nombre partida: nombre de la partida</a>
@@ -128,6 +128,13 @@
 		<a class="tituloCartaIzq">Actualmente:</a>
 		<a id="partidaRapidaNombre">-Partida: Partida de Perry maison</a>
 		<a id="partidaRapidaJugadores">-(Necesarios 2 jugadores)</a>
+	</div>
+
+	<div id=cuadroFinPartida style="display: none;">
+		<h1>Fin de la Partida</h1>
+		<h2>Ha ganado el jugador</br></h2>
+		<h3 id="jugadorFinPartida"></h3>
+		<input class="boton" id="botonFinPartida" value="VOLVER A LA PANTALLA PRINCIPAL" onclick="backTo_InitMenu()" readonly="readonly"/>
 	</div>
 
 	<div id="canvas_container" style="position: relative; display: none;">

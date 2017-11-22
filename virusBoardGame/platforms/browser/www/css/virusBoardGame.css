@@ -192,6 +192,47 @@ a.num_jugadores {
 	top: 5px;
 }
 
+#cuadroFinPartida {
+	width: 80%;
+    height: 70%;
+    position: absolute;
+    border: solid 10px rgb(0, 77, 0);
+
+    background-color: #2dc234;
+    background-image: -webkit-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: -moz-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: -o-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+
+    -ms-border-radius:8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+
+    box-shadow: 0px 0px 0px #197b1d, 10px 10px 2px rgba(0, 0, 0, .4);
+    color: #fff;
+    display: block;
+    font-family: 'Oleo Script', Arial, sans-serif;
+    font-size: 30px;
+    line-height: 1;
+    padding: 15px 25px;
+    text-align: center;
+    margin: 16px;
+    z-index: 50;
+}
+#cuadroFinPartida > h2 {
+	font-family: Arial, sans-serif;
+}
+
+#cuadroFinPartida > h3 {
+	color: rgb(0, 77, 0);
+}
+
+#botonFinPartida {
+	width: 60%;
+    height: 20%;
+}
+
 input.boton {
 	width: 30%;
 	padding: 0px;
@@ -770,6 +811,7 @@ input:checked + .slider:before {
 
     width: 10em;
     position: absolute;
+    padding: 3px;
 }
 
 #partidaRapidaNombre, #partidaRapidaJugadores {

@@ -117,6 +117,7 @@ function button_lista_partidas() {
 
 function backTo_InitMenu() {
 	//console.log("backTo_InitMenu()");
+	$("#cuadroPartidaRapida").css("display", "inline");
 	$("#container_botones").css("display", "inline");
 	$("#container_form_create").css("display", "none");
 	$("#lista_partidas").css("display", "none");
@@ -125,7 +126,7 @@ function backTo_InitMenu() {
 	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "inline");
 	$("#ranquing").css("display", "inline");
-	$("#cuadroPartidaRapida").css("display", "inline");
+	$("#cuadroFinPartida").css("display", "none");
 	var logged = localStorage.getItem("logged");
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
@@ -713,7 +714,8 @@ function esperarMovimiento(){
 				if (ganador != "") {
 					console.log("Hemos ganado");
 					var data = {
-						idPartida: idPartida
+						idPartida: idPartida,
+						ganador: ganador
 					}
 					socket.emit('terminarPartida', data);
 				} else {
@@ -844,7 +846,33 @@ function checkCards() {
 socket.on('terminarPartida', function(data){
 	console.log("Terminar Partida");
 	console.log("Ganador: "+data.ganador);
-	button_lista_partidas();
+
+	var widthElem = parseInt(($("#cuadroFinPartida").css("width")).replace("px",""));
+	var heightElem = parseInt(($("#cuadroFinPartida").css("height")).replace("px",""));
+	var marginElem = parseInt(($("#cuadroFinPartida").css("margin")).replace("px",""));
+	var borderElem = parseInt(($("#cuadroFinPartida").css("border-width")).replace("px",""));
+	var paddingTopElem = parseInt(($("#cuadroFinPartida").css("padding-top")).replace("px",""));
+	var paddingLeftElem = parseInt(($("#cuadroFinPartida").css("padding-left")).replace("px",""));
+	/**console.log("widthElem: "+widthElem);
+	console.log("heightElem: "+heightElem);
+	console.log("marginElem: "+marginElem);
+	console.log("borderElem: "+borderElem);
+	console.log("paddingTopElem: "+paddingTopElem);
+	console.log("paddingLeftElem: "+paddingLeftElem);**/
+	var posX = (windowWidth - widthElem)/2 - marginElem - borderElem - paddingLeftElem;
+	var posY = (windowHeight - heightElem)/2 - marginElem - borderElem - paddingTopElem;
+	var posXStr = (Math.floor(posX)).toString()+"px";
+	var posYStr = (Math.floor(posY)).toString()+"px";
+	$("#cuadroFinPartida").css("left", posXStr);
+	$("#cuadroFinPartida").css("top", posYStr);
+	var ganador;
+	if (data.ganador.length == 20) {
+		ganador = "Anonimo";
+	} else {
+		ganador = data.ganador;
+	}
+	document.getElementById("jugadorFinPartida").innerHTML = ganador;
+	$("#cuadroFinPartida").css("display", "block");
 })
 /** -------------------- **/
 
