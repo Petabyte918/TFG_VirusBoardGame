@@ -173,6 +173,19 @@ function renderCountDown(time, oldDate){
 	cxMID.shadowColor = 'white';
 	cxMID.fillText("Turno "+numTurno, xCountDown - 1.3*radius, yCountDown - 45);
 
+	//Vemos si avisamos que nos hemos saltado el turno alguna vez
+	if (infoJugadores[usuario].turnosPerdidos > 0) {
+		//¡Cuidado!: Seremos expulsados
+		//si perdemos el turno
+		//X veces mas
+		cxMID.font = "10px Arial Bold";
+		cxMID.fillStyle = 'red';
+		cxMID.fillText("¡Cuidado!: Seremos expulsados", xCountDown - 2*radius, yCountDown - 45 + radius*3 + 14);
+		cxMID.fillText("       si perdemos el turno", xCountDown - 2*radius, yCountDown - 45+ radius*3 +28);
+		cxMID.font = "15px Arial Bold";
+		var numVeces = infoJugadores[usuario].limiteTurnosPerdidos - infoJugadores[usuario].turnosPerdidos;
+		cxMID.fillText("      "+numVeces+" veces mas", xCountDown - 2*radius, yCountDown - 45+ radius*3 + 45);
+	}
 
 	countDownSTO = setTimeout(function(){ 
 		if (time > 0) {

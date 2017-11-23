@@ -131,7 +131,11 @@ function backTo_InitMenu() {
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
 		$("#userNameContainer").css("display", "block");
+		$("#login").css("display", "none");
+		$("#register").css("display", "none");
 	} else {
+		$("#leave").css("display", "none");
+		$("#userNameContainer").css("display", "none");
 		$("#login").css("display", "inline");
 		$("#register").css("display", "inline");
 	}
@@ -779,6 +783,7 @@ socket.on('tiempo_agotadoOK', function() {
 });
 
 function checkPartidaTerminada(){
+	//Dos formas de ganar. Tener un cuerpo entero completo SANO...
 	var totalOrganosCompletos;
 	for (var jugador in organosJugadoresCli) {
 		totalOrganosCompletos = 0;
@@ -816,6 +821,10 @@ function checkPartidaTerminada(){
 		if (totalOrganosCompletos >= 4){
 			return jugador;
 		}
+	}
+	//...o ser el ultimo jugador que queda en la partida
+	if (jugadores.length == 1) {
+		return jugadores[0];
 	}
 	return "";
 }
