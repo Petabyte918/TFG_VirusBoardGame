@@ -942,14 +942,14 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		case "ladron de organos":
 			console.log("manejadorMov() - Ladron de organos");
 			//Si no tengo el organo destino y se puede lo robo
-			if (organosJugadoresCli[1][organoColision] == "") {
+			if (organosJugadoresCli[usuario][organoColision] == "") {
 				var estadoOrgano = organosJugadoresCli[jugDestino][organoColision];
 				if ((estadoOrgano == "vacunado") ||
 					(estadoOrgano == "normal") ||
 					(estadoOrgano == "enfermo")) {
 
-					organosJugadoresCli[1][organoColision] = estadoOrgano;
-					organosJugadoresCli[jugDestino][organoColision] == "";
+					organosJugadoresCli[usuario][organoColision] = estadoOrgano;
+					organosJugadoresCli[jugDestino][organoColision] = "";
 					movJugador = "true";
 				}
 			}
