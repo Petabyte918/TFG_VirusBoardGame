@@ -881,16 +881,16 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			var auxHigado = organosJugadoresCli[jugDestino].higado;
 			var auxHueso = organosJugadoresCli[jugDestino].hueso;
 			var auxOrganoComodin = organosJugadoresCli[jugDestino].organoComodin;
-			organosJugadoresCli[jugDestino].cerebro = organosJugadoresCli[1].cerebro;
-			organosJugadoresCli[jugDestino].corazon = organosJugadoresCli[1].corazon;
-			organosJugadoresCli[jugDestino].higado = organosJugadoresCli[1].higado;
-			organosJugadoresCli[jugDestino].hueso = organosJugadoresCli[1].hueso;
-			organosJugadoresCli[jugDestino].organoComodin = organosJugadoresCli[1].organoComodin;
-			organosJugadoresCli[1].cerebro = auxCerebro;
-			organosJugadoresCli[1].corazon = auxCorazon;
-			organosJugadoresCli[1].higado = auxHigado;
-			organosJugadoresCli[1].hueso = auxHueso;
-			organosJugadoresCli[1].organoComodin = auxOrganoComodin;
+			organosJugadoresCli[jugDestino].cerebro = organosJugadoresCli[usuario].cerebro;
+			organosJugadoresCli[jugDestino].corazon = organosJugadoresCli[usuario].corazon;
+			organosJugadoresCli[jugDestino].higado = organosJugadoresCli[usuario].higado;
+			organosJugadoresCli[jugDestino].hueso = organosJugadoresCli[usuario].hueso;
+			organosJugadoresCli[jugDestino].organoComodin = organosJugadoresCli[usuario].organoComodin;
+			organosJugadoresCli[usuario].cerebro = auxCerebro;
+			organosJugadoresCli[usuario].corazon = auxCorazon;
+			organosJugadoresCli[usuario].higado = auxHigado;
+			organosJugadoresCli[usuario].hueso = auxHueso;
+			organosJugadoresCli[usuario].organoComodin = auxOrganoComodin;
 
 			movJugador = "algo";
 			break;
