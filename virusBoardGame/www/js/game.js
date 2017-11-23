@@ -175,8 +175,8 @@ function renderCountDown(time, oldDate){
 
 	//Vemos si avisamos que nos hemos saltado el turno alguna vez
 	if (infoJugadores[usuario].turnosPerdidos > 0) {
-		//Solo ponemos la advertencia en nuestro turno y solo el siguiente turno al que hemos pasado
-		if ((infoJugadores[usuario].turnoPerdida + jugadores.length <= numTurno) && (turno == usuario)) {
+		//Solo ponemos la advertencia el siguiente turno al que hemos pasado
+		if (infoJugadores[usuario].turnoPerdida + jugadores.length <= numTurno) {
 			//¡Cuidado!: Seremos expulsados
 			//si perdemos el turno
 			//X veces mas
