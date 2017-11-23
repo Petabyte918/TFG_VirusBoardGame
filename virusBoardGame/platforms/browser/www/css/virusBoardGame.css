@@ -601,106 +601,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-/** Divs de ayuda **/
-.ayudaDebil {
 
-}
-
-.ayudaFuerte {
-
-}
-
-#ayudaTransplante {
-	position: absolute;
-    border: solid white 1px;
-    width: 30%;
-    left: 2em;
-    top: 20em;
-
-    border: solid rgb(153, 0, 204) 5px;
-    border-radius: 15px;
-
-    background: rgb(242, 204, 255);
-}
-
-#ayudaTransplanteParteSup {
-    border: solid rgb(153, 0, 204) 2px;
-    border-radius: 7px 7px 15px 15px;
-}
-
-#ayudaTransplanteParteInf {
-	height: 9em;
-}
-
-#ayudaTransplantePie {
-	font-size: 0.7em;
-	text-align: center;
-}
-
-.cartaIzq {
-    float: left;
-    width: 50%;
-}	
-
-.tituloCartaIzq {
-	text-align: center;
-	color: rgb(191, 0, 255);
-	font-weight: bold;
-	text-decoration: underline;
-}
-
-.imagenCartaIzq {
-	height: 5em;
-    border: solid rgb(153, 0, 204) 1px;
-    border-radius: 7px;
-    margin-left: 2.5em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    width: 4em;
-}
-
-.cartaDcha {
-    float: right;
-    width: 50%;
-}
-
-.tituloCartaDcha {
-	text-align: center;
-	color: rgb(191, 0, 255);
-	font-weight: bold;
-	text-decoration: underline;
-}
-
-.imagenCartaDcha {
-	height: 5em;
-    border: solid rgb(153, 0, 204) 1px;
-    border-radius: 7px;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    margin-left: 3.2em;
-    width: 4em;
-}
-
-.iconoCartaEspecial {
-    display: inline;
-    float: left;
-    width: 5em;
-    height: 5em;
-
-	background-repeat: no-repeat;
-	background-image: url(img/iconosEspeciales/iconoTransplante.png);
-	background-size: cover; 
-}
-
-.textoCartaEspecial {
-    display: inline;
-    font-size: 0.8em;
-}
-
-.tituloTextoCartaEspecial {
-	color: rgb(191, 0, 255);
-	font-weight: bold;
-}
 
 /** Divs de ayuda **/
 .ayudaDebil {
@@ -722,6 +623,8 @@ input:checked + .slider:before {
     border-radius: 15px;
 
     background: rgb(242, 204, 255);
+
+    z-index: 10;
 }
 
 #ayudaTransplanteParteSup,  {
@@ -730,17 +633,19 @@ input:checked + .slider:before {
 }
 
 #ayudaTransplanteParteInf {
-	height: 9em;
+	margin-top: 0.3em;
 }
 
 #ayudaTransplantePie {
 	font-size: 0.7em;
 	text-align: center;
+	clear: both;
 }
 
 .cartaIzq {
     float: left;
     width: 50%;
+    text-align: -webkit-center;
 }	
 
 .tituloCartaIzq {
@@ -754,7 +659,6 @@ input:checked + .slider:before {
 	height: 5em;
     border: solid rgb(153, 0, 204) 1px;
     border-radius: 7px;
-    margin-left: 2.5em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     width: 4em;
@@ -763,6 +667,7 @@ input:checked + .slider:before {
 .cartaDcha {
     float: right;
     width: 50%;
+    text-align: -webkit-center;
 }
 
 .tituloCartaDcha {
@@ -778,7 +683,6 @@ input:checked + .slider:before {
     border-radius: 7px;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-    margin-left: 3.2em;
     width: 4em;
 }
 
@@ -802,6 +706,8 @@ input:checked + .slider:before {
 	color: rgb(191, 0, 255);
 	font-weight: bold;
 }
+
+/**  End divs de ayuda**/
 
 #cuadroPartidaRapida {
 	border: solid rgb(153, 0, 204) 5px;

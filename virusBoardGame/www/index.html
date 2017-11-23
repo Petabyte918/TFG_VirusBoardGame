@@ -137,6 +137,28 @@
 		<input class="boton" id="botonFinPartida" value="VOLVER A LA PANTALLA PRINCIPAL" onclick="backTo_InitMenu()" readonly="readonly"/>
 	</div>
 
+	<div id="ayudaTransplante" class=".ayudaDebil" onclick="ayudaTransplante()">
+		<div id="ayudaTransplanteParteSup">
+			<div class="iconoCartaEspecial">
+			</div>
+			<div class="textoCartaEspecial">
+				<a class="tituloTextoCartaEspecial">TRANSPLANTE<br></a>
+				<b>Intercambia</b> un órgano por otro entre dos jugadores cualesquiera. No importa si el color de estos órganos es diferente, ni si están sanos, infectados o vacunados. Sencillamente el jugador cambia el órgano escogido por otro, siempre y cuando ninguno de los dos jugadores tenga dos órganos del mismo color ni éstos estén inmunizados.
+			</div>
+		</div>
+		<div id="ayudaTransplanteParteInf">
+			<div class="cartaIzq">
+				<div class="tituloCartaIzq">Organo 1</div>
+				<div class="imagenCartaIzq"></div>
+			</div>
+			<div class="cartaDcha">
+				<div class="tituloCartaDcha">Organo 2</div>
+				<div class="imagenCartaDcha"></div>
+			</div>
+		</div>
+		<div id="ayudaTransplantePie">(Toca en un recuadro superior para eliminar la seleccion)</div>
+	</div>
+
 	<div id="canvas_container" style="position: relative; display: none;">
 		<canvas id="canvas" width="1000px" height="700px"
 				style="position: absolute; left: 0; top: 0; z-index: 5;">

@@ -844,12 +844,20 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
 
+
 	turno = datos_partida.turno;
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
     infoJugadores = datos_partida.infoJugadores,
 	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
+
+	//Compruebo si me han echado de la partida
+	if (jugadores.indexOf(usuario) == -1) {
+		console.log("Hemos sido expulsado de la partida");
+		backTo_InitMenu();
+		return;
+	}
 
 	//Comprobamos si nos estamos reenchando a la partida
 	//if (cartasUsuario.length <= 0){

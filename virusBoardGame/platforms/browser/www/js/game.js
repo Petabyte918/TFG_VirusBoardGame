@@ -175,8 +175,8 @@ function renderCountDown(time, oldDate){
 
 	//Vemos si avisamos que nos hemos saltado el turno alguna vez
 	if (infoJugadores[usuario].turnosPerdidos > 0) {
-		//Solo ponemos la advertencia en nuestro turno y solo el siguiente turno al que hemos pasado
-		if ((infoJugadores[usuario].turnoPerdida + jugadores.length <= numTurno) && (turno == usuario)) {
+		//Solo ponemos la advertencia el siguiente turno al que hemos pasado
+		if (infoJugadores[usuario].turnoPerdida + jugadores.length >= numTurno) {
 			//¡Cuidado!: Seremos expulsados
 			//si perdemos el turno
 			//X veces mas
@@ -356,30 +356,35 @@ function actualizarCanvasMID(){
 					posOrgano.tipo = "cerebro";
 					posOrgano.x = posOrganosJugadores[pos].posCerebro[0];
 					posOrgano.y = posOrganosJugadores[pos].posCerebro[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaCerebro.png';
 					break;
 				case "corazon":
 					posOrgano.tipo = "corazon";
 					posOrgano.x = posOrganosJugadores[pos].posCorazon[0];
 					posOrgano.y = posOrganosJugadores[pos].posCorazon[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaCorazon.png';
 					break;
 				case "higado":
 					posOrgano.tipo = "higado";
 					posOrgano.x = posOrganosJugadores[pos].posHigado[0];
 					posOrgano.y = posOrganosJugadores[pos].posHigado[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaHigado.png';					
 					break;
 				case "hueso":
 					posOrgano.tipo = "hueso";
 					posOrgano.x = posOrganosJugadores[pos].posHueso[0];
 					posOrgano.y = posOrganosJugadores[pos].posHueso[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaHueso.png';					
 					break;
 				case "organoComodin":
 					posOrgano.tipo = "organoComodin";
 					posOrgano.x = posOrganosJugadores[pos].posComodin[0];
 					posOrgano.y = posOrganosJugadores[pos].posComodin[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaComodin.png';	
 					break;
 				default:
