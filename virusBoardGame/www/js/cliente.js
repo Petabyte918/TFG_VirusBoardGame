@@ -768,6 +768,7 @@ socket.on('tiempo_agotadoOK', function() {
 	//Todos los demas jugadores aumentaran este turno, pero tenemos un "seguro" en socket.on('siguienteTurnoCli'
 	//pero si no, daria igual
 	infoJugadores[turno].turnosPerdidos++;
+	infoJugadores[turno].turnoPerdida = numTurno;
 	//Avisamos al servidor que retransmita el cambio de turno
 	var newDatos_partida = {
 		idPartida: idPartida,

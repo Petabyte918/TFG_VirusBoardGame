@@ -175,16 +175,19 @@ function renderCountDown(time, oldDate){
 
 	//Vemos si avisamos que nos hemos saltado el turno alguna vez
 	if (infoJugadores[usuario].turnosPerdidos > 0) {
-		//¡Cuidado!: Seremos expulsados
-		//si perdemos el turno
-		//X veces mas
-		cxMID.font = "10px Arial Bold";
-		cxMID.fillStyle = 'red';
-		cxMID.fillText("¡Cuidado!: Seremos expulsados", xCountDown - 2*radius, yCountDown - 45 + radius*3 + 14);
-		cxMID.fillText("       si perdemos el turno", xCountDown - 2*radius, yCountDown - 45+ radius*3 +28);
-		cxMID.font = "15px Arial Bold";
-		var numVeces = infoJugadores[usuario].limiteTurnosPerdidos - infoJugadores[usuario].turnosPerdidos;
-		cxMID.fillText("      "+numVeces+" veces mas", xCountDown - 2*radius, yCountDown - 45+ radius*3 + 45);
+		//Solo ponemos la advertencia en nuestro turno y solo el siguiente turno al que hemos pasado
+		if ((infoJugadores[usuario].turnoPerdida + jugadores.length <= numTurno) && (turno == usuario)) {
+			//¡Cuidado!: Seremos expulsados
+			//si perdemos el turno
+			//X veces mas
+			cxMID.font = "10px Arial Bold";
+			cxMID.fillStyle = 'red';
+			cxMID.fillText("¡Cuidado!: Seremos expulsados", xCountDown - 2*radius, yCountDown - 45 + radius*3 + 14);
+			cxMID.fillText("       si perdemos el turno", xCountDown - 2*radius, yCountDown - 45+ radius*3 +28);
+			cxMID.font = "15px Arial Bold";
+			var numVeces = infoJugadores[usuario].limiteTurnosPerdidos - infoJugadores[usuario].turnosPerdidos;
+			cxMID.fillText("      "+numVeces+" veces mas", xCountDown - 2*radius, yCountDown - 45+ radius*3 + 45);
+		}
 	}
 
 	countDownSTO = setTimeout(function(){ 
