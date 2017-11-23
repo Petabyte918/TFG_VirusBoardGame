@@ -790,10 +790,10 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	//console.log("numCarta-typeOf(numcarta): "+numCarta+("-")+typeof(numCarta));
 
 	//Transplante-block. Si estamos en proceso de transplante no podemos hacer otra cosa hasta acabar
-	if (transplante.enProceso == true) {
-		console.log("Transplante en proceso");
-		return;
-	}
+	//if (transplante.enProceso == true) {
+		//console.log("Transplante en proceso");
+		//return;
+	//}
 
 	//Descarte
 	if (posDestino == 0) {
@@ -901,12 +901,16 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		case "transplante":
 			console.log("manejadorMov() - Transplante");
 			//Guardo el intercambio
-			if (transplante.organo1.jugDest1 == -1) {
+			if (transplante.organo1.numJug == -1) {
 				transplante.organo1.organo = organoColision;
 				transplante.organo1.numJug = jugDestino;
-			} else if (transplante.organo2.jugDest2 == -1) {
+				console.log("El organo para el cambio 1 es: "+organoColision);
+				transplante.enProceso = true;
+			} else if (transplante.organo2.numJug == -1) {
 				transplante.organo2.organo = organoColision;
 				transplante.organo2.numJug = jugDestino;
+				console.log("El organo para el cambio 2 es: "+organoColision);
+				transplante.enProceso = true;
 			}
 			//Evaluo si la jugada esta completa
 			if (((transplante.organo1.organo != "") && (transplante.organo1.numJug != -1)) &&
@@ -919,21 +923,22 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				var estadoOrgano1 = organosJugadoresCli[jug1][organo1];
 				var estadoOrgano2 = organosJugadoresCli[jug2][organo2];
 
-				//Dos condiciones
+				//Dos condiciones para que sea legal
 				//1: que el tipo de organos sea el mismo (y distintos de "")
 				if (organo1 == organo2) {
-
 					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
 					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
 					movJugador = "true";
 					fin_transplante();
 				}
 				//2: si no que los organos, para el cambio esten vacios
-				if ((organosJugadoresCli[jug1][organo2] == "")
+				else if ((organosJugadoresCli[jug1][organo2] == "")
 					&& (organosJugadoresCli[jug2][organo1] == "")) {
 
-					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
-					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
+					organosJugadoresCli[jug1][organo2] = estadoOrgano2;
+					organosJugadoresCli[jug2][organo1] = estadoOrgano1;
+					organosJugadoresCli[jug1][organo1] = "";
+					organosJugadoresCli[jug2][organo2] = "";
 					movJugador = "true";
 					fin_transplante();
 				}
