@@ -5,6 +5,7 @@ var idPartida = "";
 var numTurno;
 var turno;
 var jugadores = [];
+var infoJugadores = {};
 var deckOfCards = [];
 var movJugador = "";
 

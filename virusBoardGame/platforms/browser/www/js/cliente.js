@@ -700,6 +700,7 @@ function esperarMovimiento(){
 				var newDatos_partida = {
 					idPartida: idPartida,
 					jugadores: jugadores,
+					infoJugadores: infoJugadores,
 					turno: turno,
 					numTurno : numTurno,
 					deckOfCardsPartida: deckOfCards,
@@ -715,7 +716,7 @@ function esperarMovimiento(){
 					console.log("Hemos ganado");
 					var data = {
 						idPartida: idPartida,
-						ganador: ganador
+						ganador: infoJugadores[ganador].nombre
 					}
 					socket.emit('terminarPartida', data);
 				} else {
@@ -724,6 +725,7 @@ function esperarMovimiento(){
 					var newDatos_partida = {
 						idPartida: idPartida,
 						jugadores: jugadores,
+						infoJugadores: infoJugadores,
 						turno: turno,
 						numTurno : numTurno,
 						deckOfCardsPartida: deckOfCards,
@@ -759,10 +761,14 @@ socket.on('tiempo_agotadoOK', function() {
 	turno = jugadores[index];
 	numTurno = numTurno++;**/
 
+	//Todos los demas jugadores aumentaran este turno, pero tenemos un "seguro" en socket.on('siguienteTurnoCli'
+	//pero si no, daria igual
+	infoJugadores[turno].turnosPerdidos++;
 	//Avisamos al servidor que retransmita el cambio de turno
 	var newDatos_partida = {
 		idPartida: idPartida,
 		jugadores: jugadores,
+		infoJugadores: infoJugadores,
 		turno: turno,
 		numTurno : numTurno,
 		deckOfCardsPartida: deckOfCards,
@@ -816,8 +822,6 @@ function checkPartidaTerminada(){
 
 socket.on('siguienteTurnoCli', function(datos_partida){
 	//console.log("siguienteTurnoCli");
-	clearTimeout(countDownSTO);
-	clearTimeout(esperarMovSTO);
 
 	//Si el anterior jugador ha perdido el turno, llegaran uno o varios mensajes
 	//Usamos el primero y saltamos el resto
@@ -827,16 +831,20 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		return;
 	}
 
+	clearTimeout(countDownSTO);
+	clearTimeout(esperarMovSTO);
+
 	turno = datos_partida.turno;
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
+    infoJugadores = datos_partida.infoJugadores,
 	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 
 	//Comprobamos si nos estamos reenchando a la partida
-	if (cartasUsuario.length <= 0){
-		handleReconect();
-	}
+	//if (cartasUsuario.length <= 0){
+	//	handleReconect();
+	//}
 
 	if (datos_partida.organosJugadoresCli != undefined){
 		for (var jugador in datos_partida.organosJugadoresCli){
@@ -886,6 +894,10 @@ function checkCards() {
 }
 
 socket.on('terminarPartida', function(data){
+	//Reseteamos cosas
+	clearTimeout(countDownSTO);
+	clearTimeout(esperarMovSTO);
+
 	console.log("Terminar Partida");
 	console.log("Ganador: "+data.ganador);
 
@@ -907,13 +919,8 @@ socket.on('terminarPartida', function(data){
 	var posYStr = (Math.floor(posY)).toString()+"px";
 	$("#cuadroFinPartida").css("left", posXStr);
 	$("#cuadroFinPartida").css("top", posYStr);
-	var ganador;
-	if (data.ganador.length == 20) {
-		ganador = "Anonimo";
-	} else {
-		ganador = data.ganador;
-	}
-	document.getElementById("jugadorFinPartida").innerHTML = ganador;
+
+	document.getElementById("jugadorFinPartida").innerHTML = data.ganador;
 	$("#cuadroFinPartida").css("display", "block");
 })
 /** -------------------- **/
