@@ -300,6 +300,7 @@ function form_settings() {
 }
 
 socket.on('create_ranquing', function(data) {
+	console.log("create_ranquing");
 	//User fields
 	//	{"usuario": data.usuario,
 	//	"pass": data.pass,
@@ -312,157 +313,31 @@ socket.on('create_ranquing', function(data) {
 	//		}
 	//	};
 
-	var clasificacion = "victorias";
-	var sortedObj = {};
-	var objIndex = 0;
-	//Si hay la longitud del objeto de usuario es menor que el numero de gente del ranquing que queremos mostrar
+	//Si hay menos usuarios que la cantidad de gente del ranquing que queremos mostrar
 	keysObj = Object.keys(data);
-	lengthObj = keysObj.length;
-	if (lengthObj < 10) {
-		maxLoop = lengthObj;
+	numUsers = keysObj.length;
+	if (numUsers < 10) {
+		maxLoop = numUsers;
 	} else {
 		maxLoop = 10;
 	}
-	//Para no cargarnos data
-	var auxData = $.extend(true,{},data);
-	if (clasificacion == "victorias") {
-		var topWin = -1;
-		var win = -1;
-		for (var cont = 0; cont < maxLoop; cont++) {
-			for (var i in auxData) {
-				win = auxData[i].stats.wins;
-				if (win > topWin) {
-					topWin = win;
-					objIndex = i;
-				}
-			}
-			var auxObj = $.extend(true,{},auxData[objIndex]);
-			delete auxData[objIndex];
-			sortedObj[cont] = auxObj;
-			topWin = -1;
-			win = -1;
-			objIndex = 0;
-		}
-	} else if (clasificacion == "porcentaje") {
-		var topPercent = -1;
-		var percent = -1;
-		for (var cont = 0; cont < maxLoop; cont++) {
-			for (var i in auxData) {
-				percent = auxData[i].stats.wins / auxData[i].stats.total;
-				if (percent > topPercent) {
-					topPercent = percent;
-					objIndex = i;
-				}
-			}
-			var auxObj = $.extend(true,{},auxData[objIndex]);
-			delete auxData[objIndex];
-			sortedObj[cont] = auxObj;
-			topWin = -1;
-			win = -1;
-			objIndex = 0;
-		}
-	}
-	/** No comprobado para el caso de calcular por porcentaje
-	for (var j in sortedObj) {
-		console.log("Pos: "+j+" - Usuario: "+sortedObj[j].usuario+" - Victorias: "+ sortedObj[j].stats.wins);
-	}
-	**/
 
-	//Añado el html necesario
-	//Vaciamos la lista
-	$("#ranquingList").empty();
-	//Ponemos el titulo
-	$("#ranquingList").append(
-		'<label class="label_form1 tittle_ranquing">Clasificacion</label>'
-	);
-	//Ponemos el primero
-	if (sortedObj[0] != false) {
-		$("#ranquingList").append(
-			'<div class="ranquingUser">'+
-				'<a class="ranquingNormal ranquingPrimero">1.</a>'+
-				'<a class="ranquingUsuario">'+sortedObj[0].usuario+'</a>'+
-				'<a class="ranquingTotal">T: '+sortedObj[0].stats.total+'</a>'+
-				'<a class="ranquingVictorias">V: '+sortedObj[0].stats.wins+'</a>'+
-			'</div>'
-		);
-	}
-	//Ponemos el segundo
-	if (sortedObj[1] != false) {
-		$("#ranquingList").append(
-			'<div class="ranquingUser">'+
-				'<a class="ranquingNormal ranquingSegundo">2.</a>'+
-				'<a class="ranquingUsuario">'+sortedObj[1].usuario+'</a>'+
-				'<a class="ranquingTotal">T: '+sortedObj[1].stats.total+'</a>'+
-				'<a class="ranquingVictorias">G: '+sortedObj[1].stats.wins+'</a>'+
-			'</div>'
-		);
-	}
-	//Ponemos el tercero
-	if (sortedObj[2] != false) {
-		$("#ranquingList").append(
-			'<div class="ranquingUser">'+
-				'<a class="ranquingNormal ranquingTercero">3.</a>'+
-				'<a class="ranquingUsuario">'+sortedObj[2].usuario+'</a>'+
-				'<a class="ranquingTotal">T: '+sortedObj[2].stats.total+'</a>'+
-				'<a class="ranquingVictorias">G: '+sortedObj[2].stats.wins+'</a>'+
-			'</div>'
-		);
-	}
-	//Ponemos el resto
-	var pos = 0;
-	for (var i = 3; i < maxLoop; i++) {
-		pos = i + 1;
-		if (sortedObj[i] != false) {
-			$("#ranquingList").append(
-				'<div class="ranquingUser">'+
-					'<a class="ranquingNormal">'+pos+'</a>'+
-					'<a class="ranquingUsuario">'+sortedObj[i].usuario+'</a>'+
-					'<a class="ranquingTotal">T: '+sortedObj[i].stats.total+'</a>'+
-					'<a class="ranquingVictorias">G: '+sortedObj[i].stats.wins+'</a>'+
-				'</div>'
-			);
-		}
-	}
-	//Nos ponemos a nuestro usuario tb (si estamos logueados)
-	var logged = localStorage.getItem("logged");
-	if (logged == "true") {
-		//Buscamos en que posicion del objeto esta nuestro usuario
-		var loginName = localStorage.getItem('loginName');
-		var posUser = -1;
-		for (var j in data) {
-			if (data[j].usuario == loginName) {
-				posUser = j;
-				break;
-			}
-		}
-		//Buscamos en que posicion del ranquing estamos
-		var contOwnRanquing = 0;
-		if (clasificacion == "victorias") {
-			percent = data[posUser].stats.wins / data[posUser].stats.total;
-			for (var i in data) {
-				if (data[i].stats.wins < data[posUser].stats.wins) {
-					contOwnRanquing++;
-				}
-			}
-			ownRanquing = lengthObj - contOwnRanquing;
-		} else if (clasificacion == "porcentaje") {
-			for (var i in data) {
-				if ((data[i].stats.wins / data[i].stats.total) < percent) {
-					contOwnRanquing++;
-				}
-			}
-			ownRanquing = contOwnRanquing;
-		}
+	$(".ranquingElems").remove();
 
-		$("#ranquingList").append(
-			'<div class="ranquingOwnUser">'+
-				'<a class="ranquingNormal">'+ownRanquing+'</a>'+
-				'<a class="ranquingUsuario">'+data[posUser].usuario+'</a>'+
-				'<a class="ranquingTotal">T: '+data[posUser].stats.total+'</a>'+
-				'<a class="ranquingVictorias">G: '+data[posUser].stats.wins+'</a>'+
-			'</div>'
-		);
+	var html = "";
+
+	for (var i = 0; i < maxLoop; i++) {
+		html+=
+		"<tr class='ranquingElems'>"+
+			"<td class='ranquingPos' >1</td>"+
+			"<td class='ranquingUsuario' >1</td>"+
+			"<td class='ranquingTotal'>1</td>"+
+			"<td class='ranquingwins'>1</td>"+
+			"<td class='ranquingPercent'>1</td>"+
+		"</tr>";
 	}
+	$("#ranquingList").append(html);
+
 })
 
 function form_createGame() {

@@ -14,7 +14,7 @@
 		por si solo. Y en settings se puede ajustar como ayuda débil.
 		-Con un span cada vez que la carta de use mal, podemos remarcar con otro color lo que se ha incumplido
 9.- DONE- Poder descartar todas las cartas
-10.- Echar al jugador tras pasar tres turnos
+10.- DONE- Echar al jugador tras pasar tres turnos
 11.- Representar movimientos
 12.- Virus comodin puede ser curado por cualquier medicina
 13.- Medicina comodin puede ser infectado por cualquier virus
@@ -296,3 +296,151 @@ socket.on('checkMatchRunningKO', function(){
 	console.log("checkMatchRunningKO");
 	localStorage.removeItem('idPartida');
 })
+
+
+//RANQUING
+
+	var clasificacion = "victorias";
+	var sortedObj = {};
+	var objIndex = 0;
+
+	//Para no cargarnos data
+	var auxData = $.extend(true,{},data);
+	if (clasificacion == "victorias") {
+		var topWin = -1;
+		var win = -1;
+		for (var cont = 0; cont < maxLoop; cont++) {
+			for (var i in auxData) {
+				win = auxData[i].stats.wins;
+				if (win > topWin) {
+					topWin = win;
+					objIndex = i;
+				}
+			}
+			var auxObj = $.extend(true,{},auxData[objIndex]);
+			delete auxData[objIndex];
+			sortedObj[cont] = auxObj;
+			topWin = -1;
+			win = -1;
+			objIndex = 0;
+		}
+	} else if (clasificacion == "porcentaje") {
+		var topPercent = -1;
+		var percent = -1;
+		for (var cont = 0; cont < maxLoop; cont++) {
+			for (var i in auxData) {
+				percent = auxData[i].stats.wins / auxData[i].stats.total;
+				if (percent > topPercent) {
+					topPercent = percent;
+					objIndex = i;
+				}
+			}
+			var auxObj = $.extend(true,{},auxData[objIndex]);
+			delete auxData[objIndex];
+			sortedObj[cont] = auxObj;
+			topWin = -1;
+			win = -1;
+			objIndex = 0;
+		}
+	}
+	/** No comprobado para el caso de calcular por porcentaje
+	for (var j in sortedObj) {
+		console.log("Pos: "+j+" - Usuario: "+sortedObj[j].usuario+" - Victorias: "+ sortedObj[j].stats.wins);
+	}
+	**/
+
+	//Añado el html necesario
+	//Vaciamos la lista
+	$("#ranquingList").empty();
+	//Ponemos el titulo
+	$("#ranquingList").append(
+		'<label class="label_form1 tittle_ranquing">Clasificacion</label>'
+	);
+	//Ponemos el primero
+	if (sortedObj[0] != false) {
+		$("#ranquingList").append(
+			'<div class="ranquingUser">'+
+				'<a class="ranquingNormal ranquingPrimero">1.</a>'+
+				'<a class="ranquingUsuario">'+sortedObj[0].usuario+'</a>'+
+				'<a class="ranquingTotal">T: '+sortedObj[0].stats.total+'</a>'+
+				'<a class="ranquingVictorias">V: '+sortedObj[0].stats.wins+'</a>'+
+			'</div>'
+		);
+	}
+	//Ponemos el segundo
+	if (sortedObj[1] != false) {
+		$("#ranquingList").append(
+			'<div class="ranquingUser">'+
+				'<a class="ranquingNormal ranquingSegundo">2.</a>'+
+				'<a class="ranquingUsuario">'+sortedObj[1].usuario+'</a>'+
+				'<a class="ranquingTotal">T: '+sortedObj[1].stats.total+'</a>'+
+				'<a class="ranquingVictorias">G: '+sortedObj[1].stats.wins+'</a>'+
+			'</div>'
+		);
+	}
+	//Ponemos el tercero
+	if (sortedObj[2] != false) {
+		$("#ranquingList").append(
+			'<div class="ranquingUser">'+
+				'<a class="ranquingNormal ranquingTercero">3.</a>'+
+				'<a class="ranquingUsuario">'+sortedObj[2].usuario+'</a>'+
+				'<a class="ranquingTotal">T: '+sortedObj[2].stats.total+'</a>'+
+				'<a class="ranquingVictorias">G: '+sortedObj[2].stats.wins+'</a>'+
+			'</div>'
+		);
+	}
+	//Ponemos el resto
+	var pos = 0;
+	for (var i = 3; i < maxLoop; i++) {
+		pos = i + 1;
+		if (sortedObj[i] != false) {
+			$("#ranquingList").append(
+				'<div class="ranquingUser">'+
+					'<a class="ranquingNormal">'+pos+'</a>'+
+					'<a class="ranquingUsuario">'+sortedObj[i].usuario+'</a>'+
+					'<a class="ranquingTotal">T: '+sortedObj[i].stats.total+'</a>'+
+					'<a class="ranquingVictorias">G: '+sortedObj[i].stats.wins+'</a>'+
+				'</div>'
+			);
+		}
+	}
+	//Nos ponemos a nuestro usuario tb (si estamos logueados)
+	var logged = localStorage.getItem("logged");
+	if (logged == "true") {
+		//Buscamos en que posicion del objeto esta nuestro usuario
+		var loginName = localStorage.getItem('loginName');
+		var posUser = -1;
+		for (var j in data) {
+			if (data[j].usuario == loginName) {
+				posUser = j;
+				break;
+			}
+		}
+		//Buscamos en que posicion del ranquing estamos
+		var contOwnRanquing = 0;
+		if (clasificacion == "victorias") {
+			percent = data[posUser].stats.wins / data[posUser].stats.total;
+			for (var i in data) {
+				if (data[i].stats.wins < data[posUser].stats.wins) {
+					contOwnRanquing++;
+				}
+			}
+			ownRanquing = lengthObj - contOwnRanquing;
+		} else if (clasificacion == "porcentaje") {
+			for (var i in data) {
+				if ((data[i].stats.wins / data[i].stats.total) < percent) {
+					contOwnRanquing++;
+				}
+			}
+			ownRanquing = contOwnRanquing;
+		}
+
+		$("#ranquingList").append(
+			'<div class="ranquingOwnUser">'+
+				'<a class="ranquingNormal">'+ownRanquing+'</a>'+
+				'<a class="ranquingUsuario">'+data[posUser].usuario+'</a>'+
+				'<a class="ranquingTotal">T: '+data[posUser].stats.total+'</a>'+
+				'<a class="ranquingVictorias">G: '+data[posUser].stats.wins+'</a>'+
+			'</div>'
+		);
+	}

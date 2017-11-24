@@ -403,7 +403,7 @@ input.botonCrearPartida {
 	line-height: 1;
 }
 
-.ranquingUser {
+/**.ranquingUser {
 	margin: 0.1em;
 	float: left;
 	width: 100%;
@@ -443,8 +443,8 @@ input.botonCrearPartida {
 
 .ranquingUser > .ranquingPrimero {
 	background-color: rgba(230, 172, 0, 0.8);
-    -webkit-transition-property: width, height; /* Safari */
-    -webkit-transition-duration: 2s; /* Safari */
+    -webkit-transition-property: width, height; 
+    -webkit-transition-duration: 2s;
     transition-property: width, height;
     transition-duration: 2s;
 
@@ -462,8 +462,8 @@ input.botonCrearPartida {
 
 .ranquingUser > .ranquingSegundo {
 	background-color: rgba(179, 179, 179, 0.8);
-    -webkit-transition-property: width, height; /* Safari */
-    -webkit-transition-duration: 2s; /* Safari */
+    -webkit-transition-property: width, height; 
+    -webkit-transition-duration: 2s; 
     transition-property: width, height;
     transition-duration: 2s;
 
@@ -481,8 +481,8 @@ input.botonCrearPartida {
 
 .ranquingUser > .ranquingTercero {
 	background-color: rgba(204, 102, 0, 0.8);
-    -webkit-transition-property: width, height; /* Safari */
-    -webkit-transition-duration: 2s; /* Safari */
+    -webkit-transition-property: width, height; 
+    -webkit-transition-duration: 2s;
     transition-property: width, height;
     transition-duration: 2s;
 
@@ -515,8 +515,9 @@ input.botonCrearPartida {
     padding-top: 0.40em;
 	margin-right: 1em;
 }
+**/
 
-#registerForm > form, #loginForm > form, #settingsForm > form , #ranquingList{
+#registerForm > form, #loginForm > form, #settingsForm > form {
 	text-align: center;
 }
 

@@ -489,6 +489,11 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	}
 }
 
+
+//Ideas de mejora a futuro ->
+//1. Renderizar la imagen que se mueve y las otras a diferente ritmo -> DESCARTADA
+//2. Detectar la colision en el canvas de las cartas pero dibujar unicamente la que se mueve en otro sola
+//3. Tener las imagenes siempre cargadas y solo dibujarlas en el contexto. Y cuando robo cartas, cargarlas
 function actualizarCanvas(){
 	//console.log("Actualizar canvas");
 	cx.clearRect(0, 0, windowWidth, windowHeight);
