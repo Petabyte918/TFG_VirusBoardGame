@@ -863,7 +863,8 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		finDescarte = false;
 		actualizarCanvas();
 	}
-	if (finDescarte == false) {
+	//Pero solo le permitimos recuperar sus cartas en SU turno
+	if ((finDescarte == false) && (usuario == data.turno)) {
 		$("#descartes_boton").css("display","inline");
 	}
 
