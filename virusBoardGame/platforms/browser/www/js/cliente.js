@@ -6,7 +6,7 @@ var enPartidaEsperando = false;
 var ayudaFuerte;
 var ayudaDebil;
 /** Establecimiento de la conexion con el servidor **/
-socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+//socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 //Local
 var socket = io.connect('localhost:8080');
 socket.on('Connection OK', function (data) {
@@ -844,6 +844,31 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
 
+	movJugador = datos_partida.movJugador;
+
+	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
+	//enviado por el servidor)
+	//Pendiente
+	representarMov(movJugador);
+
+	//Guante de Latex
+	//El jugador de la carta no se descarta
+	if ((movJugador == "guante_de_latex") && (usuario != turno)) {
+		objetos[0].src = "";
+		objetos[1].src = "";
+		objetos[2].src = "";
+		descartes[0] = true;
+		descartes[1] = true;
+		descartes[2] = true;
+		finDescarte = false;
+		actualizarCanvas();
+	}
+	if (finDescarte == false) {
+		$("#descartes_boton").css("display","inline");
+	}
+
+	//Una vez representado el movimiento del jugador, borramos el mov
+	movJugador = "";
 
 	turno = datos_partida.turno;
 	idPartida = datos_partida.idPartida;
@@ -873,24 +898,6 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 			organosJugadoresCli[jugador].organoComodin = datos_partida.organosJugadoresCli[jugador].organoComodin;
 		}
 	}
-
-	movJugador = datos_partida.movJugador;
-
-	//Ajustar sabiendo que el que usa la carta no se descarta
-	//Cuando usemos movJugador como un objeto se hará solo
-	if (movJugador == "guante_de_latex") {
-		objetos[0].src = "";
-		objetos[1].src = "";
-		objetos[2].src = "";
-		actualizarCanvas();
-	}
-
-	representarMov(movJugador);
-	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
-	//enviado por el servidor)
-	//Pendiente
-	//Una vez representado el movimiento del jugador, borramos el mov
-	movJugador = "";
 
 	checkCards();
 	indicarTurno(turno);
