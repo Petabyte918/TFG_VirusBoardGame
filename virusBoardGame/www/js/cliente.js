@@ -8,7 +8,7 @@ var ayudaDebil;
 /** Establecimiento de la conexion con el servidor **/
 //socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 //Local
-var socket = io.connect('localhost:8080');
+var socket = io.connect('https://localhost:8080');
 socket.on('Connection OK', function (data) {
    	console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
@@ -75,6 +75,12 @@ function configInicial() {
 	$("#cuadroPartidaRapida").css("left", posX);
 	$("#cuadroPartidaRapida").css("top", posY);
 	$("#cuadroPartidaRapida").css("display", "block");
+
+	//Option Ranquing
+	var optionRanquing = localStorage.getItem('optionRanquing');
+	if (optionRanquing == undefined) {
+		localStorage.setItem('optionRanquing', 'wins');
+	}
 }
 //Comprobamos si hemos abandonado una partida en curso
 //checkMatchRunning();
@@ -324,21 +330,32 @@ socket.on('create_ranquing', function(data) {
 
 	$(".ranquingElems").remove();
 
-	var html = "";
+	var optionRanquing = localStorage.getItem('optionRanquing');
+	console.log("optionRanquing: "+ optionRanquing);
 
+	var sortedObj = getUsersSorted(optionRanquing, data, maxLoop);
+
+	var html = "";
 	for (var i = 0; i < maxLoop; i++) {
+		var pos = i + 1;
+		var percent = (Math.round(((sortedObj[i].stats.wins / sortedObj[i].stats.total)*100))).toString()+"%";
 		html+=
-		"<tr class='ranquingElems'>"+
-			"<td class='ranquingPos' >1</td>"+
-			"<td class='ranquingUsuario' >1</td>"+
-			"<td class='ranquingTotal'>1</td>"+
-			"<td class='ranquingwins'>1</td>"+
-			"<td class='ranquingPercent'>1</td>"+
-		"</tr>";
+		'<div class="ranquingElems ranquingLine">'+
+			'<a class="ranquingPos">'+pos+'</a>'+
+			'<a class="ranquingUsuario">'+sortedObj[i].usuario+'</a>'+
+			'<a class="ranquingPercent" onclick=sortRanquing("percent")>'+percent+'</a>'+
+			'<a class="ranquingWins" onclick=sortRanquing("wins")>'+sortedObj[i].stats.wins+'</a>'+
+			'<a class="ranquingTotal" onclick=sortRanquing("total")>'+sortedObj[i].stats.total+'</a>'+
+		'</div>';
 	}
 	$("#ranquingList").append(html);
 
 })
+
+function sortRanquing(option) {
+	localStorage.setItem('optionRanquing', option);
+	socket.emit('request_users', {request: 'create_ranquing'});
+}
 
 function form_createGame() {
 	//console.log("form_createGame()");

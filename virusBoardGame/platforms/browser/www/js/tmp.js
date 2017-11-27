@@ -300,55 +300,6 @@ socket.on('checkMatchRunningKO', function(){
 
 //RANQUING
 
-	var clasificacion = "victorias";
-	var sortedObj = {};
-	var objIndex = 0;
-
-	//Para no cargarnos data
-	var auxData = $.extend(true,{},data);
-	if (clasificacion == "victorias") {
-		var topWin = -1;
-		var win = -1;
-		for (var cont = 0; cont < maxLoop; cont++) {
-			for (var i in auxData) {
-				win = auxData[i].stats.wins;
-				if (win > topWin) {
-					topWin = win;
-					objIndex = i;
-				}
-			}
-			var auxObj = $.extend(true,{},auxData[objIndex]);
-			delete auxData[objIndex];
-			sortedObj[cont] = auxObj;
-			topWin = -1;
-			win = -1;
-			objIndex = 0;
-		}
-	} else if (clasificacion == "porcentaje") {
-		var topPercent = -1;
-		var percent = -1;
-		for (var cont = 0; cont < maxLoop; cont++) {
-			for (var i in auxData) {
-				percent = auxData[i].stats.wins / auxData[i].stats.total;
-				if (percent > topPercent) {
-					topPercent = percent;
-					objIndex = i;
-				}
-			}
-			var auxObj = $.extend(true,{},auxData[objIndex]);
-			delete auxData[objIndex];
-			sortedObj[cont] = auxObj;
-			topWin = -1;
-			win = -1;
-			objIndex = 0;
-		}
-	}
-	/** No comprobado para el caso de calcular por porcentaje
-	for (var j in sortedObj) {
-		console.log("Pos: "+j+" - Usuario: "+sortedObj[j].usuario+" - Victorias: "+ sortedObj[j].stats.wins);
-	}
-	**/
-
 	//Añado el html necesario
 	//Vaciamos la lista
 	$("#ranquingList").empty();
@@ -367,6 +318,16 @@ socket.on('checkMatchRunningKO', function(){
 			'</div>'
 		);
 	}
+
+	'<div class="ranquingElems">'+
+		'<a class="ranquingPos">'+pos+'</a>'+
+		'<a class="ranquingUsuario">'+sortedObj[i].usuario+'</a>'+
+		'<a class="ranquingTotal">'+sortedObj[i].stats.total+'</a>'+
+		'<a class="ranquingWins">'+sortedObj[i].stats.wins+'</a>'+
+		'<a class="ranquingPercent">'+percent+'</a>'+
+	'</div>';
+
+
 	//Ponemos el segundo
 	if (sortedObj[1] != false) {
 		$("#ranquingList").append(
