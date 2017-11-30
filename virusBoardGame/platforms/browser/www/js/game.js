@@ -605,6 +605,9 @@ function moveObjects(){
 					break;
 				}
 			}
+			//Chequeamos cartas para divs de ayuda
+			var numCarta = objetoActual.numCarta;
+			abrirAyudaCartas(numCarta);
 		}
 
 		//Movil - ordenador
@@ -899,7 +902,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	if (cardType == "tratamiento") {
 		//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 		switch (organType) {
-		case "error medico":
+		case "error_medico":
 			console.log("manejadorMov() - Error medico");
 			var auxCerebro = organosJugadoresCli[jugDestino].cerebro;
 			var auxCorazon = organosJugadoresCli[jugDestino].corazon;
@@ -919,7 +922,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 
 			movJugador = "algo";
 			break;
-		case "guante de latex":
+		case "guante_de_latex":
 			console.log("manejadorMov() - Guante de latex");
 			movJugador = "guante_de_latex";
 			break;
@@ -969,7 +972,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				}
 			}
 			break;
-		case "ladron de organos":
+		case "ladron_de_organos":
 			console.log("manejadorMov() - Ladron de organos");
 			//Si no tengo el organo destino y se puede lo robo
 			if (organosJugadoresCli[usuario][organoColision] == "") {

@@ -159,6 +159,44 @@ function gestionarMov(movJugador){
 
 }
 
+function abrirAyudaCartas (numCarta) {
+	console.log("abrirAyudaCartas()");
+	var cardType = cartasUsuario[numCarta].cardType;
+	var organType = cartasUsuario[numCarta].organType;
+
+	if (cardType == "tratamiento") {
+		switch (organType) {
+		case "error_medico":
+			$("ayudaError_medico").css("display", "inline");
+			break;
+		case "guante_de_latex":
+			$("ayudaGuante_de_latex").css("display", "inline");
+			break;
+		case "transplante":
+			$("ayudaTransplante").css("display", "inline");
+			break;
+		case "ladron_de_organos":
+			$("ayudaLadron_de_organos").css("display", "inline");
+			break;
+		case "contagio":
+			$("ayudaContagio").css("display", "inline");
+			break;
+		default:
+			console.log("Abrir cartas imposible default");
+			break;
+		}
+	}
+}
+
+function cerrarAyudaCartas () {
+	console.log("cerrarAyudaCartas()");
+	$("ayudaError_medico").css("display", "none");
+	$("ayudaGuante_de_latex").css("display", "none");
+	$("ayudaTransplante").css("display", "none");
+	$("ayudaLadron_de_organos").css("display", "none");
+	$("ayudaContagio").css("display", "none");
+}
+
 function takeCard(){
     if (deckOfCards.length != 0){
     	var drawedCard = deckOfCards.shift();
