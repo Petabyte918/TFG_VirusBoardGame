@@ -167,19 +167,19 @@ function abrirAyudaCartas (numCarta) {
 	if (cardType == "tratamiento") {
 		switch (organType) {
 		case "error_medico":
-			$("ayudaError_medico").css("display", "inline");
+			$("#ayudaError_medico").css("display", "inline");
 			break;
 		case "guante_de_latex":
-			$("ayudaGuante_de_latex").css("display", "inline");
+			$("#ayudaGuante_de_latex").css("display", "inline");
 			break;
 		case "transplante":
-			$("ayudaTransplante").css("display", "inline");
+			$("#ayudaTransplante").css("display", "inline");
 			break;
 		case "ladron_de_organos":
-			$("ayudaLadron_de_organos").css("display", "inline");
+			$("#ayudaLadron_de_organos").css("display", "inline");
 			break;
 		case "contagio":
-			$("ayudaContagio").css("display", "inline");
+			$("#ayudaContagio").css("display", "inline");
 			break;
 		default:
 			console.log("Abrir cartas imposible default");
@@ -188,13 +188,23 @@ function abrirAyudaCartas (numCarta) {
 	}
 }
 
-function cerrarAyudaCartas () {
+function cerrarAyudaCartas() {
 	console.log("cerrarAyudaCartas()");
-	$("ayudaError_medico").css("display", "none");
-	$("ayudaGuante_de_latex").css("display", "none");
-	$("ayudaTransplante").css("display", "none");
-	$("ayudaLadron_de_organos").css("display", "none");
-	$("ayudaContagio").css("display", "none");
+	$("#ayudaError_medico").css("display", "none");
+	$("#ayudaGuante_de_latex").css("display", "none");
+
+	//Solo si el transplante no esta en proceso
+	if (transplante.enProceso == false) {
+		$("#ayudaTransplante").css("display", "none");
+		transplante.organo1.organo = "";
+		transplante.organo1.numJug = -1;
+		transplante.organo2.organo = "";
+		transplante.organo2.numJug = -1;
+		renderOrganosTransplante();
+	}
+
+	$("#ayudaLadron_de_organos").css("display", "none");
+	$("#ayudaContagio").css("display", "none");
 }
 
 function takeCard(){
@@ -455,10 +465,20 @@ Engine = new function () {
 
 	}
 	this.initFinDescartesButton = function() {
+		/** Colocacion Por cubos de descarte **/
+		var widthCubo = ((windowWidth / 6) * 0.65) - 20;
+
+		var posX = posCubosDescarte[4].x + widthCubo + 10;
+		var posY = posCubosDescarte[4].y - 5;
+
+		$("#descartes_boton").css({"top": posY, "left": posX});
+
+
+		/** Colocacion por cartas de usuario
 		var posX = posCartasUsuario[4][0] + posCartasUsuario[0] + 20;
 		var posY = posCartasUsuario[4][1] + 20;
 
-		$("#descartes_boton").css({"top": posY, "left": posX});
+		$("#descartes_boton").css({"top": posY, "left": posX});**/
 	}
 }
 

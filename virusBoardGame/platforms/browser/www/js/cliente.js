@@ -736,6 +736,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
+	cerrarAyudaCartas();
 
 	movJugador = datos_partida.movJugador;
 
