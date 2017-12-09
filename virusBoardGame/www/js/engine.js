@@ -236,8 +236,6 @@ function takeCard(){
 Engine = new function () {
 	//Responsive canvas
 	this.initCanvas = function(){
-		windowWidth = window.innerWidth;
-		windowHeight = window.innerHeight;
 
 		//Canvas principal - cosas que se mueven (se borra continuamente)
 		cv = document.getElementById('canvas');

@@ -19,6 +19,7 @@ var windowWidth, windowHeight = 0;
 var objetos = [];
 var countDownSTO;
 var esperarMovSTO;
+var idDoneResizing;
 
 function renderBGCards (){
 	var widthCarta = posCartasUsuario[0];
@@ -1108,6 +1109,53 @@ function fin_transplante() {
 	transplante.organo2.numJug = -1;
 }
 
+function reDimPartidaRapida() {
+	//console.log("reDimPartidaRapida()");
+
+	//Partida Rapida
+	//Derecha de boton jugar
+	//var elemBotonJug = document.getElementById('boton_jugar');
+	//var posBotonJug = elemBotonJug.getBoundingClientRect();
+	//var posX = (Math.floor(posBotonJug.left + posBotonJug.width + 10)).toString()+"px";
+	//var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
+
+	//Izquierda de boton jugar
+	var elemBotonJug = document.getElementById('boton_jugar');
+	var posBotonJug = elemBotonJug.getBoundingClientRect();
+
+	$("#cuadroPartidaRapida").css("display", "block");
+	var elemPartidaRapida = document.getElementById('cuadroPartidaRapida');
+	var posPartRapida = elemPartidaRapida.getBoundingClientRect();
+
+	var posX = (Math.floor(posBotonJug.left - posPartRapida.width - 10)).toString()+"px";
+	var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
+
+	//console.log("posX: "+posX+", posY: "+posY);
+	$("#cuadroPartidaRapida").css("left", posX);
+	$("#cuadroPartidaRapida").css("top", posY);
+}
+
+function reDimRanquingList() {
+	//console.log("reDimRanquingList()");
+	var elemBotonJug = document.getElementById('boton_jugar');
+	var posBotonJug = elemBotonJug.getBoundingClientRect();
+
+	console.log("windowWidth: "+windowWidth);
+
+	var widthRanquingList = (Math.floor(windowWidth - (posBotonJug.left + posBotonJug.width) - 40)).toString() + "px";
+
+	$("#ranquingList").css("width", widthRanquingList);
+}
+
+function doneResizing() {
+	console.log("Pantalla modificada");
+	windowWidth = window.innerWidth;
+	windowHeight = window.innerHeight;
+	
+	reDimPartidaRapida();
+	reDimRanquingList();
+}
+
 $(document).ready(function(){
 	console.log("Document Ready");
 	console.log("Orientation before lock is: "+screen.orientation.type);
@@ -1116,6 +1164,12 @@ $(document).ready(function(){
 
 	window.onload = function(){
 		console.log("Window onload");
+
+		//Controlamos el resizing de la ventana
+		$(window).resize(function() {
+		    clearTimeout(idDoneResizing);
+		    idDoneResizing = setTimeout(doneResizing, 50);	 
+		});
 	}
 })
 

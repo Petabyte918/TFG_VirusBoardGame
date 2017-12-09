@@ -65,29 +65,12 @@ function configInicial() {
 		ayudaFuerte == false;
 	}
 
+	//Tam Pantalla
+	windowWidth = window.innerWidth;
+	windowHeight = window.innerHeight;
+
 	//Posicion Cuadros ayuda
-	//Partida Rapida
-	//Derecha de boton jugar
-	//var elemBotonJug = document.getElementById('boton_jugar');
-	//var posBotonJug = elemBotonJug.getBoundingClientRect();
-	//var posX = (Math.floor(posBotonJug.left + posBotonJug.width + 10)).toString()+"px";
-	//var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
-
-	//Izquierda de botn jugar
-	var elemBotonJug = document.getElementById('boton_jugar');
-	var posBotonJug = elemBotonJug.getBoundingClientRect();
-
-	$("#cuadroPartidaRapida").css("display", "block");
-	var elemPartidaRapida = document.getElementById('cuadroPartidaRapida');
-	var posPartRapida = elemPartidaRapida.getBoundingClientRect();
-
-	var posX = (Math.floor(posBotonJug.left - posPartRapida.width - 10)).toString()+"px";
-	var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
-
-	//console.log("posX: "+posX+", posY: "+posY);
-	$("#cuadroPartidaRapida").css("left", posX);
-	$("#cuadroPartidaRapida").css("top", posY);
-	
+	reDimPartidaRapida();	
 
 	//Option Ranquing
 	var optionRanquing = localStorage.getItem('optionRanquing');
@@ -204,6 +187,7 @@ function button_ranquing () {
 	} else {
 		$("#settingsForm").css("display","none");
 		$("#ranquingList").css("display", "block");
+		reDimRanquingList();
 	}
 	socket.emit('request_users', {request: 'create_ranquing'});
 }
