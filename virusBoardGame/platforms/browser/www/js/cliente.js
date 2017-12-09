@@ -287,14 +287,19 @@ function form_register() {
 
 socket.on('register_user-OK', function(message) {
 	console.log("register_user-OK");
-	document.form_login_user.loginName.value = document.form_register_user.registerName.value;
-	document.form_login_user.loginPass.value = document.form_register_user.registerPass1.value;
+	var loginName = document.form_register_user.registerName.value;
+	var loginPass = document.form_register_user.registerPass1.value;
+	document.form_login_user.loginName.value = loginName;
+	document.form_login_user.loginPass.value = loginPass;
 	document.getElementById("registerCorrection").innerHTML = "";
 	document.form_register_user.registerName.value = "";
 	document.form_register_user.registerPass1.value = "";
 	document.form_register_user.registerPass2.value = "";
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "block");
+
+	//Autologin tras registrarnos correctamente
+	form_login();
 });
 
 socket.on('register_user-KO', function(message) {
