@@ -67,14 +67,27 @@ function configInicial() {
 
 	//Posicion Cuadros ayuda
 	//Partida Rapida
-	var elemBotJug = document.getElementById('boton_jugar');
-	var posBotJug = elemBotJug.getBoundingClientRect();
-	var posX = (Math.floor(posBotJug.left + posBotJug.width + 10)).toString()+"px";
-	var posY = (Math.floor(posBotJug.top + posBotJug.height -110)).toString()+"px";
+	//Derecha de boton jugar
+	//var elemBotonJug = document.getElementById('boton_jugar');
+	//var posBotonJug = elemBotonJug.getBoundingClientRect();
+	//var posX = (Math.floor(posBotonJug.left + posBotonJug.width + 10)).toString()+"px";
+	//var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
+
+	//Izquierda de botn jugar
+	var elemBotonJug = document.getElementById('boton_jugar');
+	var posBotonJug = elemBotonJug.getBoundingClientRect();
+
+	$("#cuadroPartidaRapida").css("display", "block");
+	var elemPartidaRapida = document.getElementById('cuadroPartidaRapida');
+	var posPartRapida = elemPartidaRapida.getBoundingClientRect();
+
+	var posX = (Math.floor(posBotonJug.left - posPartRapida.width - 10)).toString()+"px";
+	var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
+
 	//console.log("posX: "+posX+", posY: "+posY);
 	$("#cuadroPartidaRapida").css("left", posX);
 	$("#cuadroPartidaRapida").css("top", posY);
-	$("#cuadroPartidaRapida").css("display", "block");
+	
 
 	//Option Ranquing
 	var optionRanquing = localStorage.getItem('optionRanquing');
@@ -319,26 +332,26 @@ socket.on('create_ranquing', function(data) {
 	//		}
 	//	};
 
-	//Si hay menos usuarios que la cantidad de gente del ranquing que queremos mostrar
-	keysObj = Object.keys(data);
-	numUsers = keysObj.length;
-	if (numUsers < 10) {
-		maxLoop = numUsers;
-	} else {
-		maxLoop = 10;
-	}
-
 	$(".ranquingElems").remove();
 
 	var optionRanquing = localStorage.getItem('optionRanquing');
 	console.log("optionRanquing: "+ optionRanquing);
 
-	var sortedObj = getUsersSorted(optionRanquing, data, maxLoop);
+	var sortedObj = getUsersSorted(optionRanquing, data);
+	var maxLoop = (Object.keys(sortedObj)).length;
+
 
 	var html = "";
 	for (var i = 0; i < maxLoop; i++) {
 		var pos = i + 1;
 		var percent = (Math.round(((sortedObj[i].stats.wins / sortedObj[i].stats.total)*100))).toString()+"%";
+		//No mostramos porcentajes de jugadores que no han jugado partidas
+		//console.log("Percent: "+percent);
+		if (percent == "NaN%") {
+			//Los usuarios nuevos tambien aparecen
+			percent = "0%";
+			//continue;
+		}	
 		html+=
 		'<div class="ranquingElems ranquingLine">'+
 			'<a class="ranquingPos">'+pos+'</a>'+

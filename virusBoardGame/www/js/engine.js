@@ -86,11 +86,22 @@ function prepararOrganosJugadoresCli(){
 	}
 }
 
-function getUsersSorted (optionRanquing, data, maxLoop) {
+function getUsersSorted (optionRanquing, data) {
 	//Para no cargarnos data
 	var auxData = $.extend(true,{},data);
 	var sortedObj = {};
 	var objIndex = 0;
+
+	//Si hay menos usuarios que la cantidad de gente del ranquing que queremos mostrar
+	var keysObj = Object.keys(data);
+	var numUsers = keysObj.length;
+	var maxLoop = -1;
+
+	if (numUsers < 10) {
+		maxLoop = numUsers;
+	} else {
+		maxLoop = 10;
+	}
 
 	if (optionRanquing == "wins") {
 		var topWin = -1;
@@ -118,6 +129,10 @@ function getUsersSorted (optionRanquing, data, maxLoop) {
 		for (var cont = 0; cont < maxLoop; cont++) {
 			for (var i in auxData) {
 				percent = auxData[i].stats.wins / auxData[i].stats.total;
+				//Nos protegemos del Nah
+				if (isNaN(percent)) {
+					percent = 0;
+				}
 				if (percent > topPercent) {
 					topPercent = percent;
 					objIndex = i;
@@ -126,8 +141,8 @@ function getUsersSorted (optionRanquing, data, maxLoop) {
 			var auxObj = $.extend(true,{},auxData[objIndex]);
 			delete auxData[objIndex];
 			sortedObj[cont] = auxObj;
-			topWin = -1;
-			win = -1;
+			topPercent = -1;
+			percent = -1;
 			objIndex = 0;
 		}
 	}

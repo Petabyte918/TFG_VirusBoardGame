@@ -413,11 +413,9 @@ input.botonCrearPartida {
 }
 
 .ranquingIndices {
-	margin-top: 0.7em;
 	border-bottom: solid white 1px;
     padding: 0em;
     line-height: 0;
-    margin-top: 1em;
 	margin-bottom: 0.1em;
 }
 
@@ -451,6 +449,12 @@ input.botonCrearPartida {
 	-moz-box-shadow: inset 1px -2px 5px 4px rgb(0,0,0), 1px 1px 7px 2px rgba(0,0,0,0.75);
 	box-shadow: inset 1px -2px 5px 4px rgb(0,0,0), 1px 1px 7px 2px rgba(0,0,0,0.75);
 }
+
+.ranquingIndices > a {
+    margin-top: 1em;
+    padding-bottom: 0.7em;
+}
+
 .ranquingIndices > .ranquingPos {
 	padding-top: 0.35em;
     padding-left: 0.35em;
