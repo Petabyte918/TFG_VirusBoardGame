@@ -130,6 +130,7 @@ function backTo_InitMenu() {
 	$("#ranquing").css("display", "inline");
 	$("#cuadroFinPartida").css("display", "none");
 	var logged = localStorage.getItem("logged");
+	console.log("backTo_InitMenu()->logged: "+logged);
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
 		$("#userNameContainer").css("display", "block");

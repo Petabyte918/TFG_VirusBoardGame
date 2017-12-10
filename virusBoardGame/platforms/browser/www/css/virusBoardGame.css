@@ -1,5 +1,16 @@
+
 html {
+	/** Para darle tamaño a body **/
 	height: 100%;
+
+	/** Ningun texto es seleccionable **/
+	-webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select:none;
+
+    /** Cursor por defecto **/
+    cursor: default;
 }
 
 body {
@@ -7,6 +18,22 @@ body {
 	background: url(img/startmenuBG3.jpg);
 	background-size: cover;
 	background-repeat: no-repeat;
+}
+
+div {
+	cursor: pointer;
+}
+
+input {
+	cursor: pointer;
+}
+
+input[type=text], input[type=password] {
+	cursor: text;
+}
+
+#settings, #ranquing, #login, #leave, #userNameContainer, #register {
+
 }
 
 #canvas {
@@ -266,7 +293,7 @@ input.botonCrearPartida {
 	width: 50%;
 }
 
-#settings, #ranquing, #login, #register, #leave {
+#settings, #ranquing, #login, #register, #leave, #instrucciones {
 	margin: 5px;
 	margin-top: 10px;
 	padding: 25px;
@@ -322,6 +349,48 @@ input.botonCrearPartida {
 	line-height: 1;
 
 	padding: 15px 25px;
+}
+
+#instrucciones {
+	position: absolute;
+    bottom: 3em;
+    left: 3em;
+	background-repeat: no-repeat;
+	background-color: #2dc234;
+
+	background-image: -webkit-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: -moz-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: -o-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+	background-image: linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+
+	-ms-border-radius:4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+	-webkit-box-shadow: 0 5px 0 #197b1d, 0 5px 10px rgba(0, 0, 0, .4);
+	-moz-box-shadow: 0 5px 0 #197b1d, 0 5px 10px rgba(0, 0, 0, .4);
+	box-shadow: 0 5px 0 #197b1d, 0 5px 10px rgba(0, 0, 0, .4);
+
+	color: #fff;
+
+	display: block;
+	font-family: 'Oleo Script', Arial, sans-serif;
+	font-size: 25px;
+	line-height: 1;
+
+	padding: 15px 25px;
+}
+
+#instrucciones:active {
+	/* Disminiumos la cantidad de sombras */
+	-webkit-box-shadow: 0 4px 0 #197b1d, 0 10px 20px rgba(0, 0, 0, .4);
+	-moz-box-shadow: 0 4px 0 #197b1d, 0 10px 20px rgba(0, 0, 0, .4);
+	box-shadow: 0 4px 0 #197b1d, 0 10px 20px rgba(0, 0, 0, .4);
+	/* Movemos ligeramente el botón hacia abajo */
+	position: absolute;
+	bottom: 2.95em;
+    left: 3.05em;
 }
 
 #userNameContainer {
