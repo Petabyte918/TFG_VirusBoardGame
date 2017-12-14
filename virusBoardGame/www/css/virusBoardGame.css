@@ -11,6 +11,9 @@ html {
 
     /** Cursor por defecto **/
     cursor: default;
+
+    /** Evitamos cualquier tipo de overflow no intencionado**/
+    overflow: hidden;
 }
 
 body {
@@ -30,10 +33,6 @@ input {
 
 input[type=text], input[type=password] {
 	cursor: text;
-}
-
-#settings, #ranquing, #login, #leave, #userNameContainer, #register {
-
 }
 
 #canvas {
@@ -353,8 +352,8 @@ input.botonCrearPartida {
 
 #instrucciones {
 	position: absolute;
-    bottom: 3em;
-    left: 3em;
+    bottom: 1em;
+    right: 8px;
 	background-repeat: no-repeat;
 	background-color: #2dc234;
 
@@ -389,8 +388,8 @@ input.botonCrearPartida {
 	box-shadow: 0 4px 0 #197b1d, 0 10px 20px rgba(0, 0, 0, .4);
 	/* Movemos ligeramente el botón hacia abajo */
 	position: absolute;
-	bottom: 2.95em;
-    left: 3.05em;
+	bottom: 0.93em;
+    right: 3.05em;
 }
 
 #userNameContainer {
@@ -443,6 +442,7 @@ input.botonCrearPartida {
 
 #ranquingList {
 	height: 80%;
+	z-index: 10;
 }
 
 #settingsForm {
@@ -858,3 +858,123 @@ input:checked + .slider:before {
     display: block;
     text-align: -webkit-left;
 }
+
+/** Instrucciones **/
+#container_instrucciones1, #container_instrucciones2, #container_instrucciones3,
+#container_instrucciones4, #container_instrucciones5 {
+	position: absolute;
+	border: solid rgb(153, 0, 204) 5px;
+    border-radius: 15px;
+
+    background: rgb(242, 204, 255);
+	padding: 7px;
+    font-size: 0.95em;
+
+    font: 'caption';
+}
+
+span.tittleSeccion1 {
+	text-align: center;
+	color: rgb(191, 0, 255);
+	font-weight: bold;
+	font-size: 1.2em;
+    text-decoration: underline;
+}
+
+span.textoSeccion1 {
+	font-size: 1em;
+
+}
+
+span.tittleSeccion2 {
+	text-align: center;
+	color: rgb(191, 0, 255);
+	font-weight: bold;
+	font-size: 0.8em;
+}
+	
+span.textoSeccion2 {
+	font-size: 0.8em;
+}
+
+span.tittleSeccion3 {
+	text-align: center;
+	color: rgb(191, 0, 255);
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+span.textoSeccion3 {
+	font-size: 0.9em;
+}
+
+div.backNext_Container {
+	margin: 2px;
+	text-align: center;
+}
+
+div.instruccionesBack {
+	float: left;
+    font-size: x-large;
+    border: solid black 2px;
+    margin: 2px;
+    padding: 3px;
+    width: 30%;
+    text-align: center;
+}
+
+div.instruccionesNext {
+	float: right;
+    font-size: x-large;
+    border: solid black 2px;
+    margin: 2px;
+    padding: 3px;
+    width: 38%;
+    text-align: center;
+}
+
+div.instruccionesBack, div.instruccionesNext {
+	border: solid 1px rgba(0, 153, 0, 0.8);
+	border-bottom: 2px;
+	-ms-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+	-webkit-box-shadow: 0 3px 0 rgb(0, 26, 0), inset 0 2px 2px rgba(0, 51, 0, .4);
+	-moz-box-shadow: 0 3px 0 rgb(0, 26, 0), inset 0 2px 2px rgba(0, 51, 0, .4);
+	box-shadow: 0 3px 0 rgb(0, 26, 0), inset 0 2px 2px rgba(0, 51, 0, .4);
+
+	background-repeat: no-repeat;
+	background-color: rgba(0, 77, 0, 0.8);
+	background-size: cover;
+
+	color: #fff;
+	display: block;
+	font-family: 'Oleo Script', Arial, sans-serif;
+	font-size: 25px;
+	line-height: 1;
+}
+
+div.instruccionesBack:active, div.instruccionesNext:active {
+	/* Disminiumos la cantidad de sombras */
+	-webkit-box-shadow: 0 2px 0 rgb(0, 26, 0), inset 0 2px 2px rgba(0, 51, 0, .4);
+	-moz-box-shadow: 0 2px 0 rgb(0, 26, 0), inset 0 2px 2px rgba(0, 51, 0, .4);
+	box-shadow: 0 2px 0 rgb(0, 26, 0), inset 0 2px 2px rgba(0, 51, 0, .4);
+	/* Movemos ligeramente el botón hacia abajo */
+	position: relative;
+	top: 2px;
+	left: 2px;
+}
+
+div.numPagInstrucciones {
+	width: 20%;
+    display: inline;
+
+    text-align: center;
+    font-size: x-large;
+    color: rgb(153, 0, 204);
+    font-weight: bold;
+}
+
+/** END instrucciones**/

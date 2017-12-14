@@ -193,8 +193,133 @@
 		</canvas>
 	</div>
 
-	<div id="instrucciones">Instrucciones</div>
-	<div id="container_instrucciones">
+	<div id="cuadroPartidaRapida" style="display: none;">
+		<a class="notaEncabezado">(Juega en la partida con más posibilidades de empezar antes)</a>
+		<a class="tituloCartaIzq">Actualmente:</a>
+		<a id="partidaRapidaNombre">-Partida: Partida de Perry maison</a>
+		<a id="partidaRapidaJugadores">-(Necesarios 2 jugadores)</a>
+	</div>
+
+	<div id="instrucciones" onclick="mostrarInstrucciones()">Instrucciones</div>
+
+	<div id="container_instrucciones1" style="display: none;">
+		<span class="tittleSeccion1">ÓRGANOS</span></br>
+		<span class="textoSeccion1">
+			Reune <b>cuatro órganos sanos de distinto color</b> para ganar el juego. No puedes tener en tu cuerpo dos órganos iguales en ningún momento.</br>
+		</span>
+		<span class="tittleSeccion3">ÓRGANO MULTICOLOR</span></br>
+		<span class="textoSeccion3">
+			Este órgano actúa como comodín para ayudarte a completar tu cuerpo y cuenta como órgano a todos los efectos.</br>
+			Puede vacunarse por una medicina de cualquier color, pero tambien puede ser infectado por un virus de cualquier color.</br>
+			<b>Nota: </b>Tu cuerpo podrá tener cinco órganos distintos si uno de ellos es el multicolor, y puedes ganar la partida si cuatro de ellos están sanos.</br>
+		</span>
+		<div class="backNext_Container">
+			<div class="instruccionesBack" style="visibility: hidden;">Atrás</div>
+			<div class="numPagInstrucciones">1/5</div>
+			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina2')">Siguiente</div>
+		</div>
+	</div>
+
+	<div id="container_instrucciones2" style="display: none;">
+		<span class="tittleSeccion1">VIRUS</span></br>
+		<span class="textoSeccion1">
+			Usa las cartas de virus para destruir los órganos y medicinas de tus rivales. Los virus solo tienen efecto sobre organos y medicinas de su mismo color.</br>
+		</span>
+		<span class="tittleSeccion2">INFECTAR</span></br>
+		<span class="textoSeccion2">
+			Arrastra una carta de virus sobre un órgano libre para infectarlo. <b>No podras completar tu cuerpo</b> si alguno de tus órganos está infectado por un virus.</br>
+		</span>
+		<span class="tittleSeccion2">EXTIRPAR</span></br>
+		<span class="textoSeccion2">
+			<b>Destruye un órgano infectado. </b>Coloca un segundo virus sobre un órgano ya infectado: Ese órgano es destruido y las tres cartas van a la pila de descarte.</br>
+		</span>
+		<span class="tittleSeccion2">DESTRUIR VACUNA</span></br>
+		<span class="textoSeccion2">
+			<b>Destruye una vacuna.</b> Elimina la proteccion otorgada por una medicina en un órgano.</br>
+		</span>
+		<span class="tittleSeccion3">VIRUS MULTICOLOR</span></br>
+		<span class="textoSeccion3">
+			Este virus <b>comodin</b> puede infectar un órgano o destruir una vacuna de cualquier color</br>
+		</span>
+		<div class="backNext_Container">
+			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina1')">Atrás</div>
+			<div class="numPagInstrucciones">2/5</div>
+			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina3')">Siguiente</div>
+		</div>
+	</div>
+
+	<div id="container_instrucciones3" style="display: none;">
+		<span class="tittleSeccion1">MEDICINAS</span></br>
+		<span class="textoSeccion1">
+			Las cartas de medicina sirven para proteger tus órganos de los virus. Pueden destruir cartas de virus o proteger órganos para evitar que sean infectados. Utiliza las cartas de medicina sólo sobre cartas (virus u órganos) de su mismo color</br>
+		</span>
+		<span class="tittleSeccion2">CURAR</span></br>
+		<span class="textoSeccion2">
+			<b>Destruye un virus.</b> Utiliza una medicina para contrarrestar el efecto de un virus de su mismo color que se encuentre sobre un órgano.</br>
+		</span>
+		<span class="tittleSeccion2">VACUNAR</span></br>
+		<span class="textoSeccion2">
+			<b>Protege un órgano.</b> Arrastra una medicina sobre un órgano libre de su mismo color. Ahora tus rivales necesitan dos virus para infectar tu órgano.</br>
+		</span>
+		<span class="tittleSeccion2">INMUNIZAR</span></br>
+		<span class="textoSeccion2">
+			Arrastra una segunda medicina sobre un organo. Este queda <b>protegido para siempre</b> contra el ataque de cualquier virus y no podrá ser destruido ni afectado por las cartas de tratamiento.</br>
+		</span>
+		<span class="tittleSeccion3">MEDICINAS MULTICOLOR</span></br>
+		<span class="textoSeccion3">
+			Estas medicinas son <b>comodines.</b> Utilízalas para curar virus o vacunar órganos de cualquier color.</br>
+		</span>
+		<div class="backNext_Container">
+			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina2')">Atrás</div>
+			<div class="numPagInstrucciones">3/5</div>
+			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina4')">Siguiente</div>
+		</div>
+	</div>
+
+	<div id="container_instrucciones4" style="display: none;">
+		<span class="tittleSeccion1">TRATAMIENTOS</span></br>
+		<span class="textoSeccion1">
+			Las cartas de tratamiento pueden alterar el juego para ayudarte a ganar.</br>Utilízalas en tu beneficio o para evitar que tus rivales completen su cuerpo antes que tú.</br>
+		</span>
+		<span class="tittleSeccion2">TRANSPLANTE</span></br>
+		<span class="textoSeccion2">
+			<b>Intercambia</b> un órgano por otro entre dos jugadores cualesquiera. No importa si el color de los órganos es diferente, ni si están sanos, infectados o vacunados. Sencillamente el jugador cambia el órgano escogido por otro, siempre y cuando ninguno de los dos jugadpres tenga dos órganos del mismo colo ni estos estén inmunizados.</br>
+		</span>
+		<span class="tittleSeccion2">LADRÓN DE ÓRGANOS</span></br>
+		<span class="textoSeccion2">
+			<b>Roba un órgano.</b> de otro jugador y añadelo a tu cuerpo. Puedes robar órganos sanos, vacunados o infectados, pero no inmunes. Recuerda que no puedes tener dos órganos del mismo color.</br>
+		</span>
+		<!--<span class="tittleSeccion2">CONTAGIO</span></br>
+		<span class="textoSeccion2">
+			Arrastra una segunda medicina sobre un organo. Este queda <b>protegido para siempre</b> contra el ataque de cualquier virus y no podrá ser destruido ni afectado por las cartas de tratamiento.</br>
+		</span>-->
+		<span class="tittleSeccion2">GUANTE DE LATEX</span></br>
+		<span class="textoSeccion2">
+			Todos los jugadores excepto el que utiliza el guante, <b>descartan su mano. </b> Al comienzo de su siguiente turno, al no tener cartas, estos jugadores tan solo podrán robar una nueva mano, perdiendo así un turno de juego.</br>
+		</span>
+		<span class="tittleSeccion2">ERROR MEDICO</span></br>
+		<span class="textoSeccion2">
+			<b>Intercambia todo tu cuerpo</b> por el de otro jugador, incluyendo órganos virus y vacunas. No importa el número de cartas que cada uno tenga en la mesa. Cuando usas esta carta, <b>los órganos inmunizados también son intercambiados.</b></br>
+		</span>
+		<div class="backNext_Container">
+			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina3')">Atrás</div>
+			<div class="numPagInstrucciones">4/5</div>
+			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina5')">Siguiente</div>
+		</div>
+	</div>
+
+	<div id="container_instrucciones5" style="display: none;">
+		<span class="tittleSeccion1">ÓRGANOS</span></br>
+		Reune <b>cuatro órganos sanos de distinto color</b> para ganar el juego. No puedes tener en tu cuerpo dos órganos iguales en ningún momento.</br>
+		<span class="tittleSeccion2">ÓRGANO MULTICOLOR</span></br>
+		Este órgano actúa como comodín para ayudarte a completar tu cuerpo y cuenta como órgano a todos los efectos.</br>
+		Puede vacunarse por una medicina de cualquier color, pero tambien puede ser infectado por un virus de cualquier color.</br>
+		<b>Nota: </b>Tu cuerpo podrá tener cinco órganos distintos si uno de ellos es el multicolor, y puedes ganar la partida si cuatro de ellos están sanos.</br>
+		<div class="backNext_Container">
+			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina4')">Atrás</div>
+			<div class="numPagInstrucciones">5/5</div>
+			<div class="instruccionesNext" style="visibility: hidden;">Siguiente</div>
+		</div>
 	</div>
 
 </body>

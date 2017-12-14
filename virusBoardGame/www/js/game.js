@@ -1147,6 +1147,37 @@ function reDimRanquingList() {
 	$("#ranquingList").css("width", widthRanquingList);
 }
 
+function reDimContainer_instrucciones() {
+
+	var elemBotonInstrucciones = document.getElementById('instrucciones');
+	var posBotonInstrucciones = elemBotonInstrucciones.getBoundingClientRect();
+
+	var elemContainer_botones = document.getElementById('container_botones');
+	var posContainer_botones = elemContainer_botones.getBoundingClientRect();
+
+	var widthContainer_intrucciones = (Math.floor(windowWidth - posContainer_botones.right - 40)).toString() + "px";
+
+	$("#container_instrucciones1").css("width", widthContainer_intrucciones);
+	$("#container_instrucciones2").css("width", widthContainer_intrucciones);
+	$("#container_instrucciones3").css("width", widthContainer_intrucciones);
+	$("#container_instrucciones4").css("width", widthContainer_intrucciones);
+	$("#container_instrucciones5").css("width", widthContainer_intrucciones);
+
+	var leftContainer_instrucciones = (Math.floor(posContainer_botones.right + 10)).toString() + "px";
+	$("#container_instrucciones1").css("left", leftContainer_instrucciones);
+	$("#container_instrucciones2").css("left", leftContainer_instrucciones);
+	$("#container_instrucciones3").css("left", leftContainer_instrucciones);
+	$("#container_instrucciones4").css("left", leftContainer_instrucciones);
+	$("#container_instrucciones5").css("left", leftContainer_instrucciones);
+
+	var bottomContainer_instrucciones = (Math.floor(windowHeight - posBotonInstrucciones.top + 10)).toString() + "px"; 
+	$("#container_instrucciones1").css("bottom", bottomContainer_instrucciones);
+	$("#container_instrucciones2").css("bottom", bottomContainer_instrucciones);
+	$("#container_instrucciones3").css("bottom", bottomContainer_instrucciones);
+	$("#container_instrucciones4").css("bottom", bottomContainer_instrucciones);
+	$("#container_instrucciones5").css("bottom", bottomContainer_instrucciones);
+}
+
 function doneResizing() {
 	console.log("Pantalla modificada");
 	windowWidth = window.innerWidth;
@@ -1154,6 +1185,7 @@ function doneResizing() {
 	
 	reDimPartidaRapida();
 	reDimRanquingList();
+	reDimContainer_instrucciones()
 }
 
 $(document).ready(function(){
