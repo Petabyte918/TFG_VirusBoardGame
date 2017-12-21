@@ -635,7 +635,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initPosCartasUsuario();
 	Engine.initFinDescartesButton();
 
-	renderBGCards();
+	actualizarCanvasBG();
 
 	//Crea dos arrays para poder buscar informacion comodamente.
 	asignarJugadoresAPosiciones();

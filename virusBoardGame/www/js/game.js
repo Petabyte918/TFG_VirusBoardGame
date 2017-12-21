@@ -23,7 +23,7 @@ var countDownSTO;
 var esperarMovSTO;
 var idDoneResizing;
 
-function renderBGCards (){
+function actualizarCanvasBG (){
 	var widthCarta = posCartasUsuario[0];
 	var heightCarta = posCartasUsuario[1];
 	var posCarta1 = posCartasUsuario[2];
@@ -1254,7 +1254,21 @@ function doneResizing() {
 	
 	reDimPartidaRapida();
 	reDimRanquingList();
-	reDimContainer_instrucciones()
+	reDimContainer_instrucciones();
+
+	//Redimensionamos la configuracion inicial
+	Engine.initCanvas();
+	Engine.initJugadores();
+	Engine.initPosOrganosJugadores();
+	Engine.initCubosDescarte();
+	Engine.initPosCartasUsuario();
+	Engine.initFinDescartesButton();
+
+	actualizarCanvasBG();
+	actualizarCanvasMID();
+	indicarTurno(turno);
+	actualizarCanvas();
+	actualizarCanvasFrontal();
 }
 
 $(document).ready(function(){
