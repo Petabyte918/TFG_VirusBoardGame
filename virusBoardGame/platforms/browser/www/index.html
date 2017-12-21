@@ -202,17 +202,20 @@
 
 	<div id="instrucciones" onclick="mostrarInstrucciones()">Instrucciones</div>
 
+
 	<div id="container_instrucciones1" style="display: none;">
-		<span class="tittleSeccion1">ÓRGANOS</span></br>
-		<span class="textoSeccion1">
-			Reune <b>cuatro órganos sanos de distinto color</b> para ganar el juego. No puedes tener en tu cuerpo dos órganos iguales en ningún momento.</br>
-		</span>
-		<span class="tittleSeccion3">ÓRGANO MULTICOLOR</span></br>
-		<span class="textoSeccion3">
-			Este órgano actúa como comodín para ayudarte a completar tu cuerpo y cuenta como órgano a todos los efectos.</br>
-			Puede vacunarse por una medicina de cualquier color, pero tambien puede ser infectado por un virus de cualquier color.</br>
-			<b>Nota: </b>Tu cuerpo podrá tener cinco órganos distintos si uno de ellos es el multicolor, y puedes ganar la partida si cuatro de ellos están sanos.</br>
-		</span>
+		<span class="tittleSeccion1">¿CÓMO JUGAR A VIRUS?</span></br>
+		Virus es un sencillo y divertido juego de cartas.</br>Hay 4 tipos de cartas diferentes: órganos, virus, medicinas y <b>cartas especiales</b> de tratamiento.
+		Para usar las cartas de tu mano, ¡simplemente arrástralas!</br>
+		Las cartas de órganos sólo puedes usarlas sobre ti mismo.</br>
+		Las cartas de medicinas y virus puedes usarlas contra un órgano del mismo color que tu carta <b>de cualquier jugador.</b> Aunque, ¿para que ibas a usar un virus sobre ti mismo? ¿O una medicina para curar algún órgano de tu rival?</br></br>
+		Reune <b>cuatro órganos sanos de distinto color</b> para ganar el juego.</br> 
+		No puedes tener en tu cuerpo <b>dos órganos iguales</b> en ningún momento.</br>
+		
+		No te preocupes si no sabes usar las cartas especiales todavía. Cuando vayas a jugarlas, aparecerá un mensaje de ayuda.</br>
+
+		¡SUERTE!</br>
+		</br>
 		<div class="backNext_Container">
 			<div class="instruccionesBack" style="visibility: hidden;">Atrás</div>
 			<div class="numPagInstrucciones">1/5</div>
@@ -221,7 +224,26 @@
 	</div>
 
 	<div id="container_instrucciones2" style="display: none;">
-		<span class="tittleSeccion1">VIRUS</span></br>
+		<span class="tittleSeccion1">Tipo de carta - ÓRGANOS</span></br>
+		<span class="textoSeccion1">
+			Reune <b>cuatro órganos sanos de distinto color</b> para ganar el juego. No puedes tener en tu cuerpo dos órganos iguales en ningún momento.</br>
+		</span>
+		<span class="tittleSeccion3">ÓRGANO MULTICOLOR</span></br>
+		<span class="textoSeccion3">
+			Este órgano actúa como comodín para ayudarte a completar tu cuerpo y cuenta como órgano a todos los efectos.</br>
+			Puede vacunarse con una medicina de cualquier color, pero tambien puede ser infectado por un virus de cualquier color.</br>
+			<b>Nota: </b>Tu cuerpo podrá tener cinco órganos distintos si uno de ellos es el multicolor, y puedes ganar la partida si cuatro de ellos están sanos.</br>
+		</span>
+		</br>
+		<div class="backNext_Container">
+			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina1')">Atrás</div>
+			<div class="numPagInstrucciones">2/5</div>
+			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina3')">Siguiente</div>
+		</div>
+	</div>
+
+	<div id="container_instrucciones3" style="display: none;">
+		<span class="tittleSeccion1">Tipo de carta - VIRUS</span></br>
 		<span class="textoSeccion1">
 			Usa las cartas de virus para destruir los órganos y medicinas de tus rivales. Los virus solo tienen efecto sobre órganos y medicinas de su mismo color.</br>
 		</span>
@@ -241,15 +263,16 @@
 		<span class="textoSeccion3">
 			Este virus <b>comodin</b> puede infectar un órgano o destruir una vacuna de cualquier color</br>
 		</span>
+		</br>
 		<div class="backNext_Container">
-			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina1')">Atrás</div>
-			<div class="numPagInstrucciones">2/5</div>
-			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina3')">Siguiente</div>
+			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina2')">Atrás</div>
+			<div class="numPagInstrucciones">3/5</div>
+			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina4')">Siguiente</div>
 		</div>
 	</div>
 
-	<div id="container_instrucciones3" style="display: none;">
-		<span class="tittleSeccion1">MEDICINAS</span></br>
+	<div id="container_instrucciones4" style="display: none;">
+		<span class="tittleSeccion1">Tipo de carta - MEDICINAS</span></br>
 		<span class="textoSeccion1">
 			Las cartas de medicina sirven para proteger tus órganos de los virus. Pueden destruir cartas de virus o proteger órganos para evitar que sean infectados. Utiliza las cartas de medicina sólo sobre cartas (virus u órganos) de su mismo color</br>
 		</span>
@@ -269,15 +292,16 @@
 		<span class="textoSeccion3">
 			Estas medicinas son <b>comodines.</b> Utilízalas para curar virus o vacunar órganos de cualquier color.</br>
 		</span>
+		</br>
 		<div class="backNext_Container">
-			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina2')">Atrás</div>
-			<div class="numPagInstrucciones">3/5</div>
-			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina4')">Siguiente</div>
+			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina3')">Atrás</div>
+			<div class="numPagInstrucciones">4/5</div>
+			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina5')">Siguiente</div>
 		</div>
 	</div>
 
-	<div id="container_instrucciones4" style="display: none;">
-		<span class="tittleSeccion1">TRATAMIENTOS</span></br>
+	<div id="container_instrucciones5" style="display: none;">
+		<span class="tittleSeccion1">Tipo de carta - TRATAMIENTOS</span></br>
 		<span class="textoSeccion1">
 			Las cartas de tratamiento pueden alterar el juego para ayudarte a ganar.</br>Utilízalas en tu beneficio o para evitar que tus rivales completen su cuerpo antes que tú.</br>
 		</span>
@@ -301,20 +325,7 @@
 		<span class="textoSeccion2">
 			<b>Intercambia todo tu cuerpo</b> por el de otro jugador, incluyendo órganos virus y vacunas. No importa el número de cartas que cada uno tenga en la mesa. Cuando usas esta carta, <b>los órganos inmunizados también son intercambiados.</b></br>
 		</span>
-		<div class="backNext_Container">
-			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina3')">Atrás</div>
-			<div class="numPagInstrucciones">4/5</div>
-			<div class="instruccionesNext" onclick="mostrarInstrucciones('pagina5')">Siguiente</div>
-		</div>
-	</div>
-
-	<div id="container_instrucciones5" style="display: none;">
-		<span class="tittleSeccion1">ÓRGANOS</span></br>
-		Reune <b>cuatro órganos sanos de distinto color</b> para ganar el juego. No puedes tener en tu cuerpo dos órganos iguales en ningún momento.</br>
-		<span class="tittleSeccion2">ÓRGANO MULTICOLOR</span></br>
-		Este órgano actúa como comodín para ayudarte a completar tu cuerpo y cuenta como órgano a todos los efectos.</br>
-		Puede vacunarse por una medicina de cualquier color, pero tambien puede ser infectado por un virus de cualquier color.</br>
-		<b>Nota: </b>Tu cuerpo podrá tener cinco órganos distintos si uno de ellos es el multicolor, y puedes ganar la partida si cuatro de ellos están sanos.</br>
+		</br>
 		<div class="backNext_Container">
 			<div class="instruccionesBack" onclick="mostrarInstrucciones('pagina4')">Atrás</div>
 			<div class="numPagInstrucciones">5/5</div>

@@ -389,7 +389,7 @@ input.botonCrearPartida {
 	/* Movemos ligeramente el botón hacia abajo */
 	position: absolute;
 	bottom: 0.93em;
-    right: 3.05em;
+    right: 6px;
 }
 
 #userNameContainer {

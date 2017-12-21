@@ -97,6 +97,12 @@ function button_create() {
 	$("#userNameContainer").css("display", "none");
 	$("#register").css("display", "none");
 	$("#cuadroPartidaRapida").css("display", "none");
+	$("#instrucciones").css("display", "none");
+	$("#container_instrucciones1").css("display", "none");
+	$("#container_instrucciones2").css("display", "none");
+	$("#container_instrucciones3").css("display", "none");
+	$("#container_instrucciones4").css("display", "none");
+	$("#container_instrucciones5").css("display", "none");
 }
 
 function button_lista_partidas() {
@@ -115,6 +121,12 @@ function button_lista_partidas() {
 	$("#userNameContainer").css("display", "none");
 	$("#register").css("display", "none");
 	$("#cuadroPartidaRapida").css("display", "none");
+	$("#instrucciones").css("display", "none");
+	$("#container_instrucciones1").css("display", "none");
+	$("#container_instrucciones2").css("display", "none");
+	$("#container_instrucciones3").css("display", "none");
+	$("#container_instrucciones4").css("display", "none");
+	$("#container_instrucciones5").css("display", "none");
 }
 
 function backTo_InitMenu() {
@@ -129,6 +141,7 @@ function backTo_InitMenu() {
 	$("#settings").css("display", "inline");
 	$("#ranquing").css("display", "inline");
 	$("#cuadroFinPartida").css("display", "none");
+	$("#instrucciones").css("display", "inline");
 	var logged = localStorage.getItem("logged");
 	console.log("backTo_InitMenu()->logged: "+logged);
 	if (logged == "true") {
