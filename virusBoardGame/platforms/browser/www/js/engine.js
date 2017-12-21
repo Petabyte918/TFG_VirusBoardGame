@@ -237,7 +237,7 @@ Engine = new function () {
 	//Responsive canvas
 	this.initCanvas = function(){
 
-		//Canvas principal - cosas que se mueven (se borra continuamente)
+		//Canvas frontal - cosas que solo se mueven
 		cv = document.getElementById('canvas');
 		cv.width = windowWidth;
 		cv.height = windowHeight;
@@ -245,7 +245,16 @@ Engine = new function () {
 		cx.fillStyle = "rgba(0,0,255,0)";
 		cx.fillRect(0,0,windowWidth,windowHeight);
 
+		//Canvas apoyo - cosas que se mueven (es un apoyo del frontal)
+		cvAPO = document.getElementById('canvasAPO');
+		cvAPO.width = windowWidth;
+		cvAPO.height = windowHeight;
+		cxAPO = cvAPO.getContext('2d');
+		cxAPO.fillStyle = "rgba(0,0,255,0)";
+		cxAPO.fillRect(0,0,windowWidth,windowHeight);
+
 		//Canvas del medio - turnos y estado tablero (se borra a veces)
+		//Este canvas se actualiza junto con el reloj
 		cvMID = document.getElementById('canvasMID');
 		cvMID.width = windowWidth;
 		cvMID.height = windowHeight;

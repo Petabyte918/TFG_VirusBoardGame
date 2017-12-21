@@ -10,8 +10,10 @@ function playSound(soundResource){
 	}
 }
 
-var cv, cx, objetoActual, touch = null;
+var objetoActual, touch = null;
 var posInitObjX, posInitObjY = 0;
+var cx, cv = null;
+var cxAPO, cvAPO = null;
 var cvMID, cxMID = null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
@@ -554,33 +556,64 @@ function removeOrgano2Transplante(){
 
 //Ideas de mejora a futuro ->
 //1. Renderizar la imagen que se mueve y las otras a diferente ritmo -> DESCARTADA
-//2. Detectar la colision en el canvas de las cartas pero dibujar unicamente la que se mueve en otro sola
+//2. Detectar la colision en el canvas de las cartas pero dibujar unicamente la que se mueve en otro sola ->Hecho
 //3. Tener las imagenes siempre cargadas y solo dibujarlas en el contexto. Y cuando robo cartas, cargarlas
+//4. Posibilidad de dibujar siempre pero borrar solo cada cierta diferencia de pixeles
+
+function actualizarCanvasFrontal() {
+	cx.clearRect(0, 0, windowWidth, windowHeight);
+	if (objetoActual != null) {
+		var img0 = new Image();
+		img0.src = objetoActual.src;
+		img0.onload = function(){
+			//console.log("objetos[0] :"+objetos[0]);
+			cx.drawImage(img0, objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
+		}
+	} else {
+
+	}
+}
+
 function actualizarCanvas(){
 	//console.log("Actualizar canvas");
-	cx.clearRect(0, 0, windowWidth, windowHeight);
+	cxAPO.clearRect(0, 0, windowWidth, windowHeight);
 	var img1 = new Image();
 	if ((objetos[0].src != "") && (descartes[0] == false)){
-		img1.src = objetos[0].src;
-		img1.onload = function(){
-			//console.log("objetos[0] :"+objetos[0]);
-			cx.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
+		//Tratamos de evitar parpadeos moviendo cartas
+		if (objetos[0] == objetoActual) {
+			console.log("Objeto 1 es el objeto actual");
+		} else {
+			img1.src = objetos[0].src;
+			img1.onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cxAPO.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
+			}
 		}
 	}
 	var img2 = new Image();
 	if ((objetos[1].src != "") && (descartes[1] == false)){
-		img2.src = objetos[1].src;
-		img2.onload = function(){
-			//console.log("objetos[1] :"+objetos[1]);
-			cx.drawImage(img2, objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
+		//Tratamos de evitar parpadeos moviendo cartas
+		if (objetos[1] == objetoActual) {
+			console.log("Objeto 2 es el objeto actual");
+		} else {
+			img2.src = objetos[1].src;
+			img2.onload = function(){
+				//console.log("objetos[1] :"+objetos[1]);
+				cxAPO.drawImage(img2, objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
+			}
 		}
 	}
 	var img3 = new Image();
 	if ((objetos[2].src != "") && (descartes[2] == false)){
-		img3.src = objetos[2].src;
-		img3.onload = function(){
-			//console.log("objetos[2] :"+objetos[2]);
-			cx.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
+		//Tratamos de evitar parpadeos moviendo cartas
+		if (objetos[2] == objetoActual) {
+			console.log("Objeto 3 es el objeto actual");
+		} else {
+			img3.src = objetos[2].src;
+			img3.onload = function(){
+				//console.log("objetos[2] :"+objetos[2]);
+				cxAPO.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
+			}
 		}
 	}
 }
@@ -612,18 +645,27 @@ function moveObjects(){
 	});
 
 	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-	    console.log('Esto es un dispositivo móvil');
+	    console.log('Esto es un dispositivo movil');
 		cv.ontouchstart = function(event) {
 			touch = event.touches[0];
+			//console.log("Ontouchstart");
 			for (var i = 0; i < objetos.length; i++) {
 				if (objetos[i].x < touch.pageX
 				  && (objetos[i].width + objetos[i].x > touch.pageX)
 				  && objetos[i].y < touch.pageY
 				  && (objetos[i].height + objetos[i].y > touch.pageY)) {
+
 					objetoActual = objetos[i];
+					//Chequeamos cartas para divs de ayuda
+					var numCarta = objetoActual.numCarta;
+					abrirAyudaCartas(numCarta);
+
 					//console.log("Objeto "+i+" TOCADO");
 					inicioY = touch.pageY - objetos[i].y;
 					inicioX = touch.pageX - objetos[i].x;
+					//Optimizar renderizado
+					posInitObjX = objetoActual.x;
+					posInitObjY = objetoActual.y;
 					break;
 				}
 			}
@@ -631,19 +673,46 @@ function moveObjects(){
 
 		cv.ontouchmove = function(event) {
 			touch = event.touches[0];
+			//console.log("Ontouchmove");
+			//Solo actualizamos si movemos y hay algun objeto seleccionado y cada cierta diferencia de pixeles
 			if (objetoActual != null) {
 				objetoActual.x = touch.pageX - inicioX;
 				objetoActual.y = touch.pageY - inicioY;
-				actualizarCanvas();
+
+				//Calculamos la distancia adecuado de renderizado segun diferencia de pixeles
+				//Podriamos hacer un producto escalar de x e y pero...pasando!
+				var distRend = 5;
+
+				if ( (((posInitObjX - objetoActual.x) > distRend) || 
+					((objetoActual.x - posInitObjX) > distRend)) ||
+					(((posInitObjY - objetoActual.y) > distRend) || 
+					((objetoActual.y - posInitObjY) > distRend)) ) {
+
+					posInitObjX = objetoActual.x;
+					posInitObjY = objetoActual.y;
+					actualizarCanvasFrontal();
+				}
+
+				//Objeto.x: dist x hasta el inicio de la carta
+				//Touch.x: punto x de la pagina donde tocas
+				//InicioX: distancia desde el limite izq de la carta al punto donde tocas (FIJO al arrastrar)
+				//console.log("ObjetoActual.x: "+objetoActual.x);
+				//console.log("touch.pageX: "+touch.pageX);
+				//console.log("inicioX :"+inicioX);
 			}
 		}
 
 		cv.ontouchend = function(event) {
+			//console.log("Ontouchend");
 			if (objetoActual != null){
 				checkCollision();
-				objetoActual = null;
+				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
 				actualizarCanvas();
+				actualizarCanvasFrontal();
 			}
+			//	2Eliminar o no objeto
+			//	3Agregarlo o no a algun sitio
+			//4restablecer coordenadas iniciale
 			objetoActual = null;
 		}
 	} else {
@@ -671,7 +740,6 @@ function moveObjects(){
 					break;
 				}
 			}
-
 		}
 
 		//Movil - ordenador
@@ -694,7 +762,7 @@ function moveObjects(){
 
 					posInitObjX = objetoActual.x;
 					posInitObjY = objetoActual.y;
-					actualizarCanvas();
+					actualizarCanvasFrontal();
 				}
 
 				//Objeto.x: dist x hasta el inicio de la carta
@@ -712,6 +780,7 @@ function moveObjects(){
 				checkCollision();
 				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
 				actualizarCanvas();
+				actualizarCanvasFrontal();
 			}
 			//	2Eliminar o no objeto
 			//	3Agregarlo o no a algun sitio
