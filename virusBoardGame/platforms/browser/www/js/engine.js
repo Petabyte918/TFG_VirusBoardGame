@@ -473,12 +473,15 @@ Engine = new function () {
 		}
 	}	
 	this.initPosCartasUsuario = function(){
-		//La posY sera 5px debajo de los cubos
-		var posY = posCubosDescarte[1].y + posCubosDescarte.heightCubo - 20;
-		//La altura de las cartas del usuario sera el espacio entre los cubos y los organos del usuario
-		var heightCarta = posOrganosJugadores[1].posCerebro[1] - posY - 70;
+
+		var distDisp = posCubosDescarte[1].y + posCubosDescarte.heightCubo;
+		//La altura de las cartas del usuario sera proporcional al espacio entre los cubos y los organos del usuario
+		var heightCarta = (posOrganosJugadores[1].posCerebro[1] - distDisp - 70) * 0.90;
 		//La anchura de las cartas del usuario esta en proporcion con (1536/1013)
 		var widthCarta = heightCarta * (1013/1536);
+
+		//La posY sera centrada entre los cubos y el espacio para los organos
+		var posY = ((distDisp - heightCarta) / 2) + posCubosDescarte[1].y;
 
 		var posCarta1 = [windowWidth/2 - widthCarta*1.5 - 10, posY];
 		var posCarta2 = [windowWidth/2 - widthCarta*0.5, posY];
