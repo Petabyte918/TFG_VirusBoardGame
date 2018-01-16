@@ -6,9 +6,10 @@ var enPartidaEsperando = false;
 var ayudaFuerte;
 var ayudaDebil;
 /** Establecimiento de la conexion con el servidor **/
-//socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+
 //Local
-var socket = io.connect('http://localhost:8080');
+//var socket = io.connect('http://localhost:8080');
 socket.on('Connection OK', function (data) {
    	console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
@@ -16,9 +17,13 @@ socket.on('Connection OK', function (data) {
    	actualizar_partidas();
 });
 /** -------------------- **/
+//Tam Pantalla
+windowWidth = window.innerWidth;
+windowHeight = window.innerHeight;
 
 function configInicial() {
 	console.log("configInicial()");
+
 	var autoLogin = localStorage.getItem('autoLogin');
 	if (autoLogin == "") {
 		document.form_settings_user.autoLoginName.checked = true;
@@ -64,10 +69,6 @@ function configInicial() {
 		document.form_settings_user.ayudaFuerteName.checked = false;
 		ayudaFuerte == false;
 	}
-
-	//Tam Pantalla
-	windowWidth = window.innerWidth;
-	windowHeight = window.innerHeight;
 
 	//Posicion Cuadros ayuda
 	reDimPartidaRapida();	
@@ -303,34 +304,36 @@ socket.on('register_user-OK', function(message) {
 socket.on('register_user-KO', function(message) {
 	console.log("register_user-KO: "+message);
 	document.getElementById("registerCorrection").innerHTML = "Usuario repetido";
-	document.form_register_user.registerName.value = "";
+	//Quitar ya que si por mala conexion llegan peticiones retrasadas, el campo queda vacio.
+	//Por register_user-OK ya se gestionado todo
+	//document.form_register_user.registerName.value = "";
 });
 
 function mostrarInstrucciones(pagina) {
-	console.log("containerInstrucciones()->pagina: "+pagina);
+	//console.log("containerInstrucciones()->pagina: "+pagina);
 	var pagina = pagina;
 
 	switch(pagina) {
-	case "pagina1":
+	case "container_instrucciones1":
 		$("#container_instrucciones1").css("display","block");
 		$("#container_instrucciones2").css("display","none");
 		break;
-	case "pagina2":
+	case "container_instrucciones2":
 		$("#container_instrucciones1").css("display","none");
 		$("#container_instrucciones2").css("display","block");
 		$("#container_instrucciones3").css("display","none");
 		break;
-	case "pagina3":
+	case "container_instrucciones3":
 		$("#container_instrucciones2").css("display","none");
 		$("#container_instrucciones3").css("display","block");
 		$("#container_instrucciones4").css("display","none");
 		break;
-	case "pagina4":
+	case "container_instrucciones4":
 		$("#container_instrucciones3").css("display","none");
 		$("#container_instrucciones4").css("display","block");
 		$("#container_instrucciones5").css("display","none");
 		break;
-	case "pagina5":
+	case "container_instrucciones5":
 		$("#container_instrucciones4").css("display","none");
 		$("#container_instrucciones5").css("display","block");
 		break;
@@ -346,11 +349,19 @@ function mostrarInstrucciones(pagina) {
 			$("#container_instrucciones3").css("display","none");
 			$("#container_instrucciones4").css("display","none");
 			$("#container_instrucciones5").css("display","none");
+
+			$("#container_botones").css("visibility","visible");
+			$("#cuadroPartidaRapida").css("visibility","visible");
 		} else {
+			pagina = 'container_instrucciones1';
+		
 			$("#container_instrucciones1").css("display","block");
-			reDimContainer_instrucciones();
+			$("#container_botones").css("visibility","hidden");
+			$("#cuadroPartidaRapida").css("visibility","hidden");
 		}
 	}
+	reDimContainer_instrucciones(pagina);
+
 }
 
 function form_settings() {
@@ -615,6 +626,9 @@ function leavePartida(idPartida) {
 /** -------------------- **/
 
 /** Interaccion con el servidor de la partida **/
+function pausarJuego(){
+	console.log("Pausar juego");
+}
 
 socket.on('prepararPartida', function(datos_iniciales){
 	console.log("prepararPartida");

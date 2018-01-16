@@ -2,7 +2,10 @@
 //Informacion que se intercambia con el servidor o se pide
 var usuario = "";
 var idPartida = "";
+var numTurno;
+var turno;
 var jugadores = [];
+var infoJugadores = {};
 var deckOfCards = [];
 var movJugador = "";
 
@@ -16,7 +19,7 @@ var posCubosDescarte = {};
 var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
 var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
-var finDescarte = false; //Indica si estoy en proceso de descarte
+var finDescarte = true; //Indica si estoy en proceso de descarte
 var descartes = {0: false, 1: false, 2: false}; //
 var transplante = {enProceso: false, organo1: {organo: "", numJug: -1}, organo2: {organo: "", numJug: -1}};
 
@@ -83,8 +86,140 @@ function prepararOrganosJugadoresCli(){
 	}
 }
 
+function getUsersSorted (optionRanquing, data) {
+	//Para no cargarnos data
+	var auxData = $.extend(true,{},data);
+	var sortedObj = {};
+	var objIndex = 0;
+
+	//Si hay menos usuarios que la cantidad de gente del ranquing que queremos mostrar
+	var keysObj = Object.keys(data);
+	var numUsers = keysObj.length;
+	var maxLoop = -1;
+
+	if (numUsers < 10) {
+		maxLoop = numUsers;
+	} else {
+		maxLoop = 10;
+	}
+
+	if (optionRanquing == "wins") {
+		var topWin = -1;
+		var win = -1;
+		for (var cont = 0; cont < maxLoop; cont++) {
+			for (var i in auxData) {
+				win = auxData[i].stats.wins;
+				if (win > topWin) {
+					topWin = win;
+					objIndex = i;
+				}
+			}
+			var auxObj = $.extend(true,{},auxData[objIndex]);
+			delete auxData[objIndex];
+			sortedObj[cont] = auxObj;
+			topWin = -1;
+			win = -1;
+			objIndex = 0;
+		}
+	}
+
+	if (optionRanquing == "percent") {
+		var topPercent = -1;
+		var percent = -1;
+		for (var cont = 0; cont < maxLoop; cont++) {
+			for (var i in auxData) {
+				percent = auxData[i].stats.wins / auxData[i].stats.total;
+				//Nos protegemos del Nah
+				if (isNaN(percent)) {
+					percent = 0;
+				}
+				if (percent > topPercent) {
+					topPercent = percent;
+					objIndex = i;
+				}
+			}
+			var auxObj = $.extend(true,{},auxData[objIndex]);
+			delete auxData[objIndex];
+			sortedObj[cont] = auxObj;
+			topPercent = -1;
+			percent = -1;
+			objIndex = 0;
+		}
+	}
+
+	if (optionRanquing == "total") {
+		var topTotal = -1;
+		var total = -1;
+		for (var cont = 0; cont < maxLoop; cont++) {
+			for (var i in auxData) {
+				total = auxData[i].stats.total;
+				if (total > topTotal) {
+					topTotal = total;
+					objIndex = i;
+				}
+			}
+			var auxObj = $.extend(true,{},auxData[objIndex]);
+			delete auxData[objIndex];
+			sortedObj[cont] = auxObj;
+			topTotal = -1;
+			total = -1;
+			objIndex = 0;
+		}
+	}
+
+	return sortedObj;
+}
+
 function gestionarMov(movJugador){
 
+}
+
+function abrirAyudaCartas (numCarta) {
+	console.log("abrirAyudaCartas()");
+	var cardType = cartasUsuario[numCarta].cardType;
+	var organType = cartasUsuario[numCarta].organType;
+
+	if (cardType == "tratamiento") {
+		switch (organType) {
+		case "error_medico":
+			$("#ayudaError_medico").css("display", "inline");
+			break;
+		case "guante_de_latex":
+			$("#ayudaGuante_de_latex").css("display", "inline");
+			break;
+		case "transplante":
+			$("#ayudaTransplante").css("display", "inline");
+			break;
+		case "ladron_de_organos":
+			$("#ayudaLadron_de_organos").css("display", "inline");
+			break;
+		case "contagio":
+			$("#ayudaContagio").css("display", "inline");
+			break;
+		default:
+			console.log("Abrir cartas imposible default");
+			break;
+		}
+	}
+}
+
+function cerrarAyudaCartas() {
+	console.log("cerrarAyudaCartas()");
+	$("#ayudaError_medico").css("display", "none");
+	$("#ayudaGuante_de_latex").css("display", "none");
+
+	//Solo si el transplante no esta en proceso
+	if (transplante.enProceso == false) {
+		$("#ayudaTransplante").css("display", "none");
+		transplante.organo1.organo = "";
+		transplante.organo1.numJug = -1;
+		transplante.organo2.organo = "";
+		transplante.organo2.numJug = -1;
+		renderOrganosTransplante();
+	}
+
+	$("#ayudaLadron_de_organos").css("display", "none");
+	$("#ayudaContagio").css("display", "none");
 }
 
 function takeCard(){
@@ -101,10 +236,8 @@ function takeCard(){
 Engine = new function () {
 	//Responsive canvas
 	this.initCanvas = function(){
-		windowWidth = window.innerWidth;
-		windowHeight = window.innerHeight;
 
-		//Canvas principal - cosas que se mueven (se borra continuamente)
+		//Canvas frontal - cosas que solo se mueven
 		cv = document.getElementById('canvas');
 		cv.width = windowWidth;
 		cv.height = windowHeight;
@@ -112,7 +245,16 @@ Engine = new function () {
 		cx.fillStyle = "rgba(0,0,255,0)";
 		cx.fillRect(0,0,windowWidth,windowHeight);
 
+		//Canvas apoyo - cosas que se mueven (es un apoyo del frontal)
+		cvAPO = document.getElementById('canvasAPO');
+		cvAPO.width = windowWidth;
+		cvAPO.height = windowHeight;
+		cxAPO = cvAPO.getContext('2d');
+		cxAPO.fillStyle = "rgba(0,0,255,0)";
+		cxAPO.fillRect(0,0,windowWidth,windowHeight);
+
 		//Canvas del medio - turnos y estado tablero (se borra a veces)
+		//Este canvas se actualiza junto con el reloj
 		cvMID = document.getElementById('canvasMID');
 		cvMID.width = windowWidth;
 		cvMID.height = windowHeight;
@@ -331,12 +473,15 @@ Engine = new function () {
 		}
 	}	
 	this.initPosCartasUsuario = function(){
-		//La posY sera 5px debajo de los cubos
-		var posY = posCubosDescarte[1].y + posCubosDescarte.heightCubo - 20;
-		//La altura de las cartas del usuario sera el espacio entre los cubos y los organos del usuario
-		var heightCarta = posOrganosJugadores[1].posCerebro[1] - posY - 70;
+
+		var distDisp = posCubosDescarte[1].y + posCubosDescarte.heightCubo;
+		//La altura de las cartas del usuario sera proporcional al espacio entre los cubos y los organos del usuario
+		var heightCarta = (posOrganosJugadores[1].posCerebro[1] - distDisp - 70) * 0.90;
 		//La anchura de las cartas del usuario esta en proporcion con (1536/1013)
 		var widthCarta = heightCarta * (1013/1536);
+
+		//La posY sera centrada entre los cubos y el espacio para los organos
+		var posY = ((distDisp - heightCarta) / 2) + posCubosDescarte[1].y;
 
 		var posCarta1 = [windowWidth/2 - widthCarta*1.5 - 10, posY];
 		var posCarta2 = [windowWidth/2 - widthCarta*0.5, posY];
@@ -345,10 +490,20 @@ Engine = new function () {
 
 	}
 	this.initFinDescartesButton = function() {
+		/** Colocacion Por cubos de descarte **/
+		var widthCubo = ((windowWidth / 6) * 0.65) - 20;
+
+		var posX = posCubosDescarte[4].x + widthCubo + 10;
+		var posY = posCubosDescarte[4].y - 5;
+
+		$("#descartes_boton").css({"top": posY, "left": posX});
+
+
+		/** Colocacion por cartas de usuario
 		var posX = posCartasUsuario[4][0] + posCartasUsuario[0] + 20;
 		var posY = posCartasUsuario[4][1] + 20;
 
-		$("#descartes_boton").css({"top": posY, "left": posX});
+		$("#descartes_boton").css({"top": posY, "left": posX});**/
 	}
 }
 

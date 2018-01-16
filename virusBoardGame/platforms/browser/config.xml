@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>¡Virus!</name>
+<widget id="com.virusRampage" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>¡VIRUS RAMPAGE!</name>
     <icon src="www/img/icon.png" />
     <description>
-        Web board game application
+        VIRUS RAMPAGE: UNA APLICACIÓN HÍBRIDA DESARROLLADA CON APACHE CORDOVA DEL JUEGO DE MESA VIRUS. Desarrollado solamente pon propositos educativos.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="daniel.rodriguezcabello@gmail.com">
+        Daniel Rodriguez Cabello
     </author>
     <content src="index.html" />
     <access origin="*" />

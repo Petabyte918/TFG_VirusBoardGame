@@ -10,7 +10,10 @@ function playSound(soundResource){
 	}
 }
 
-var cv, cx, objetoActual, touch = null;
+var objetoActual, touch = null;
+var posInitObjX, posInitObjY = 0;
+var cx, cv = null;
+var cxAPO, cvAPO = null;
 var cvMID, cxMID = null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
@@ -18,8 +21,9 @@ var windowWidth, windowHeight = 0;
 var objetos = [];
 var countDownSTO;
 var esperarMovSTO;
+var idDoneResizing;
 
-function renderBGCards (){
+function actualizarCanvasBG (){
 	var widthCarta = posCartasUsuario[0];
 	var heightCarta = posCartasUsuario[1];
 	var posCarta1 = posCartasUsuario[2];
@@ -166,17 +170,43 @@ function renderCountDown(time, oldDate){
 		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8);
 	}
 
-	countDownSTO = setTimeout(function(){ 
+	//Texto numTurnos (Eliminamos difuminado, color y algunas cosas)
+	cxMID.font = "25px Arial Bold";
+	cxMID.fillStyle = '#09303a';
+	cxMID.shadowBlur = 1;
+	cxMID.shadowColor = 'white';
+	cxMID.fillText("Turno "+numTurno, xCountDown - 1.3*radius, yCountDown - 45);
 
+	//Vemos si avisamos que nos hemos saltado el turno alguna vez
+	if (infoJugadores[usuario].turnosPerdidos > 0) {
+		//Solo ponemos la advertencia el siguiente turno al que hemos pasado
+		if (infoJugadores[usuario].turnoPerdida + jugadores.length >= numTurno) {
+			//¡Cuidado!: Seremos expulsados
+			//si perdemos el turno
+			//X veces mas
+			cxMID.font = "10px Arial Bold";
+			cxMID.fillStyle = 'red';
+			cxMID.fillText("¡Cuidado!: Seremos expulsados", xCountDown - 2*radius, yCountDown - 45 + radius*3 + 14);
+			cxMID.fillText("       si perdemos el turno", xCountDown - 2*radius, yCountDown - 45+ radius*3 +28);
+			cxMID.font = "15px Arial Bold";
+			var numVeces = infoJugadores[usuario].limiteTurnosPerdidos - infoJugadores[usuario].turnosPerdidos;
+			cxMID.fillText("      "+numVeces+" veces mas", xCountDown - 2*radius, yCountDown - 45+ radius*3 + 45);
+		}
+	}
+
+	countDownSTO = setTimeout(function(){ 
 		if (time > 0) {
 			renderCountDown(time, now);
 		} else {
+			console.log("renderCountDown: el tiempo ha llegado a cero");
+			//Y nos chivamos al servidor
+			comunicarTiempoAgotado();
 			//Por si se nos ha pasado el tiempo en medio de un descarte
 			fin_descarte();
 			//Por si se nos ha pasado el tiempo en medio de un transplante
 			fin_transplante();
 			movJugador = "tiempo_agotado";
-			//Y nos chivamos al servidor
+
 		}
 	}, 250);
 }
@@ -330,30 +360,35 @@ function actualizarCanvasMID(){
 					posOrgano.tipo = "cerebro";
 					posOrgano.x = posOrganosJugadores[pos].posCerebro[0];
 					posOrgano.y = posOrganosJugadores[pos].posCerebro[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaCerebro.png';
 					break;
 				case "corazon":
 					posOrgano.tipo = "corazon";
 					posOrgano.x = posOrganosJugadores[pos].posCorazon[0];
 					posOrgano.y = posOrganosJugadores[pos].posCorazon[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaCorazon.png';
 					break;
 				case "higado":
 					posOrgano.tipo = "higado";
 					posOrgano.x = posOrganosJugadores[pos].posHigado[0];
 					posOrgano.y = posOrganosJugadores[pos].posHigado[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaHigado.png';					
 					break;
 				case "hueso":
 					posOrgano.tipo = "hueso";
 					posOrgano.x = posOrganosJugadores[pos].posHueso[0];
 					posOrgano.y = posOrganosJugadores[pos].posHueso[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaHueso.png';					
 					break;
 				case "organoComodin":
 					posOrgano.tipo = "organoComodin";
 					posOrgano.x = posOrganosJugadores[pos].posComodin[0];
 					posOrgano.y = posOrganosJugadores[pos].posComodin[1];
+					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaComodin.png';	
 					break;
 				default:
@@ -457,31 +492,128 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	}
 }
 
+function renderOrganosTransplante () {
+	//Redimensionamos en relacion al tamaño de la carta
+	var heightCard = ($(".imagenCartaIzq").css("height")).replace("px","");;
+	var widthCard = (heightCard * (1013/1536)) + "px";
+	console.log("heightCard: "+heightCard);
+	console.log("widthCard: "+widthCard);
+
+	$(".imagenCartaIzq").css("width", widthCard);
+	$(".imagenCartaDcha").css("width", widthCard);
+	//Compruebo para dibujar organos
+	if (transplante.enProceso == true) {
+		switch(transplante.organo1.organo) {
+		case "corazon":
+			$(".imagenCartaIzq").css("background-image", "url('img/cardImagesLQ/organos/orgaCorazon.png')");
+			break;
+		case "hueso":
+			$(".imagenCartaIzq").css("background-image", "url('img/cardImagesLQ/organos/orgaHueso.png')");
+			break;
+		case "higado":
+			$(".imagenCartaIzq").css("background-image", "url('img/cardImagesLQ/organos/orgaHigado.png')");
+			break;
+		case "cerebro":
+			$(".imagenCartaIzq").css("background-image", "url('img/cardImagesLQ/organos/orgaCerebro.png')");
+			break;
+		default:
+			$(".imagenCartaIzq").css("background-image", "");
+			break;
+		}
+		switch(transplante.organo2.organo) {
+		case "corazon":
+			$(".imagenCartaDcha").css("background-image", "url('img/cardImagesLQ/organos/orgaCorazon.png')");
+			break;
+		case "hueso":
+			$(".imagenCartaDcha").css("background-image", "url('img/cardImagesLQ/organos/orgaHueso.png')");
+			break;
+		case "higado":
+			$(".imagenCartaDcha").css("background-image", "url('img/cardImagesLQ/organos/orgaHigado.png')");
+			break;
+		case "cerebro":
+			$(".imagenCartaDcha").css("background-image", "url('img/cardImagesLQ/organos/orgaCerebro.png')");
+			break;
+		default:
+			$(".imagenCartaDcha").css("background-image", "");
+			break;
+		}
+	}
+}
+
+function removeOrgano1Transplante() {
+	console.log("removeOrgano1Transplante()");
+	transplante.organo1.organo = "";
+	transplante.organo1.numJug = -1;
+	renderOrganosTransplante();
+}
+
+function removeOrgano2Transplante(){
+	console.log("removeOrgano2Transplante()");
+	transplante.organo2.organo = "";
+	transplante.organo2.numJug = -1;
+	renderOrganosTransplante();
+}
+
+//Ideas de mejora a futuro ->
+//1. Renderizar la imagen que se mueve y las otras a diferente ritmo -> DESCARTADA
+//2. Detectar la colision en el canvas de las cartas pero dibujar unicamente la que se mueve en otro sola ->Hecho
+//3. Tener las imagenes siempre cargadas y solo dibujarlas en el contexto. Y cuando robo cartas, cargarlas
+//4. Posibilidad de dibujar siempre pero borrar solo cada cierta diferencia de pixeles
+
+function actualizarCanvasFrontal() {
+	cx.clearRect(0, 0, windowWidth, windowHeight);
+	if (objetoActual != null) {
+		var img0 = new Image();
+		img0.src = objetoActual.src;
+		img0.onload = function(){
+			//console.log("objetos[0] :"+objetos[0]);
+			cx.drawImage(img0, objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
+		}
+	} else {
+
+	}
+}
+
 function actualizarCanvas(){
 	//console.log("Actualizar canvas");
-	cx.clearRect(0, 0, windowWidth, windowHeight);
+	cxAPO.clearRect(0, 0, windowWidth, windowHeight);
 	var img1 = new Image();
 	if ((objetos[0].src != "") && (descartes[0] == false)){
-		img1.src = objetos[0].src;
-		img1.onload = function(){
-			//console.log("objetos[0] :"+objetos[0]);
-			cx.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
+		//Tratamos de evitar parpadeos moviendo cartas
+		if (objetos[0] == objetoActual) {
+			console.log("Objeto 1 es el objeto actual");
+		} else {
+			img1.src = objetos[0].src;
+			img1.onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cxAPO.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
+			}
 		}
 	}
 	var img2 = new Image();
 	if ((objetos[1].src != "") && (descartes[1] == false)){
-		img2.src = objetos[1].src;
-		img2.onload = function(){
-			//console.log("objetos[1] :"+objetos[1]);
-			cx.drawImage(img2, objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
+		//Tratamos de evitar parpadeos moviendo cartas
+		if (objetos[1] == objetoActual) {
+			console.log("Objeto 2 es el objeto actual");
+		} else {
+			img2.src = objetos[1].src;
+			img2.onload = function(){
+				//console.log("objetos[1] :"+objetos[1]);
+				cxAPO.drawImage(img2, objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
+			}
 		}
 	}
 	var img3 = new Image();
 	if ((objetos[2].src != "") && (descartes[2] == false)){
-		img3.src = objetos[2].src;
-		img3.onload = function(){
-			//console.log("objetos[2] :"+objetos[2]);
-			cx.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
+		//Tratamos de evitar parpadeos moviendo cartas
+		if (objetos[2] == objetoActual) {
+			console.log("Objeto 3 es el objeto actual");
+		} else {
+			img3.src = objetos[2].src;
+			img3.onload = function(){
+				//console.log("objetos[2] :"+objetos[2]);
+				cxAPO.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
+			}
 		}
 	}
 }
@@ -513,18 +645,27 @@ function moveObjects(){
 	});
 
 	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-	    //console.log('Esto es un dispositivo móvil');
+	    console.log('Esto es un dispositivo movil');
 		cv.ontouchstart = function(event) {
 			touch = event.touches[0];
+			//console.log("Ontouchstart");
 			for (var i = 0; i < objetos.length; i++) {
 				if (objetos[i].x < touch.pageX
 				  && (objetos[i].width + objetos[i].x > touch.pageX)
 				  && objetos[i].y < touch.pageY
 				  && (objetos[i].height + objetos[i].y > touch.pageY)) {
+
 					objetoActual = objetos[i];
+					//Chequeamos cartas para divs de ayuda
+					var numCarta = objetoActual.numCarta;
+					abrirAyudaCartas(numCarta);
+
 					//console.log("Objeto "+i+" TOCADO");
 					inicioY = touch.pageY - objetos[i].y;
 					inicioX = touch.pageX - objetos[i].x;
+					//Optimizar renderizado
+					posInitObjX = objetoActual.x;
+					posInitObjY = objetoActual.y;
 					break;
 				}
 			}
@@ -532,24 +673,50 @@ function moveObjects(){
 
 		cv.ontouchmove = function(event) {
 			touch = event.touches[0];
+			//console.log("Ontouchmove");
+			//Solo actualizamos si movemos y hay algun objeto seleccionado y cada cierta diferencia de pixeles
 			if (objetoActual != null) {
 				objetoActual.x = touch.pageX - inicioX;
 				objetoActual.y = touch.pageY - inicioY;
-				actualizarCanvas();
+
+				//Calculamos la distancia adecuado de renderizado segun diferencia de pixeles
+				//Podriamos hacer un producto escalar de x e y pero...pasando!
+				var distRend = 5;
+
+				if ( (((posInitObjX - objetoActual.x) > distRend) || 
+					((objetoActual.x - posInitObjX) > distRend)) ||
+					(((posInitObjY - objetoActual.y) > distRend) || 
+					((objetoActual.y - posInitObjY) > distRend)) ) {
+
+					posInitObjX = objetoActual.x;
+					posInitObjY = objetoActual.y;
+					actualizarCanvasFrontal();
+				}
+
+				//Objeto.x: dist x hasta el inicio de la carta
+				//Touch.x: punto x de la pagina donde tocas
+				//InicioX: distancia desde el limite izq de la carta al punto donde tocas (FIJO al arrastrar)
+				//console.log("ObjetoActual.x: "+objetoActual.x);
+				//console.log("touch.pageX: "+touch.pageX);
+				//console.log("inicioX :"+inicioX);
 			}
 		}
 
 		cv.ontouchend = function(event) {
+			//console.log("Ontouchend");
 			if (objetoActual != null){
 				checkCollision();
-				objetoActual = null;
+				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
 				actualizarCanvas();
+				actualizarCanvasFrontal();
 			}
+			//	2Eliminar o no objeto
+			//	3Agregarlo o no a algun sitio
+			//4restablecer coordenadas iniciale
 			objetoActual = null;
 		}
 	} else {
-		//console.log('Esto es un navegador de ordenador');
-		//Movil - ordenador
+		console.log('Esto es un navegador de ordenador');
 		cv.onmousedown = function(event) {
 			touch = event;
 			//console.log("Onmousedown");
@@ -558,10 +725,18 @@ function moveObjects(){
 				  && (objetos[i].width + objetos[i].x > touch.pageX)
 				  && objetos[i].y < touch.pageY
 				  && (objetos[i].height + objetos[i].y > touch.pageY)) {
+
 					objetoActual = objetos[i];
+					//Chequeamos cartas para divs de ayuda
+					var numCarta = objetoActual.numCarta;
+					abrirAyudaCartas(numCarta);
+
 					//console.log("Objeto "+i+" TOCADO");
 					inicioY = touch.pageY - objetos[i].y;
 					inicioX = touch.pageX - objetos[i].x;
+					//Optimizar renderizado
+					posInitObjX = objetoActual.x;
+					posInitObjY = objetoActual.y;
 					break;
 				}
 			}
@@ -575,11 +750,27 @@ function moveObjects(){
 			if (objetoActual != null) {
 				objetoActual.x = touch.pageX - inicioX;
 				objetoActual.y = touch.pageY - inicioY;
+
+				//Calculamos la distancia adecuado de renderizado segun diferencia de pixeles
+				//Podriamos hacer un producto escalar de x e y pero...pasando!
+				var distRend = 5;
+
+				if ( (((posInitObjX - objetoActual.x) > distRend) || 
+					((objetoActual.x - posInitObjX) > distRend)) ||
+					(((posInitObjY - objetoActual.y) > distRend) || 
+					((objetoActual.y - posInitObjY) > distRend)) ) {
+
+					posInitObjX = objetoActual.x;
+					posInitObjY = objetoActual.y;
+					actualizarCanvasFrontal();
+				}
+
+				//Objeto.x: dist x hasta el inicio de la carta
+				//Touch.x: punto x de la pagina donde tocas
+				//InicioX: distancia desde el limite izq de la carta al punto donde tocas (FIJO al arrastrar)
 				//console.log("ObjetoActual.x: "+objetoActual.x);
 				//console.log("touch.pageX: "+touch.pageX);
-				//console.log("touch.pageY: "+touch.pageY);
 				//console.log("inicioX :"+inicioX);
-				actualizarCanvas();
 			}
 		}
 
@@ -589,6 +780,7 @@ function moveObjects(){
 				checkCollision();
 				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
 				actualizarCanvas();
+				actualizarCanvasFrontal();
 			}
 			//	2Eliminar o no objeto
 			//	3Agregarlo o no a algun sitio
@@ -683,7 +875,7 @@ function checkCardColision(colision) {
 	var organoColision = "";
 	var posX, posY;
 
-	console.log("checkCardColision() - posPolision: "+colision);
+	//console.log("checkCardColision() - posPolision: "+colision);
 
 	//He soltado la carta en una posicion que no corresponde a ningún jugador
 	if (posOrganosJugadores[colision] == undefined) {
@@ -749,20 +941,20 @@ function checkCardColision(colision) {
 		organoColision = "organoComodin";
 	}
 
-	console.log("Colision concreta en organo: "+organoColision);
+	//console.log("Colision concreta en organo: "+organoColision);
 
 	return organoColision;
 }
 
 function manejadorMov(posDestino, organoColision, numCarta) {
-	console.log("Pos destino del movimiento: "+posDestino);
+	//console.log("Pos destino del movimiento: "+posDestino);
 	//console.log("numCarta-typeOf(numcarta): "+numCarta+("-")+typeof(numCarta));
 
 	//Transplante-block. Si estamos en proceso de transplante no podemos hacer otra cosa hasta acabar
-	if (transplante.enProceso == true) {
-		console.log("Transplante en proceso");
-		return;
-	}
+	//if (transplante.enProceso == true) {
+		//console.log("Transplante en proceso");
+		//return;
+	//}
 
 	//Descarte
 	if (posDestino == 0) {
@@ -779,7 +971,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 
 	//He soltado la carta en una posicion que no corresponde a ningún jugador
 	if (jugPorPosicion[posDestino] == undefined) {
-		console.log("jugPorPosicion[posDestino] == "+jugPorPosicion[posDestino]);
+		//console.log("jugPorPosicion[posDestino] == "+jugPorPosicion[posDestino]);
 		return;
 	}
 
@@ -790,9 +982,9 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 
 	//Si es un organo y la pos es la mia, evaluo si no lo tengo
 	if ((cardType == "organo") && (posDestino == 1)) {
-		console.log("organosJugadoresCli[jugDestino][organType]: "+organosJugadoresCli[jugDestino][organType]);
-		console.log("jugDestino: "+jugDestino);
-		console.log("organtype: "+organType);
+		//console.log("organosJugadoresCli[jugDestino][organType]: "+organosJugadoresCli[jugDestino][organType]);
+		//console.log("jugDestino: "+jugDestino);
+		//console.log("organtype: "+organType);
 		if (organosJugadoresCli[jugDestino][organType] == ""){
 			organosJugadoresCli[jugDestino][organType] = "normal";
 			movJugador = "algo";
@@ -843,40 +1035,46 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	if (cardType == "tratamiento") {
 		//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 		switch (organType) {
-		case "error medico":
+		case "error_medico":
 			console.log("manejadorMov() - Error medico");
 			var auxCerebro = organosJugadoresCli[jugDestino].cerebro;
 			var auxCorazon = organosJugadoresCli[jugDestino].corazon;
 			var auxHigado = organosJugadoresCli[jugDestino].higado;
 			var auxHueso = organosJugadoresCli[jugDestino].hueso;
 			var auxOrganoComodin = organosJugadoresCli[jugDestino].organoComodin;
-			organosJugadoresCli[jugDestino].cerebro = organosJugadoresCli[1].cerebro;
-			organosJugadoresCli[jugDestino].corazon = organosJugadoresCli[1].corazon;
-			organosJugadoresCli[jugDestino].higado = organosJugadoresCli[1].higado;
-			organosJugadoresCli[jugDestino].hueso = organosJugadoresCli[1].hueso;
-			organosJugadoresCli[jugDestino].organoComodin = organosJugadoresCli[1].organoComodin;
-			organosJugadoresCli[1].cerebro = auxCerebro;
-			organosJugadoresCli[1].corazon = auxCorazon;
-			organosJugadoresCli[1].higado = auxHigado;
-			organosJugadoresCli[1].hueso = auxHueso;
-			organosJugadoresCli[1].organoComodin = auxOrganoComodin;
+			organosJugadoresCli[jugDestino].cerebro = organosJugadoresCli[usuario].cerebro;
+			organosJugadoresCli[jugDestino].corazon = organosJugadoresCli[usuario].corazon;
+			organosJugadoresCli[jugDestino].higado = organosJugadoresCli[usuario].higado;
+			organosJugadoresCli[jugDestino].hueso = organosJugadoresCli[usuario].hueso;
+			organosJugadoresCli[jugDestino].organoComodin = organosJugadoresCli[usuario].organoComodin;
+			organosJugadoresCli[usuario].cerebro = auxCerebro;
+			organosJugadoresCli[usuario].corazon = auxCorazon;
+			organosJugadoresCli[usuario].higado = auxHigado;
+			organosJugadoresCli[usuario].hueso = auxHueso;
+			organosJugadoresCli[usuario].organoComodin = auxOrganoComodin;
 
 			movJugador = "algo";
 			break;
-		case "guante de latex":
+		case "guante_de_latex":
 			console.log("manejadorMov() - Guante de latex");
 			movJugador = "guante_de_latex";
 			break;
 		case "transplante":
 			console.log("manejadorMov() - Transplante");
 			//Guardo el intercambio
-			if (transplante.organo1.jugDest1 == -1) {
+			if (transplante.organo1.numJug == -1) {
 				transplante.organo1.organo = organoColision;
 				transplante.organo1.numJug = jugDestino;
-			} else if (transplante.organo2.jugDest2 == -1) {
+				console.log("El organo para el cambio 1 es: "+organoColision);
+
+				transplante.enProceso = true;
+			} else if (transplante.organo2.numJug == -1) {
 				transplante.organo2.organo = organoColision;
 				transplante.organo2.numJug = jugDestino;
+				console.log("El organo para el cambio 2 es: "+organoColision);
+				transplante.enProceso = true;
 			}
+			renderOrganosTransplante();
 			//Evaluo si la jugada esta completa
 			if (((transplante.organo1.organo != "") && (transplante.organo1.numJug != -1)) &&
 				((transplante.organo2.organo != "") && (transplante.organo2.numJug != -1))) {
@@ -888,37 +1086,48 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				var estadoOrgano1 = organosJugadoresCli[jug1][organo1];
 				var estadoOrgano2 = organosJugadoresCli[jug2][organo2];
 
-				//Dos condiciones
+				//Dos condiciones para que sea legal
 				//1: que el tipo de organos sea el mismo (y distintos de "")
 				if (organo1 == organo2) {
-
+					console.log("Transplante organos iguales");
+					console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
+					console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
 					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
 					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
 					movJugador = "true";
 					fin_transplante();
 				}
 				//2: si no que los organos, para el cambio esten vacios
-				if ((organosJugadoresCli[jug1][organo2] == "")
+				else if ((organosJugadoresCli[jug1][organo2] == "")
 					&& (organosJugadoresCli[jug2][organo1] == "")) {
 
-					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
-					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
+					console.log("Transplante organos no iguales");
+					console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
+					console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
+					organosJugadoresCli[jug1][organo2] = estadoOrgano2;
+					organosJugadoresCli[jug2][organo1] = estadoOrgano1;
+					organosJugadoresCli[jug1][organo1] = "";
+					organosJugadoresCli[jug2][organo2] = "";
 					movJugador = "true";
 					fin_transplante();
+				} else {
+					console.log("El transplante no ha sido posible");
+					console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
+					console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
 				}
 			}
 			break;
-		case "ladron de organos":
+		case "ladron_de_organos":
 			console.log("manejadorMov() - Ladron de organos");
 			//Si no tengo el organo destino y se puede lo robo
-			if (organosJugadoresCli[1][organoColision] == "") {
+			if (organosJugadoresCli[usuario][organoColision] == "") {
 				var estadoOrgano = organosJugadoresCli[jugDestino][organoColision];
 				if ((estadoOrgano == "vacunado") ||
 					(estadoOrgano == "normal") ||
 					(estadoOrgano == "enfermo")) {
 
-					organosJugadoresCli[1][organoColision] = estadoOrgano;
-					organosJugadoresCli[jugDestino][organoColision] == "";
+					organosJugadoresCli[usuario][organoColision] = estadoOrgano;
+					organosJugadoresCli[jugDestino][organoColision] = "";
 					movJugador = "true";
 				}
 			}
@@ -934,10 +1143,10 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	}
 	
 	if (movJugador != "") {
-		console.log("Movimiento valido");
+		//console.log("Movimiento valido");
 		nuevaCarta(numCarta);
 	} else {
-		console.log("Movimiento no valido");
+		//console.log("Movimiento no valido");
 	}
 }
 
@@ -969,6 +1178,129 @@ function fin_transplante() {
 	transplante.organo2.numJug = -1;
 }
 
+function reDimPartidaRapida() {
+	//console.log("reDimPartidaRapida()");
+
+	//Partida Rapida
+	//Derecha de boton jugar
+	//var elemBotonJug = document.getElementById('boton_jugar');
+	//var posBotonJug = elemBotonJug.getBoundingClientRect();
+	//var posX = (Math.floor(posBotonJug.left + posBotonJug.width + 10)).toString()+"px";
+	//var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
+
+	//Izquierda de boton jugar
+	var elemBotonJug = document.getElementById('boton_jugar');
+	var posBotonJug = elemBotonJug.getBoundingClientRect();
+
+	$("#cuadroPartidaRapida").css("display", "block");
+	var elemPartidaRapida = document.getElementById('cuadroPartidaRapida');
+	var posPartRapida = elemPartidaRapida.getBoundingClientRect();
+
+	var posX = (Math.floor(posBotonJug.left - posPartRapida.width - 10)).toString()+"px";
+	var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
+
+	console.log("posX: "+posX+", posY: "+posY);
+	$("#cuadroPartidaRapida").css("left", posX);
+	$("#cuadroPartidaRapida").css("top", posY);
+}
+
+function reDimRanquingList() {
+	//console.log("reDimRanquingList()");
+	var elemBotonJug = document.getElementById('boton_jugar');
+	var posBotonJug = elemBotonJug.getBoundingClientRect();
+
+	console.log("windowWidth: "+windowWidth);
+
+	var widthRanquingList = (Math.floor(windowWidth - (posBotonJug.left + posBotonJug.width) - 40)).toString() + "px";
+
+	$("#ranquingList").css("width", widthRanquingList);
+}
+
+function reDimContainer_instrucciones(pagina) {
+	//Si redimensionamos, que le den, cerramos las instrucciones y que las habra por procedimiento normal
+	if (pagina == undefined) {
+		return;
+	}
+
+	var elemBotonInstrucciones = document.getElementById('instrucciones');
+	var posBotonInstrucciones = elemBotonInstrucciones.getBoundingClientRect();
+
+	var elemContainer_botones = document.getElementById('container_botones');
+	var posContainer_botones = elemContainer_botones.getBoundingClientRect();
+
+	var elemRegister = document.getElementById('register');
+	var posRegister = elemRegister.getBoundingClientRect();
+
+	//var widthContainer_intrucciones = (Math.floor(windowWidth - posContainer_botones.right - 40)).toString() + "px";
+	var widthContainer_intrucciones = (Math.floor(windowWidth / 2)).toString() + "px";
+	$("#container_instrucciones1").css("width", widthContainer_intrucciones);
+	$("#container_instrucciones2").css("width", widthContainer_intrucciones);
+	$("#container_instrucciones3").css("width", widthContainer_intrucciones);
+	$("#container_instrucciones4").css("width", widthContainer_intrucciones);
+	$("#container_instrucciones5").css("width", widthContainer_intrucciones);
+
+	var leftContainer_instrucciones = (Math.floor(posBotonInstrucciones.right + 10)).toString() + "px";
+	$("#container_instrucciones1").css("left", leftContainer_instrucciones);
+	$("#container_instrucciones2").css("left", leftContainer_instrucciones);
+	$("#container_instrucciones3").css("left", leftContainer_instrucciones);
+	$("#container_instrucciones4").css("left", leftContainer_instrucciones);
+	$("#container_instrucciones5").css("left", leftContainer_instrucciones);
+
+	var bottomContainer_instrucciones = (Math.floor(windowHeight - posBotonInstrucciones.bottom)).toString() + "px"; 
+	console.log("windowHeight: "+windowHeight);
+	$("#container_instrucciones1").css("bottom", bottomContainer_instrucciones);
+	$("#container_instrucciones2").css("bottom", bottomContainer_instrucciones);
+	$("#container_instrucciones3").css("bottom", bottomContainer_instrucciones);
+	$("#container_instrucciones4").css("bottom", bottomContainer_instrucciones);
+	$("#container_instrucciones5").css("bottom", bottomContainer_instrucciones);
+
+	var elemContainer_instrucciones = document.getElementById(pagina);
+	var posContainer_instrucciones = elemContainer_instrucciones.getBoundingClientRect();
+
+	if (posContainer_instrucciones.top < (posRegister.bottom + 5)) {
+		var newWidth = (Math.floor(windowWidth - posBotonInstrucciones.right - 50)).toString() + "px";
+		$("#"+pagina).css("width", newWidth);
+
+		/** En el caso de necesitar un segundo ajuste..pero meh
+		var elemContainer_instrucciones = document.getElementById(pagina);
+		var posContainer_instrucciones = elemContainer_instrucciones.getBoundingClientRect();
+		if (posContainer_instrucciones.top < (posRegister.bottom + 5)) {
+			var newWidth
+			var heightContainer_instrucciones = (Math.floor(posBotonInstrucciones.top - posRegister.bottom - 10)).toString() + "px"; 
+			$("#container_instrucciones1").css("max-height", heightContainer_instrucciones);
+			$("#container_instrucciones2").css("max-height", heightContainer_instrucciones);
+			$("#container_instrucciones3").css("max-height", heightContainer_instrucciones);
+			$("#container_instrucciones4").css("max-height", heightContainer_instrucciones);
+			$("#container_instrucciones5").css("max-height", heightContainer_instrucciones);
+		}**/
+	}
+}
+
+function doneResizing() {
+	console.log("Pantalla modificada");
+	windowWidth = window.innerWidth;
+	windowHeight = window.innerHeight;
+	
+	reDimPartidaRapida();
+	reDimRanquingList();
+	reDimContainer_instrucciones();
+
+	//Redimensionamos la configuracion inicial
+	/**
+	Engine.initCanvas();
+	Engine.initJugadores();
+	Engine.initPosOrganosJugadores();
+	Engine.initCubosDescarte();
+	Engine.initPosCartasUsuario();
+	Engine.initFinDescartesButton();
+
+	actualizarCanvasBG();
+	actualizarCanvasMID();
+	indicarTurno(turno);
+	actualizarCanvas();
+	actualizarCanvasFrontal();**/
+}
+
 $(document).ready(function(){
 	console.log("Document Ready");
 	console.log("Orientation before lock is: "+screen.orientation.type);
@@ -977,6 +1309,12 @@ $(document).ready(function(){
 
 	window.onload = function(){
 		console.log("Window onload");
+
+		//Controlamos el resizing de la ventana
+		$(window).resize(function() {
+		    clearTimeout(idDoneResizing);
+		    idDoneResizing = setTimeout(doneResizing, 50);	 
+		});
 	}
 })
 

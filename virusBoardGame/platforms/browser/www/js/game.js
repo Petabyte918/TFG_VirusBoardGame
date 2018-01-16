@@ -1199,7 +1199,7 @@ function reDimPartidaRapida() {
 	var posX = (Math.floor(posBotonJug.left - posPartRapida.width - 10)).toString()+"px";
 	var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
 
-	//console.log("posX: "+posX+", posY: "+posY);
+	console.log("posX: "+posX+", posY: "+posY);
 	$("#cuadroPartidaRapida").css("left", posX);
 	$("#cuadroPartidaRapida").css("top", posY);
 }
@@ -1216,7 +1216,11 @@ function reDimRanquingList() {
 	$("#ranquingList").css("width", widthRanquingList);
 }
 
-function reDimContainer_instrucciones() {
+function reDimContainer_instrucciones(pagina) {
+	//Si redimensionamos, que le den, cerramos las instrucciones y que las habra por procedimiento normal
+	if (pagina == undefined) {
+		return;
+	}
 
 	var elemBotonInstrucciones = document.getElementById('instrucciones');
 	var posBotonInstrucciones = elemBotonInstrucciones.getBoundingClientRect();
@@ -1224,27 +1228,52 @@ function reDimContainer_instrucciones() {
 	var elemContainer_botones = document.getElementById('container_botones');
 	var posContainer_botones = elemContainer_botones.getBoundingClientRect();
 
-	var widthContainer_intrucciones = (Math.floor(windowWidth - posContainer_botones.right - 40)).toString() + "px";
+	var elemRegister = document.getElementById('register');
+	var posRegister = elemRegister.getBoundingClientRect();
 
+	//var widthContainer_intrucciones = (Math.floor(windowWidth - posContainer_botones.right - 40)).toString() + "px";
+	var widthContainer_intrucciones = (Math.floor(windowWidth / 2)).toString() + "px";
 	$("#container_instrucciones1").css("width", widthContainer_intrucciones);
 	$("#container_instrucciones2").css("width", widthContainer_intrucciones);
 	$("#container_instrucciones3").css("width", widthContainer_intrucciones);
 	$("#container_instrucciones4").css("width", widthContainer_intrucciones);
 	$("#container_instrucciones5").css("width", widthContainer_intrucciones);
 
-	var leftContainer_instrucciones = (Math.floor(posContainer_botones.right + 10)).toString() + "px";
+	var leftContainer_instrucciones = (Math.floor(posBotonInstrucciones.right + 10)).toString() + "px";
 	$("#container_instrucciones1").css("left", leftContainer_instrucciones);
 	$("#container_instrucciones2").css("left", leftContainer_instrucciones);
 	$("#container_instrucciones3").css("left", leftContainer_instrucciones);
 	$("#container_instrucciones4").css("left", leftContainer_instrucciones);
 	$("#container_instrucciones5").css("left", leftContainer_instrucciones);
 
-	var bottomContainer_instrucciones = (Math.floor(windowHeight - posBotonInstrucciones.top + 10)).toString() + "px"; 
+	var bottomContainer_instrucciones = (Math.floor(windowHeight - posBotonInstrucciones.bottom)).toString() + "px"; 
+	console.log("windowHeight: "+windowHeight);
 	$("#container_instrucciones1").css("bottom", bottomContainer_instrucciones);
 	$("#container_instrucciones2").css("bottom", bottomContainer_instrucciones);
 	$("#container_instrucciones3").css("bottom", bottomContainer_instrucciones);
 	$("#container_instrucciones4").css("bottom", bottomContainer_instrucciones);
 	$("#container_instrucciones5").css("bottom", bottomContainer_instrucciones);
+
+	var elemContainer_instrucciones = document.getElementById(pagina);
+	var posContainer_instrucciones = elemContainer_instrucciones.getBoundingClientRect();
+
+	if (posContainer_instrucciones.top < (posRegister.bottom + 5)) {
+		var newWidth = (Math.floor(windowWidth - posBotonInstrucciones.right - 50)).toString() + "px";
+		$("#"+pagina).css("width", newWidth);
+
+		/** En el caso de necesitar un segundo ajuste..pero meh
+		var elemContainer_instrucciones = document.getElementById(pagina);
+		var posContainer_instrucciones = elemContainer_instrucciones.getBoundingClientRect();
+		if (posContainer_instrucciones.top < (posRegister.bottom + 5)) {
+			var newWidth
+			var heightContainer_instrucciones = (Math.floor(posBotonInstrucciones.top - posRegister.bottom - 10)).toString() + "px"; 
+			$("#container_instrucciones1").css("max-height", heightContainer_instrucciones);
+			$("#container_instrucciones2").css("max-height", heightContainer_instrucciones);
+			$("#container_instrucciones3").css("max-height", heightContainer_instrucciones);
+			$("#container_instrucciones4").css("max-height", heightContainer_instrucciones);
+			$("#container_instrucciones5").css("max-height", heightContainer_instrucciones);
+		}**/
+	}
 }
 
 function doneResizing() {
@@ -1257,6 +1286,7 @@ function doneResizing() {
 	reDimContainer_instrucciones();
 
 	//Redimensionamos la configuracion inicial
+	/**
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
@@ -1266,8 +1296,9 @@ function doneResizing() {
 
 	actualizarCanvasBG();
 	actualizarCanvasMID();
+	indicarTurno(turno);
 	actualizarCanvas();
-	actualizarCanvasFrontal();
+	actualizarCanvasFrontal();**/
 }
 
 $(document).ready(function(){

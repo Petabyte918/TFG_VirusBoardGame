@@ -353,7 +353,7 @@ input.botonCrearPartida {
 #instrucciones {
 	position: absolute;
     bottom: 1em;
-    right: 8px;
+    left: 8px;
 	background-repeat: no-repeat;
 	background-color: #2dc234;
 
@@ -389,7 +389,7 @@ input.botonCrearPartida {
 	/* Movemos ligeramente el botón hacia abajo */
 	position: absolute;
 	bottom: 0.93em;
-    right: 6px;
+    left: 10px;
 }
 
 #userNameContainer {
@@ -417,7 +417,8 @@ input.botonCrearPartida {
 	top: 80px;
 	left: 5px;
 	width: 25%;
-	height: 50%;
+	height: auto;
+	z-index: 4;
 
     background-color: rgba(128, 0, 0, 0.8);
     -webkit-transition-property: width, height; /* Safari */
@@ -552,6 +553,11 @@ input.botonCrearPartida {
 	left: 2px;
 }
 
+.ranquingIndices > #ranquingPos {
+	padding-left: 0.6em;
+    padding-right: 1em;
+}
+
 .ranquingIndices > .ranquingPos {
     padding-bottom: 0.90em;
 
@@ -560,13 +566,17 @@ input.botonCrearPartida {
 	box-shadow: 0px 0px 0px 0px rgb(0, 26, 0), inset 0 2px 2px rgba(0, 51, 0, .4);
 }
 
+.ranquingElems > .ranquingPos {
+	width: 0.8em;
+}
+
 .ranquingIndices > .ranquingPos:active, .ranquingIndices > .ranquingUsuario:active {
 	top: 0px;
 	left: 0px;
 }
 
 .ranquingIndices > .ranquingUsuario {
-    margin-left: 1.7em;
+    margin-left: 0.5em;
 
     padding-bottom: 0.90em;
 
@@ -587,6 +597,7 @@ input.botonCrearPartida {
 
 }
 
+/**
 .ranquingUsuario > .ranquingPrimero {
 	background-color: rgba(230, 172, 0, 0.8);
     -webkit-transition-property: width, height; 
@@ -643,6 +654,7 @@ input.botonCrearPartida {
 	-moz-box-shadow: inset 1px -2px 5px 4px #993300, 1px 1px 7px 2px rgba(0,0,0,0.75);
 	box-shadow: inset 1px -2px 5px 4px #993300, 1px 1px 7px 2px rgba(0,0,0,0.75);
 }
+**/
 
 .ranquingUsuario {
 	float: left;
@@ -673,6 +685,13 @@ input.botonCrearPartida {
     padding-top: 0.40em;
 	margin-right: 0.5em;
 }
+
+.ranquingUsuario, .ranquingWins, .ranquingTotal, .ranquingPercent {
+	padding-left: 0.3em;
+    padding-right: 0.3em;
+    width: auto;
+}
+
 /** End Ranquing **/
 
 #registerForm > form, #loginForm > form, #settingsForm > form {
@@ -701,6 +720,12 @@ input.botonCrearPartida {
 	color: red;
 	margin-top: 1em;
 	font-size: x-large;
+}
+
+#pauseButton {
+	width: 1em;
+	height: 1em;
+	border: 1px solid black;
 }
 
 /** sliders **/
@@ -868,6 +893,45 @@ input:checked + .slider:before {
 	font-weight: bold;
 }
 
+#iconoOrgano, #iconoVirus, #iconoMedicina, #iconoTratamiento {
+	float: left;
+    width: 50px;
+    margin: 5px;
+}
+
+#iconoColorOrganos {
+	float: right;
+	height: 50px;
+	margin: 5px
+
+	box-shadow: rgb(88,1,84) 0px 0px 5px 5px;;
+}
+
+
+h1.tituloEnumInstrucciones {
+	text-align: center;
+    font-size: larger;
+}
+
+h2.resaltadoEnumInstrucciones {
+    font-weight: bold;
+    text-align: center;
+    font-size: larger;
+    margin: 2px;
+}
+
+p.textoEnumInstrucciones {
+	float: left;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.iconoEnumInstrucciones {
+	float: left;
+	width: 50px;
+	margin: 5px;
+}
+
 /**  End divs de ayuda**/
 
 #cuadroPartidaRapida {
@@ -898,6 +962,7 @@ input:checked + .slider:before {
 /** Instrucciones **/
 #container_instrucciones1, #container_instrucciones2, #container_instrucciones3,
 #container_instrucciones4, #container_instrucciones5 {
+	/**font-family: 'PT Sans Caption', sans-serif;**/
 	position: absolute;
 	border: solid rgb(153, 0, 204) 5px;
     border-radius: 15px;
@@ -906,7 +971,9 @@ input:checked + .slider:before {
 	padding: 7px;
     font-size: 0.95em;
 
-    font: 'caption';
+    font-family: 'Lora', serif;
+
+    z-index: 50;
 }
 
 span.tittleSeccion1 {
@@ -1005,7 +1072,7 @@ div.instruccionesBack:active, div.instruccionesNext:active {
 
 div.numPagInstrucciones {
 	width: 20%;
-    display: inline;
+    display: inline-block;
 
     text-align: center;
     font-size: x-large;

@@ -7,17 +7,23 @@ var ayudaFuerte;
 var ayudaDebil;
 /** Establecimiento de la conexion con el servidor **/
 var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+
 //Local
-//var socket = io.connect('localhost:8080');
+//var socket = io.connect('http://localhost:8080');
 socket.on('Connection OK', function (data) {
    	console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
    	configInicial();
+   	actualizar_partidas();
 });
 /** -------------------- **/
+//Tam Pantalla
+windowWidth = window.innerWidth;
+windowHeight = window.innerHeight;
 
 function configInicial() {
 	console.log("configInicial()");
+
 	var autoLogin = localStorage.getItem('autoLogin');
 	if (autoLogin == "") {
 		document.form_settings_user.autoLoginName.checked = true;
@@ -63,6 +69,15 @@ function configInicial() {
 		document.form_settings_user.ayudaFuerteName.checked = false;
 		ayudaFuerte == false;
 	}
+
+	//Posicion Cuadros ayuda
+	reDimPartidaRapida();	
+
+	//Option Ranquing
+	var optionRanquing = localStorage.getItem('optionRanquing');
+	if (optionRanquing == undefined) {
+		localStorage.setItem('optionRanquing', 'wins');
+	}
 }
 //Comprobamos si hemos abandonado una partida en curso
 //checkMatchRunning();
@@ -82,6 +97,13 @@ function button_create() {
 	$("#leave").css("display", "none");
 	$("#userNameContainer").css("display", "none");
 	$("#register").css("display", "none");
+	$("#cuadroPartidaRapida").css("display", "none");
+	$("#instrucciones").css("display", "none");
+	$("#container_instrucciones1").css("display", "none");
+	$("#container_instrucciones2").css("display", "none");
+	$("#container_instrucciones3").css("display", "none");
+	$("#container_instrucciones4").css("display", "none");
+	$("#container_instrucciones5").css("display", "none");
 }
 
 function button_lista_partidas() {
@@ -99,10 +121,18 @@ function button_lista_partidas() {
 	$("#leave").css("display", "none");
 	$("#userNameContainer").css("display", "none");
 	$("#register").css("display", "none");
+	$("#cuadroPartidaRapida").css("display", "none");
+	$("#instrucciones").css("display", "none");
+	$("#container_instrucciones1").css("display", "none");
+	$("#container_instrucciones2").css("display", "none");
+	$("#container_instrucciones3").css("display", "none");
+	$("#container_instrucciones4").css("display", "none");
+	$("#container_instrucciones5").css("display", "none");
 }
 
 function backTo_InitMenu() {
 	//console.log("backTo_InitMenu()");
+	$("#cuadroPartidaRapida").css("display", "inline");
 	$("#container_botones").css("display", "inline");
 	$("#container_form_create").css("display", "none");
 	$("#lista_partidas").css("display", "none");
@@ -111,11 +141,18 @@ function backTo_InitMenu() {
 	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "inline");
 	$("#ranquing").css("display", "inline");
+	$("#cuadroFinPartida").css("display", "none");
+	$("#instrucciones").css("display", "inline");
 	var logged = localStorage.getItem("logged");
+	console.log("backTo_InitMenu()->logged: "+logged);
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
 		$("#userNameContainer").css("display", "block");
+		$("#login").css("display", "none");
+		$("#register").css("display", "none");
 	} else {
+		$("#leave").css("display", "none");
+		$("#userNameContainer").css("display", "none");
 		$("#login").css("display", "inline");
 		$("#register").css("display", "inline");
 	}
@@ -165,6 +202,7 @@ function button_ranquing () {
 	} else {
 		$("#settingsForm").css("display","none");
 		$("#ranquingList").css("display", "block");
+		reDimRanquingList();
 	}
 	socket.emit('request_users', {request: 'create_ranquing'});
 }
@@ -248,21 +286,83 @@ function form_register() {
 
 socket.on('register_user-OK', function(message) {
 	console.log("register_user-OK");
-	document.form_login_user.loginName.value = document.form_register_user.registerName.value;
-	document.form_login_user.loginPass.value = document.form_register_user.registerPass1.value;
+	var loginName = document.form_register_user.registerName.value;
+	var loginPass = document.form_register_user.registerPass1.value;
+	document.form_login_user.loginName.value = loginName;
+	document.form_login_user.loginPass.value = loginPass;
 	document.getElementById("registerCorrection").innerHTML = "";
 	document.form_register_user.registerName.value = "";
 	document.form_register_user.registerPass1.value = "";
 	document.form_register_user.registerPass2.value = "";
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "block");
+
+	//Autologin tras registrarnos correctamente
+	form_login();
 });
 
 socket.on('register_user-KO', function(message) {
 	console.log("register_user-KO: "+message);
 	document.getElementById("registerCorrection").innerHTML = "Usuario repetido";
-	document.form_register_user.registerName.value = "";
+	//Quitar ya que si por mala conexion llegan peticiones retrasadas, el campo queda vacio.
+	//Por register_user-OK ya se gestionado todo
+	//document.form_register_user.registerName.value = "";
 });
+
+function mostrarInstrucciones(pagina) {
+	//console.log("containerInstrucciones()->pagina: "+pagina);
+	var pagina = pagina;
+
+	switch(pagina) {
+	case "container_instrucciones1":
+		$("#container_instrucciones1").css("display","block");
+		$("#container_instrucciones2").css("display","none");
+		break;
+	case "container_instrucciones2":
+		$("#container_instrucciones1").css("display","none");
+		$("#container_instrucciones2").css("display","block");
+		$("#container_instrucciones3").css("display","none");
+		break;
+	case "container_instrucciones3":
+		$("#container_instrucciones2").css("display","none");
+		$("#container_instrucciones3").css("display","block");
+		$("#container_instrucciones4").css("display","none");
+		break;
+	case "container_instrucciones4":
+		$("#container_instrucciones3").css("display","none");
+		$("#container_instrucciones4").css("display","block");
+		$("#container_instrucciones5").css("display","none");
+		break;
+	case "container_instrucciones5":
+		$("#container_instrucciones4").css("display","none");
+		$("#container_instrucciones5").css("display","block");
+		break;
+	default:
+		if (($("#container_instrucciones1").css("display") == "block") ||
+			($("#container_instrucciones2").css("display") == "block") ||
+			($("#container_instrucciones3").css("display") == "block") ||
+			($("#container_instrucciones4").css("display") == "block") ||
+			($("#container_instrucciones5").css("display") == "block")) {
+
+			$("#container_instrucciones1").css("display","none");
+			$("#container_instrucciones2").css("display","none");
+			$("#container_instrucciones3").css("display","none");
+			$("#container_instrucciones4").css("display","none");
+			$("#container_instrucciones5").css("display","none");
+
+			$("#container_botones").css("visibility","visible");
+			$("#cuadroPartidaRapida").css("visibility","visible");
+		} else {
+			pagina = 'container_instrucciones1';
+		
+			$("#container_instrucciones1").css("display","block");
+			$("#container_botones").css("visibility","hidden");
+			$("#cuadroPartidaRapida").css("visibility","hidden");
+		}
+	}
+	reDimContainer_instrucciones(pagina);
+
+}
 
 function form_settings() {
 	console.log("form_settings()");
@@ -280,6 +380,7 @@ function form_settings() {
 }
 
 socket.on('create_ranquing', function(data) {
+	console.log("create_ranquing");
 	//User fields
 	//	{"usuario": data.usuario,
 	//	"pass": data.pass,
@@ -292,158 +393,43 @@ socket.on('create_ranquing', function(data) {
 	//		}
 	//	};
 
-	var clasificacion = "victorias";
-	var sortedObj = {};
-	var objIndex = 0;
-	//Si hay la longitud del objeto de usuario es menor que el numero de gente del ranquing que queremos mostrar
-	keysObj = Object.keys(data);
-	lengthObj = keysObj.length;
-	if (lengthObj < 10) {
-		maxLoop = lengthObj;
-	} else {
-		maxLoop = 10;
-	}
-	//Para no cargarnos data
-	var auxData = $.extend(true,{},data);
-	if (clasificacion == "victorias") {
-		var topWin = -1;
-		var win = -1;
-		for (var cont = 0; cont < maxLoop; cont++) {
-			for (var i in auxData) {
-				win = auxData[i].stats.wins;
-				if (win > topWin) {
-					topWin = win;
-					objIndex = i;
-				}
-			}
-			var auxObj = $.extend(true,{},auxData[objIndex]);
-			delete auxData[objIndex];
-			sortedObj[cont] = auxObj;
-			topWin = -1;
-			win = -1;
-			objIndex = 0;
-		}
-	} else if (clasificacion == "porcentaje") {
-		var topPercent = -1;
-		var percent = -1;
-		for (var cont = 0; cont < maxLoop; cont++) {
-			for (var i in auxData) {
-				percent = auxData[i].stats.wins / auxData[i].stats.total;
-				if (percent > topPercent) {
-					topPercent = percent;
-					objIndex = i;
-				}
-			}
-			var auxObj = $.extend(true,{},auxData[objIndex]);
-			delete auxData[objIndex];
-			sortedObj[cont] = auxObj;
-			topWin = -1;
-			win = -1;
-			objIndex = 0;
-		}
-	}
-	/** No comprobado para el caso de calcular por porcentaje
-	for (var j in sortedObj) {
-		console.log("Pos: "+j+" - Usuario: "+sortedObj[j].usuario+" - Victorias: "+ sortedObj[j].stats.wins);
-	}
-	**/
+	$(".ranquingElems").remove();
 
-	//Añado el html necesario
-	//Vaciamos la lista
-	$("#ranquingList").empty();
-	//Ponemos el titulo
-	$("#ranquingList").append(
-		'<label class="label_form1 tittle_ranquing">Clasificacion</label>'
-	);
-	//Ponemos el primero
-	if (sortedObj[0] != false) {
-		$("#ranquingList").append(
-			'<div class="ranquingUser">'+
-				'<a class="ranquingNormal ranquingPrimero">1.</a>'+
-				'<a class="ranquingUsuario">'+sortedObj[0].usuario+'</a>'+
-				'<a class="ranquingTotal">T: '+sortedObj[0].stats.total+'</a>'+
-				'<a class="ranquingVictorias">V: '+sortedObj[0].stats.wins+'</a>'+
-			'</div>'
-		);
-	}
-	//Ponemos el segundo
-	if (sortedObj[1] != false) {
-		$("#ranquingList").append(
-			'<div class="ranquingUser">'+
-				'<a class="ranquingNormal ranquingSegundo">2.</a>'+
-				'<a class="ranquingUsuario">'+sortedObj[1].usuario+'</a>'+
-				'<a class="ranquingTotal">T: '+sortedObj[1].stats.total+'</a>'+
-				'<a class="ranquingVictorias">G: '+sortedObj[1].stats.wins+'</a>'+
-			'</div>'
-		);
-	}
-	//Ponemos el tercero
-	if (sortedObj[2] != false) {
-		$("#ranquingList").append(
-			'<div class="ranquingUser">'+
-				'<a class="ranquingNormal ranquingTercero">3.</a>'+
-				'<a class="ranquingUsuario">'+sortedObj[2].usuario+'</a>'+
-				'<a class="ranquingTotal">T: '+sortedObj[2].stats.total+'</a>'+
-				'<a class="ranquingVictorias">G: '+sortedObj[2].stats.wins+'</a>'+
-			'</div>'
-		);
-	}
-	//Ponemos el resto
-	var pos = 0;
-	for (var i = 3; i < maxLoop; i++) {
-		pos = i + 1;
-		if (sortedObj[i] != false) {
-			$("#ranquingList").append(
-				'<div class="ranquingUser">'+
-					'<a class="ranquingNormal">'+pos+'</a>'+
-					'<a class="ranquingUsuario">'+sortedObj[i].usuario+'</a>'+
-					'<a class="ranquingTotal">T: '+sortedObj[i].stats.total+'</a>'+
-					'<a class="ranquingVictorias">G: '+sortedObj[i].stats.wins+'</a>'+
-				'</div>'
-			);
-		}
-	}
-	//Nos ponemos a nuestro usuario tb (si estamos logueados)
-	var logged = localStorage.getItem("logged");
-	if (logged == "true") {
-		//Buscamos en que posicion del objeto esta nuestro usuario
-		var loginName = localStorage.getItem('loginName');
-		var posUser = -1;
-		for (var j in data) {
-			if (data[j].usuario == loginName) {
-				posUser = j;
-				break;
-			}
-		}
-		//Buscamos en que posicion del ranquing estamos
-		var contOwnRanquing = 0;
-		if (clasificacion == "victorias") {
-			percent = data[posUser].stats.wins / data[posUser].stats.total;
-			for (var i in data) {
-				if (data[i].stats.wins < data[posUser].stats.wins) {
-					contOwnRanquing++;
-				}
-			}
-			ownRanquing = lengthObj - contOwnRanquing;
-		} else if (clasificacion == "porcentaje") {
-			for (var i in data) {
-				if ((data[i].stats.wins / data[i].stats.total) < percent) {
-					contOwnRanquing++;
-				}
-			}
-			ownRanquing = contOwnRanquing;
-		}
+	var optionRanquing = localStorage.getItem('optionRanquing');
+	console.log("optionRanquing: "+ optionRanquing);
 
-		$("#ranquingList").append(
-			'<div class="ranquingOwnUser">'+
-				'<a class="ranquingNormal">'+ownRanquing+'</a>'+
-				'<a class="ranquingUsuario">'+data[posUser].usuario+'</a>'+
-				'<a class="ranquingTotal">T: '+data[posUser].stats.total+'</a>'+
-				'<a class="ranquingVictorias">G: '+data[posUser].stats.wins+'</a>'+
-			'</div>'
-		);
+	var sortedObj = getUsersSorted(optionRanquing, data);
+	var maxLoop = (Object.keys(sortedObj)).length;
+
+
+	var html = "";
+	for (var i = 0; i < maxLoop; i++) {
+		var pos = i + 1;
+		var percent = (Math.round(((sortedObj[i].stats.wins / sortedObj[i].stats.total)*100))).toString()+"%";
+		//No mostramos porcentajes de jugadores que no han jugado partidas
+		//console.log("Percent: "+percent);
+		if (percent == "NaN%") {
+			//Los usuarios nuevos tambien aparecen
+			percent = "0%";
+			//continue;
+		}	
+		html+=
+		'<div class="ranquingElems ranquingLine">'+
+			'<a class="ranquingPos">'+pos+'</a>'+
+			'<a class="ranquingUsuario">'+sortedObj[i].usuario+'</a>'+
+			'<a class="ranquingPercent" onclick=sortRanquing("percent")>'+percent+'</a>'+
+			'<a class="ranquingWins" onclick=sortRanquing("wins")>'+sortedObj[i].stats.wins+'</a>'+
+			'<a class="ranquingTotal" onclick=sortRanquing("total")>'+sortedObj[i].stats.total+'</a>'+
+		'</div>';
 	}
+	$("#ranquingList").append(html);
+
 })
+
+function sortRanquing(option) {
+	localStorage.setItem('optionRanquing', option);
+	socket.emit('request_users', {request: 'create_ranquing'});
+}
 
 function form_createGame() {
 	//console.log("form_createGame()");
@@ -461,18 +447,33 @@ function form_createGame() {
 	return false;
 }
 
-socket.on('create_game-OK', function(data){
+socket.on('create_game-OK', function(data) {
 	//console.log("Recibido: create_game-OK");
 	idPartidaEsperando = data.idPartida;
 	enPartidaEsperando = true;
 	button_lista_partidas();
 })
 
-socket.on('create_game-KO', function(){
+socket.on('create_game-KO', function() {
 	//console.log("Recibido: create game-KO");
 	alert("Ya has creado o ya estas dentro de alguna partida");
 	button_lista_partidas();
 })
+
+socket.on('new_player_joined', function() {
+	console.log("new_player_joined");
+	actualizar_partidas();
+})
+
+socket.on('new_game_available', function() {
+	console.log("new_game_available");
+	actualizar_partidas();
+})
+
+socket.on('player_leaved', function() {
+	console.log("player_leaved");
+	actualizar_partidas();
+}); 
 
 function actualizar_partidas(){
 	//console.log("function actualizar_partidas()");
@@ -486,6 +487,29 @@ socket.on('actualizar_partidas', function(data){
 })
 
 function actualizar_listaPartidas() {
+	//Actualizamos partida rapida
+	var mejorDif = 9999;
+	var dif = 0;
+	var idPartida = "";
+	for (var id in lista_partidas) {
+		if (lista_partidas[id].estado == "esperando") {
+			dif = lista_partidas[id].gameNumPlayers - lista_partidas[id].gamePlayers.length;
+			if (dif < mejorDif) {
+				mejorDif = dif;
+				idPartida = id;
+			}
+		}
+	}
+	if (idPartida == "") {
+		document.getElementById("partidaRapidaNombre").innerHTML = "No hay partidas";
+		document.getElementById("partidaRapidaJugadores").innerHTML = "-----";
+	} else {
+		document.getElementById("partidaRapidaNombre").innerHTML = 
+			"-Partida: "+lista_partidas[idPartida].gameName;
+		document.getElementById("partidaRapidaJugadores").innerHTML = 
+			"-(Necesarios "+mejorDif+" jugadores)";
+	}
+
 	//console.log("function actualizar_listaPartidas()");
 	//Eliminamos primero los eventos asociados a los nodos hijos pues remove/empty no lo hace
 	//y en un mal escenario puedes tener millones de eventos disparandose cada vez
@@ -499,6 +523,7 @@ function actualizar_listaPartidas() {
 	$('.partida').attr('onClick','');
 	$('.partida').attr('onclick','');**/
 	
+	//Actualizamos la lista de partidas
 	$("#container_partidas").empty();
 	for (var id in lista_partidas) {
 		if (enPartidaEsperando == false) {
@@ -601,6 +626,9 @@ function leavePartida(idPartida) {
 /** -------------------- **/
 
 /** Interaccion con el servidor de la partida **/
+function pausarJuego(){
+	console.log("Pausar juego");
+}
 
 socket.on('prepararPartida', function(datos_iniciales){
 	console.log("prepararPartida");
@@ -621,7 +649,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initPosCartasUsuario();
 	Engine.initFinDescartesButton();
 
-	renderBGCards();
+	actualizarCanvasBG();
 
 	//Crea dos arrays para poder buscar informacion comodamente.
 	asignarJugadoresAPosiciones();
@@ -645,7 +673,9 @@ function esperarMovimiento(){
 				var newDatos_partida = {
 					idPartida: idPartida,
 					jugadores: jugadores,
+					infoJugadores: infoJugadores,
 					turno: turno,
+					numTurno : numTurno,
 					deckOfCardsPartida: deckOfCards,
 					organosJugadoresCli: organosJugadoresCli,
 					movJugador: movJugador
@@ -658,18 +688,20 @@ function esperarMovimiento(){
 				if (ganador != "") {
 					console.log("Hemos ganado");
 					var data = {
-						idPartida: idPartida
+						idPartida: idPartida,
+						infoJugadores: infoJugadores,
+						ganador: infoJugadores[ganador].nombre
 					}
 					socket.emit('terminarPartida', data);
 				} else {
 					//Si no hay ganador seguimos con el juego
-					console.log("Robamos carta y nuestro movimiento ha sido: "+movJugador);
-					//Esto de robar carta deberiamos comprobarlo.
-					takeCard();
+					console.log("Nuestro movimiento ha sido: "+movJugador);
 					var newDatos_partida = {
 						idPartida: idPartida,
 						jugadores: jugadores,
+						infoJugadores: infoJugadores,
 						turno: turno,
+						numTurno : numTurno,
 						deckOfCardsPartida: deckOfCards,
 						organosJugadoresCli: organosJugadoresCli,
 						movJugador: movJugador
@@ -681,7 +713,48 @@ function esperarMovimiento(){
 	}, 250);
 }
 
+function comunicarTiempoAgotado () {
+	datos = {
+		idPartida: idPartida,
+		turno: turno,
+		numTurno: numTurno
+	}
+	console.log("Avisamos al servidor que puede haber un jugador inactivo");
+	socket.emit('tiempo_agotado', datos);
+}
+
+socket.on('tiempo_agotadoOK', function() {
+	console.log("Servidor ha recibido correctamente el turno perdido. Retransmitimos avanzar turno");
+	//Avanzamos turno - NO -> En principio ya avanzamos turno en el servidor
+	/**var index = jugadores.indexOf(turno);
+	if (index < (jugadores.length -1)) {
+		index++;
+	} else {
+		index = 0;
+	}
+	turno = jugadores[index];
+	numTurno = numTurno++;**/
+
+	//Todos los demas jugadores aumentaran este turno, pero tenemos un "seguro" en socket.on('siguienteTurnoCli'
+	//pero si no, daria igual
+	infoJugadores[turno].turnosPerdidos++;
+	infoJugadores[turno].turnoPerdida = numTurno;
+	//Avisamos al servidor que retransmita el cambio de turno
+	var newDatos_partida = {
+		idPartida: idPartida,
+		jugadores: jugadores,
+		infoJugadores: infoJugadores,
+		turno: turno,
+		numTurno : numTurno,
+		deckOfCardsPartida: deckOfCards,
+		organosJugadoresCli: organosJugadoresCli,
+		movJugador: movJugador
+	};
+	socket.emit('siguienteTurnoSrv', newDatos_partida);
+});
+
 function checkPartidaTerminada(){
+	//Dos formas de ganar. Tener un cuerpo entero completo SANO...
 	var totalOrganosCompletos;
 	for (var jugador in organosJugadoresCli) {
 		totalOrganosCompletos = 0;
@@ -720,23 +793,73 @@ function checkPartidaTerminada(){
 			return jugador;
 		}
 	}
+	//...o ser el ultimo jugador que queda en la partida
+	if (jugadores.length == 1) {
+		return jugadores[0];
+	}
 	return "";
 }
 
 socket.on('siguienteTurnoCli', function(datos_partida){
 	//console.log("siguienteTurnoCli");
+
+	//Si el anterior jugador ha perdido el turno, llegaran uno o varios mensajes
+	//Usamos el primero y saltamos el resto
+	//Si el turno que teniamos guardado, es igual al turno que nos llega es que el turno ya ha sido procesado
+	if (turno == datos_partida.turno) {
+		console.log("Mensajes retrasados de pierde turno");
+		return;
+	}
+
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
+	cerrarAyudaCartas();
 
+	movJugador = datos_partida.movJugador;
+
+	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
+	//enviado por el servidor)
+	//Pendiente
+	representarMov(movJugador);
+
+	//Guante de Latex
+	//El jugador de la carta no se descarta
+	if ((movJugador == "guante_de_latex") && (usuario != turno)) {
+		objetos[0].src = "";
+		objetos[1].src = "";
+		objetos[2].src = "";
+		descartes[0] = true;
+		descartes[1] = true;
+		descartes[2] = true;
+		finDescarte = false;
+		actualizarCanvas();
+	}
+	//Pero solo le permitimos recuperar sus cartas en SU turno
+	if ((finDescarte == false) && (usuario == datos_partida.turno)) {
+		$("#descartes_boton").css("display","inline");
+	}
+
+	//Una vez representado el movimiento del jugador, borramos el mov
+	movJugador = "";
+
+	turno = datos_partida.turno;
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
-	turno = datos_partida.turno;
+    infoJugadores = datos_partida.infoJugadores,
+	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 
-	//Comprobamos si nos estamos reenchando a la partida
-	if (cartasUsuario.length <= 0){
-		handleReconect();
+	//Compruebo si me han echado de la partida
+	if (jugadores.indexOf(usuario) == -1) {
+		console.log("Hemos sido expulsado de la partida");
+		backTo_InitMenu();
+		return;
 	}
+
+	//Comprobamos si nos estamos reenchando a la partida
+	//if (cartasUsuario.length <= 0){
+	//	handleReconect();
+	//}
 
 	if (datos_partida.organosJugadoresCli != undefined){
 		for (var jugador in datos_partida.organosJugadoresCli){
@@ -747,23 +870,6 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 			organosJugadoresCli[jugador].organoComodin = datos_partida.organosJugadoresCli[jugador].organoComodin;
 		}
 	}
-
-	movJugador = datos_partida.movJugador;
-	//Ajustar sabiendo que el que usa la carta no se descarta
-	//Cuando usemos movJugador como un objeto se hará solo
-	if (movJugador == "guante_de_latex") {
-		objetos[0].src = "";
-		objetos[1].src = "";
-		objetos[2].src = "";
-		actualizarCanvas();
-	}
-
-	representarMov(movJugador);
-	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
-	//enviado por el servidor)
-	//Pendiente
-	//Una vez representado el movimiento del jugador, borramos el mov
-	movJugador = "";
 
 	checkCards();
 	indicarTurno(turno);
@@ -785,9 +891,34 @@ function checkCards() {
 }
 
 socket.on('terminarPartida', function(data){
+	//Reseteamos cosas
+	clearTimeout(countDownSTO);
+	clearTimeout(esperarMovSTO);
+
 	console.log("Terminar Partida");
 	console.log("Ganador: "+data.ganador);
-	button_lista_partidas();
+
+	var widthElem = parseInt(($("#cuadroFinPartida").css("width")).replace("px",""));
+	var heightElem = parseInt(($("#cuadroFinPartida").css("height")).replace("px",""));
+	var marginElem = parseInt(($("#cuadroFinPartida").css("margin")).replace("px",""));
+	var borderElem = parseInt(($("#cuadroFinPartida").css("border-width")).replace("px",""));
+	var paddingTopElem = parseInt(($("#cuadroFinPartida").css("padding-top")).replace("px",""));
+	var paddingLeftElem = parseInt(($("#cuadroFinPartida").css("padding-left")).replace("px",""));
+	/**console.log("widthElem: "+widthElem);
+	console.log("heightElem: "+heightElem);
+	console.log("marginElem: "+marginElem);
+	console.log("borderElem: "+borderElem);
+	console.log("paddingTopElem: "+paddingTopElem);
+	console.log("paddingLeftElem: "+paddingLeftElem);**/
+	var posX = (windowWidth - widthElem)/2 - marginElem - borderElem - paddingLeftElem;
+	var posY = (windowHeight - heightElem)/2 - marginElem - borderElem - paddingTopElem;
+	var posXStr = (Math.floor(posX)).toString()+"px";
+	var posYStr = (Math.floor(posY)).toString()+"px";
+	$("#cuadroFinPartida").css("left", posXStr);
+	$("#cuadroFinPartida").css("top", posYStr);
+
+	document.getElementById("jugadorFinPartida").innerHTML = data.ganador;
+	$("#cuadroFinPartida").css("display", "block");
 })
 /** -------------------- **/
 
