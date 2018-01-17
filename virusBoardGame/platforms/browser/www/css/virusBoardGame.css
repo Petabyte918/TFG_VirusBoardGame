@@ -152,11 +152,11 @@ a.num_jugadores {
 }
 
 #container_form_create {
-	position: absolute;
-	max-width: 50%;
-	top: 20%;
-	left: 25%;
-	z-index: 10;
+    position: absolute;
+    max-width: 70%;
+    top: 20%;
+    left: 18%;
+    z-index: 10;
 }
 
 .li-marginTop {
@@ -718,7 +718,7 @@ input.botonCrearPartida {
 }
 
 .bigButton {
-	height: 3em;
+	height: 2em;
     margin-top: 1em;
     margin-bottom: 1em;
     position: relative;
@@ -764,7 +764,10 @@ input.botonCrearPartida {
 
 #registerCorrection, #loginCorrection {
 	color: red;
-	margin-top: 1em;
+	margin-top: 0em;
+    margin-bottom: 1em;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
 	font-size: x-large;
 }
 

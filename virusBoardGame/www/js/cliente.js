@@ -5,6 +5,7 @@ var idPartidaEsperando = "";
 var enPartidaEsperando = false;
 var ayudaFuerte;
 var ayudaDebil;
+var countAlerts = 0;
 /** Establecimiento de la conexion con el servidor **/
 var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 
@@ -107,6 +108,7 @@ function button_create() {
 }
 
 function button_lista_partidas() {
+	countAlerts = 0;
 	//console.log("button_lista_partidas()");
 	$("#container_botones").css("display", "none");
 	$("#container_form_create").css("display", "none");
@@ -590,7 +592,10 @@ function joinPartida(idPartida , flag) {
 		});
 		socket.on('join_game-KO', function(){
 			//console.log("join_game-KO");
-			alert("Servidor alerta que no ha sido posible unirse a la partida. Intentalo de nuevo");
+			if (countAlerts == 0) {
+				countAlerts++;
+				alert("Servidor alerta que no ha sido posible unirse a la partida. Intentalo de nuevo");
+			}
 			button_lista_partidas();
 		});
 	}

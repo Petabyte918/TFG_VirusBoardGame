@@ -152,11 +152,11 @@ a.num_jugadores {
 }
 
 #container_form_create {
-	position: absolute;
-	max-width: 50%;
-	top: 20%;
-	left: 25%;
-	z-index: 10;
+    position: absolute;
+    max-width: 70%;
+    top: 20%;
+    left: 18%;
+    z-index: 10;
 }
 
 .li-marginTop {
