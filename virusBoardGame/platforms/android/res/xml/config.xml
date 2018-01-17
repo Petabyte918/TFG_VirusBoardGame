@@ -7,7 +7,7 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
-    <name>¡VIRUS RAMPAGE!</name>
+    <name>¡VIRUS!</name>
     <icon src="www/img/icon.png" />
     <description>
         VIRUS RAMPAGE: UNA APLICACIÓN HÍBRIDA DESARROLLADA CON APACHE CORDOVA DEL JUEGO DE MESA VIRUS. Desarrollado solamente pon propositos educativos.
