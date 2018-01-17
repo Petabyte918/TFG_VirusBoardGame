@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.virusRampage" version="1.0.0">
-    <name>¡VIRUS RAMPAGE!</name>
+    <name>¡VIRUS!</name>
     <icon src="www/img/icon.png" />
     <description>
         VIRUS RAMPAGE: UNA APLICACIÓN HÍBRIDA DESARROLLADA CON APACHE CORDOVA DEL JUEGO DE MESA VIRUS. Desarrollado solamente pon propositos educativos.

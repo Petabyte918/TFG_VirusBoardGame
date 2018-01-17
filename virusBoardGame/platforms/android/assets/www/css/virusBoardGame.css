@@ -417,7 +417,7 @@ input.botonCrearPartida {
 	top: 80px;
 	left: 5px;
 	width: 25%;
-	height: 50%;
+	height: auto;
 	z-index: 4;
 
     background-color: rgba(128, 0, 0, 0.8);

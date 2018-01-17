@@ -25,10 +25,16 @@ body {
 
 div {
 	cursor: pointer;
+	/** Disable Blue Highlight when Touch/Press object with Cursor:Pointer **/
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-tap-highlight-color: transparent;
 }
 
 input {
 	cursor: pointer;
+	/** Disable Blue Highlight when Touch/Press object with Cursor:Pointer **/
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-tap-highlight-color: transparent;
 }
 
 input[type=text], input[type=password] {
