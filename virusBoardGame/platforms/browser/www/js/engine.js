@@ -505,5 +505,15 @@ Engine = new function () {
 
 		$("#descartes_boton").css({"top": posY, "left": posX});**/
 	}
+	this.initPauseButton = function() {
+		$("#pauseButton").css("visibility","visible");
+
+		var left = (Math.floor(posCubosDescarte[1].x - 50)).toString()+"px";
+		//Algo hardCoding. El 84 es la altura del elemento..claro, que tp se va a cambiar y estas hasta los huevos
+		var top = (Math.floor(windowHeight - 84 - 30)).toString()+"px";
+
+		$("#pauseButton").css("left", left);
+		$("#pauseButton").css("top", top);
+	}
 }
 

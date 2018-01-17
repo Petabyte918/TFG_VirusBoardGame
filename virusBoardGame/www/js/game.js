@@ -110,7 +110,7 @@ function degToRad(degree) {
 function renderCountDown(time, oldDate){
 	//console.log("renderCountDown()");
 	var radius = 30;
-	var xCountDown = posCubosDescarte[1].x -radius;
+	var xCountDown = posCubosDescarte[1].x - radius;
 	var yCountDown = posCubosDescarte[1].y + radius*6;
 
 	//Cada vez que cambiemos el tiempo del cronometro hay que ajustar el valor

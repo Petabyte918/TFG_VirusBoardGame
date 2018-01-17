@@ -5,7 +5,7 @@ var idPartidaEsperando = "";
 var enPartidaEsperando = false;
 var ayudaFuerte;
 var ayudaDebil;
-var countAlerts = 0;
+var gamePaused = "false";
 /** Establecimiento de la conexion con el servidor **/
 //var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 
@@ -630,9 +630,6 @@ function leavePartida(idPartida) {
 /** -------------------- **/
 
 /** Interaccion con el servidor de la partida **/
-function pausarJuego(){
-	console.log("Pausar juego");
-}
 
 socket.on('prepararPartida', function(datos_iniciales){
 	console.log("prepararPartida");
@@ -652,6 +649,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initCubosDescarte();
 	Engine.initPosCartasUsuario();
 	Engine.initFinDescartesButton();
+	Engine.initPauseButton();
 
 	actualizarCanvasBG();
 
@@ -881,6 +879,38 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	esperarMovimiento(); //->setTimeOut
 	renderCountDown(30, new Date()); //->setTimeOut
 });
+
+function pauseGame(){
+	console.log("pauseGame()");
+	var datos_partida = {
+		idPartida: idPartida
+	};
+
+	if (gamePaused == "false") {
+		socket.emit('pauseGame', datos_partida);
+		//Cambiamos color
+		$("#pauseButton").css("background-color","red");
+	} else if (gamePaused == "true") {
+		socket.emit('continueGame', datos_partida);
+		//Cambiamos color
+		$("#pauseButton").css("background-color","green");
+	}
+
+}
+
+socket.on('pauseGame', function(datos_partida) {
+	console.log("socket.on->pauseGame");
+	gamePaused = "true"; 
+	clearTimeout(countDownSTO); //->setTimeOut
+	clearTimeout(esperarMovSTO); //->setTimeOut
+})
+
+socket.on('contineGame', function(datos_partida) {
+	console.log("socket.on->continueGame");	
+	gamePaused = "false";
+	esperarMovimiento(); //->setTimeOut
+	renderCountDown(30, new Date()); //->setTimeOut
+})
 
 function representarMov(movJugador) {
 

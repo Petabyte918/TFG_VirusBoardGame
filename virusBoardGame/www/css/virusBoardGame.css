@@ -1009,16 +1009,18 @@ p.textoEnumInstrucciones {
 }
 
 #pauseButton {
+	visibility: hidden;
+	z-index: 50;
 	top: 10em;
     left: 10em;
     position: absolute;
 
 	border: solid black 2px;
-	height: 5em;
-	width: 5em;
+	height: 84px;
+	width: 84px;
 
 	background-repeat: no-repeat;
-	background-color: red;
+	background-color: green;
 	background-image: url(img/pauseButton1.png);
 	background-size: cover;
 
@@ -1029,18 +1031,10 @@ p.textoEnumInstrucciones {
 }
 
 #pauseButton:active {
-	top: 10em;
-    left: 10em;
-    position: absolute;
+	height: 82px;
+	width: 82px;
 
-	border: solid black 2px;
-	height: 4.8em;
-	width: 4.8em;
-
-	background-repeat: no-repeat;
-	background-color: red;
-	background-image: url(img/pauseButton1.png);
-	background-size: cover;
+	background-color: white;
 
 	-webkit-box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
     -moz-box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
