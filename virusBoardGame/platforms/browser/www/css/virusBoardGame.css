@@ -473,9 +473,9 @@ input.botonCrearPartida {
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
 	border-radius: 8px;
-	-webkit-box-shadow: inset 0px 0px 8px 4px #4d0000, 1px 1px 10px 5px rgba(0,0,0,0.75);
-	-moz-box-shadow: inset 0px 0px 8px 4px #4d0000, 1px 1px 10px 5px rgba(0,0,0,0.75);
-	box-shadow: inset 0px 0px 0px 4px #4d0000, 1px 1px 10px 5px rgba(0,0,0,0.75);
+	-webkit-box-shadow: inset 0px 0px 8px 4px #4d0000, 1px 1px 2px 3px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 8px 4px #4d0000, 1px 1px 2px 3px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 0px 4px #4d0000, 1px 1px 2px 3px rgba(0,0,0,0.75);
 
 	font-family: 'Oleo Script', Arial, sans-serif;
 	color: #fff;
@@ -1006,6 +1006,46 @@ p.textoEnumInstrucciones {
     font-size: small;
     display: block;
     text-align: -webkit-left;
+}
+
+#pauseButton {
+	top: 10em;
+    left: 10em;
+    position: absolute;
+
+	border: solid black 2px;
+	height: 5em;
+	width: 5em;
+
+	background-repeat: no-repeat;
+	background-color: red;
+	background-image: url(img/pauseButton1.png);
+	background-size: cover;
+
+	-webkit-box-shadow: 2px 4px 1px 1px #197b1d, 0 5px 10px rgba(0, 0, 0, .4);
+    -moz-box-shadow: 2px 4px 1px 1px #197b1d, 0 5px 10px rgba(0, 0, 0, .4);
+    box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 3px rgba(0, 0, 0, 0.9);
+    border-radius: 10em;
+}
+
+#pauseButton:active {
+	top: 10em;
+    left: 10em;
+    position: absolute;
+
+	border: solid black 2px;
+	height: 4.8em;
+	width: 4.8em;
+
+	background-repeat: no-repeat;
+	background-color: red;
+	background-image: url(img/pauseButton1.png);
+	background-size: cover;
+
+	-webkit-box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
+    -moz-box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
+    box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
+    border-radius: 10em;
 }
 
 /** Instrucciones **/

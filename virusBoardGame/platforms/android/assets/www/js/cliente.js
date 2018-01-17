@@ -7,10 +7,10 @@ var ayudaFuerte;
 var ayudaDebil;
 var countAlerts = 0;
 /** Establecimiento de la conexion con el servidor **/
-var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+//var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 
 //Local
-//var socket = io.connect('http://localhost:8080');
+var socket = io.connect('http://localhost:8080');
 socket.on('Connection OK', function (data) {
    	console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
@@ -108,7 +108,6 @@ function button_create() {
 }
 
 function button_lista_partidas() {
-	countAlerts = 0;
 	//console.log("button_lista_partidas()");
 	$("#container_botones").css("display", "none");
 	$("#container_form_create").css("display", "none");
@@ -590,12 +589,10 @@ function joinPartida(idPartida , flag) {
 			enPartidaEsperando = true;
 			button_lista_partidas();
 		});
-		socket.on('join_game-KO', function(){
-			//console.log("join_game-KO");
-			if (countAlerts == 0) {
-				countAlerts++;
-				alert("Servidor alerta que no ha sido posible unirse a la partida. Intentalo de nuevo");
-			}
+		//Muy tricky. Con socket.once solo escuchamos el primer evento que llegue de ese tipo
+		socket.once('join_game-KO', function(){
+			console.log("join_game-KO");
+			alert("Servidor alerta que no ha sido posible unirse a la partida. Intentalo de nuevo");
 			button_lista_partidas();
 		});
 	}

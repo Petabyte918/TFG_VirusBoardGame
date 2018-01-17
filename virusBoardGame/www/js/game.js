@@ -1211,7 +1211,7 @@ function reDimRanquingList() {
 
 	console.log("windowWidth: "+windowWidth);
 
-	var widthRanquingList = (Math.floor(windowWidth - (posBotonJug.left + posBotonJug.width) - 40)).toString() + "px";
+	var widthRanquingList = (Math.floor(windowWidth - posBotonJug.right - 15)).toString() + "px";
 
 	$("#ranquingList").css("width", widthRanquingList);
 }
