@@ -412,6 +412,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	var widthOrgano = posOrgano.width;
 	var heightOrgano = posOrgano.height;
 	var src = posOrgano.src;
+	var posJug = posOrgano.posJug;
 
 	//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 	//Marco negro en fondo blanco
@@ -423,7 +424,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 
 	}
 
-	//Marco negro en fondo blanco y encima la imagen
+	//Marco negro (en fondo blanco) y encima la imagen->como va la imagen encima no es necesario el fondo blanco
 	if(estadoOrgano == "normal"){
 		cxMID.fillStyle = 'black';
 		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
@@ -431,9 +432,21 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
-		img1.onload = function(){
-			//console.log("objetos[0] :"+objetos[0]);
-			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
+		if (posJug == 2) {
+			img1.onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cxMID.save();
+				cxMID.translate(x, y);
+				cxMID.translate(widthOrgano, 0);
+				cxMID.rotate(Math.PI/2);
+				cxMID.drawImage(img1, 0, 0, heightOrgano, widthOrgano); //Ojo que invertimos dimensiones
+				cxMID.restore();
+			}
+		} else {
+			img1.onload = function(){
+				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+			}
 		}
 	}
 
@@ -445,9 +458,21 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
-		img1.onload = function(){
-			//console.log("objetos[0] :"+objetos[0]);
-			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
+		if (posJug == 2) {
+			img1.onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cxMID.save();
+				cxMID.translate(x, y);
+				cxMID.translate(widthOrgano, 0);
+				cxMID.rotate(Math.PI/2);
+				cxMID.drawImage(img1, 0, 0, heightOrgano, widthOrgano); //Ojo que invertimos dimensiones
+				cxMID.restore();
+			}
+		} else {
+			img1.onload = function(){
+				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+			}
 		}
 	}
 
@@ -459,9 +484,21 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
-		img1.onload = function(){
-			//console.log("objetos[0] :"+objetos[0]);
-			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
+		if (posJug == 2) {
+			img1.onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cxMID.save();
+				cxMID.translate(x, y);
+				cxMID.translate(widthOrgano, 0);
+				cxMID.rotate(Math.PI/2);
+				cxMID.drawImage(img1, 0, 0, heightOrgano, widthOrgano); //Ojo que invertimos dimensiones
+				cxMID.restore();
+			}
+		} else {
+			img1.onload = function(){
+				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+			}
 		}
 	}
 
@@ -473,16 +510,41 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
-		img1.onload = function(){
-			//console.log("objetos[0] :"+objetos[0]);
-			cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
+		if (posJug == 2) {
+			img1.onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cxMID.save();
+				cxMID.translate(x, y);
+				cxMID.translate(widthOrgano, 0);
+				cxMID.rotate(Math.PI/2);
+				cxMID.drawImage(img1, 0, 0, heightOrgano, widthOrgano); //Ojo que invertimos dimensiones
+				cxMID.restore();
+			}
 			var img2 = new Image();
 			img2.src = "img/cardImagesLQ/cadenas.png";
 			img2.onload = function(){
+				cxMID.save();
+				cxMID.translate(x, y);
+				cxMID.translate(widthOrgano, 0);
+				cxMID.rotate(Math.PI/2);
+				cxMID.drawImage(img2, -5, -5, heightOrgano+10, widthOrgano+10);
+				cxMID.restore();
+			}
+		} else {
+			img1.onload = function(){
 				//console.log("objetos[0] :"+objetos[0]);
-				cxMID.drawImage(img2, x-5, y-5, widthOrgano+10, heightOrgano+10);
+				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+				var img2 = new Image();
+				img2.src = "img/cardImagesLQ/cadenas.png";
+				img2.onload = function(){
+					//console.log("objetos[0] :"+objetos[0]);
+					cxMID.drawImage(img2, x-5, y-5, widthOrgano+10, heightOrgano+10);
+				}
 			}
 		}
+
+
 		/**
 		cxMID.globalAlpha = 0.2;
 		cxMID.fillStyle = 'blue';

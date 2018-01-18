@@ -283,16 +283,16 @@ Engine = new function () {
 		var pos1, pos2, pos3, pos4, pos5, pos6 = [];
 		switch(jugadores.length){
 		case 2:
-			posJugadores = [1, 4];
+			posJugadores = [1, 2];
 			break;
 		case 3:
-			posJugadores = [1, 2, 6]; //o [1, 3, 5];
+			posJugadores = [1, 3, 5]; //o [1, 2, 6];
 			break;
 		case 4:
-			posJugadores = [1, 2, 4, 6];
+			posJugadores = [1, 3, 4, 5];
 			break;
 		case 5:
-			posJugadores = [1, 2, 3, 5, 6];
+			posJugadores = [1, 2, 3, 4, 5];
 			break;
 		case 6:
 			posJugadores = [1, 2, 3, 4, 5, 6];

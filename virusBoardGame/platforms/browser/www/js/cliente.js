@@ -888,19 +888,17 @@ function pauseGame(){
 
 	if (gamePaused == "false") {
 		socket.emit('pauseGame', datos_partida);
-		//Cambiamos color
-		$("#pauseButton").css("background-color","red");
 	} else if (gamePaused == "true") {
 		socket.emit('continueGame', datos_partida);
-		//Cambiamos color
-		$("#pauseButton").css("background-color","green");
-	}
 
+	}
 }
 
 socket.on('pauseGame', function(datos_partida) {
 	console.log("socket.on->pauseGame");
-	gamePaused = "true"; 
+	gamePaused = "true";
+	//Cambiamos color
+	$("#pauseButton").css("background-color","red");
 	clearTimeout(countDownSTO); //->setTimeOut
 	clearTimeout(esperarMovSTO); //->setTimeOut
 })
@@ -908,6 +906,8 @@ socket.on('pauseGame', function(datos_partida) {
 socket.on('contineGame', function(datos_partida) {
 	console.log("socket.on->continueGame");	
 	gamePaused = "false";
+	//Cambiamos color
+	$("#pauseButton").css("background-color","green");
 	esperarMovimiento(); //->setTimeOut
 	renderCountDown(30, new Date()); //->setTimeOut
 })
