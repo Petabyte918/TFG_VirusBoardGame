@@ -670,7 +670,6 @@ function esperarMovimiento(){
 			//console.log("Esperando movimiento");
 			esperarMovimiento();
 		} else {
-
 			if (movJugador == "tiempo_agotado") {
 				var newDatos_partida = {
 					idPartida: idPartida,
@@ -692,7 +691,8 @@ function esperarMovimiento(){
 					var data = {
 						idPartida: idPartida,
 						infoJugadores: infoJugadores,
-						ganador: infoJugadores[ganador].nombre
+						ganador: infoJugadores[ganador].nombre,
+						organosJugadoresCli: organosJugadoresCli
 					}
 					socket.emit('terminarPartida', data);
 				} else {
@@ -808,6 +808,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	//Si el anterior jugador ha perdido el turno, llegaran uno o varios mensajes
 	//Usamos el primero y saltamos el resto
 	//Si el turno que teniamos guardado, es igual al turno que nos llega es que el turno ya ha sido procesado
+	//Si hubiera problemas, subir mas arriba esta instruccion turno = datos_partida.turno;
 	if (turno == datos_partida.turno) {
 		console.log("Mensajes retrasados de pierde turno");
 		return;
@@ -876,6 +877,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	checkCards();
 	indicarTurno(turno);
 
+	//Conforman el hilo de ejecucion del turno del usuario
 	esperarMovimiento(); //->setTimeOut
 	renderCountDown(30, new Date()); //->setTimeOut
 });
@@ -925,6 +927,19 @@ function checkCards() {
 }
 
 socket.on('terminarPartida', function(data){
+	//Dibujamos organos por ultima vez
+	if (data.organosJugadoresCli != undefined){
+		for (var jugador in data.organosJugadoresCli){
+			organosJugadoresCli[jugador].cerebro = data.organosJugadoresCli[jugador].cerebro;
+			organosJugadoresCli[jugador].corazon = data.organosJugadoresCli[jugador].corazon;
+			organosJugadoresCli[jugador].higado = data.organosJugadoresCli[jugador].higado
+			organosJugadoresCli[jugador].hueso = data.organosJugadoresCli[jugador].hueso;
+			organosJugadoresCli[jugador].organoComodin = data.organosJugadoresCli[jugador].organoComodin;
+		}
+	}
+	cerrarAyudaCartas();
+	actualizarCanvasMID();
+
 	//Reseteamos cosas
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
@@ -952,6 +967,7 @@ socket.on('terminarPartida', function(data){
 	$("#cuadroFinPartida").css("top", posYStr);
 
 	document.getElementById("jugadorFinPartida").innerHTML = data.ganador;
+	$("#pauseButton").css("visibility", "hidden");
 	$("#cuadroFinPartida").css("display", "block");
 })
 /** -------------------- **/

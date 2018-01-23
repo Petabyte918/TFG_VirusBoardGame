@@ -558,8 +558,8 @@ function renderOrganosTransplante () {
 	//Redimensionamos en relacion al tamaño de la carta
 	var heightCard = ($(".imagenCartaIzq").css("height")).replace("px","");;
 	var widthCard = (heightCard * (1013/1536)) + "px";
-	console.log("heightCard: "+heightCard);
-	console.log("widthCard: "+widthCard);
+	//console.log("heightCard: "+heightCard);
+	//console.log("widthCard: "+widthCard);
 
 	$(".imagenCartaIzq").css("width", widthCard);
 	$(".imagenCartaDcha").css("width", widthCard);
