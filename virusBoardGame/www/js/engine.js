@@ -182,19 +182,21 @@ function abrirAyudaCartas (numCarta) {
 	if (cardType == "tratamiento") {
 		switch (organType) {
 		case "error_medico":
-			$("#ayudaError_medico").css("display", "inline");
+			$("#ayudaErrorMedico").css("visibility", "visible");
 			break;
 		case "guante_de_latex":
-			$("#ayudaGuante_de_latex").css("display", "inline");
+			reDimAyudaCartaEspecial("ayudaGuanteDeLatex");
+			$("#ayudaGuanteDeLatex").css("visibility", "visible");
 			break;
 		case "transplante":
-			$("#ayudaTransplante").css("display", "inline");
+			$("#ayudaTransplante").css("visibility", "visible");
 			break;
 		case "ladron_de_organos":
-			$("#ayudaLadron_de_organos").css("display", "inline");
+			reDimAyudaCartaEspecial("ayudaLadronDeOrganos");
+			$("#ayudaLadronDeOrganos").css("visibility", "visible");
 			break;
 		case "contagio":
-			$("#ayudaContagio").css("display", "inline");
+			$("#ayudaContagio").css("visibility", "visible");
 			break;
 		default:
 			console.log("Abrir cartas imposible default");
@@ -205,12 +207,12 @@ function abrirAyudaCartas (numCarta) {
 
 function cerrarAyudaCartas() {
 	console.log("cerrarAyudaCartas()");
-	$("#ayudaError_medico").css("display", "none");
-	$("#ayudaGuante_de_latex").css("display", "none");
+	$("#ayudaErrorMedico").css("visibility", "hidden");
+	$("#ayudaGuanteDeLatex").css("visibility", "hidden");
 
 	//Solo si el transplante no esta en proceso
 	if (transplante.enProceso == false) {
-		$("#ayudaTransplante").css("display", "none");
+		$("#ayudaTransplante").css("visibility", "hidden");
 		transplante.organo1.organo = "";
 		transplante.organo1.numJug = -1;
 		transplante.organo2.organo = "";
@@ -218,8 +220,8 @@ function cerrarAyudaCartas() {
 		renderOrganosTransplante();
 	}
 
-	$("#ayudaLadron_de_organos").css("display", "none");
-	$("#ayudaContagio").css("display", "none");
+	$("#ayudaLadronDeOrganos").css("visibility", "hidden");
+	$("#ayudaContagio").css("visibility", "hidden");
 }
 
 function takeCard(){
@@ -283,7 +285,7 @@ Engine = new function () {
 		var pos1, pos2, pos3, pos4, pos5, pos6 = [];
 		switch(jugadores.length){
 		case 2:
-			posJugadores = [1, 2];
+			posJugadores = [1, 5];
 			break;
 		case 3:
 			posJugadores = [1, 3, 5]; //o [1, 2, 6];

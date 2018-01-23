@@ -198,7 +198,7 @@ function renderCountDown(time, oldDate){
 		if (time > 0) {
 			renderCountDown(time, now);
 		} else {
-			console.log("renderCountDown: el tiempo ha llegado a cero");
+			//console.log("renderCountDown: el tiempo ha llegado a cero");
 			//Y nos chivamos al servidor
 			comunicarTiempoAgotado();
 			//Por si se nos ha pasado el tiempo en medio de un descarte
@@ -643,7 +643,7 @@ function actualizarCanvas(){
 	if ((objetos[0].src != "") && (descartes[0] == false)){
 		//Tratamos de evitar parpadeos moviendo cartas
 		if (objetos[0] == objetoActual) {
-			console.log("Objeto 1 es el objeto actual");
+			//console.log("Objeto 1 es el objeto actual");
 		} else {
 			img1.src = objetos[0].src;
 			img1.onload = function(){
@@ -656,7 +656,7 @@ function actualizarCanvas(){
 	if ((objetos[1].src != "") && (descartes[1] == false)){
 		//Tratamos de evitar parpadeos moviendo cartas
 		if (objetos[1] == objetoActual) {
-			console.log("Objeto 2 es el objeto actual");
+			//console.log("Objeto 2 es el objeto actual");
 		} else {
 			img2.src = objetos[1].src;
 			img2.onload = function(){
@@ -669,7 +669,7 @@ function actualizarCanvas(){
 	if ((objetos[2].src != "") && (descartes[2] == false)){
 		//Tratamos de evitar parpadeos moviendo cartas
 		if (objetos[2] == objetoActual) {
-			console.log("Objeto 3 es el objeto actual");
+			//console.log("Objeto 3 es el objeto actual");
 		} else {
 			img3.src = objetos[2].src;
 			img3.onload = function(){
@@ -1027,7 +1027,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	}
 	//Descarte-block. Si estamos en proceso de descarte no podemos hacer otra cosa hasta acabar
 	if (finDescarte == false) {
-		console.log("Descarte en proceso");
+		//console.log("Descarte en proceso");
 		return;
 	}
 
@@ -1051,7 +1051,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			organosJugadoresCli[jugDestino][organType] = "normal";
 			movJugador = "algo";
 		} else {
-			console.log("manejadorMov() - Organo repetido");
+			//console.log("manejadorMov() - Organo repetido");
 		}
 	}
 
@@ -1073,7 +1073,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				organosJugadoresCli[jugDestino][organoColision] = "inmunizado";
 				movJugador = "algo";
 			} else {
-				console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
+				//console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
 			}
 		}
 			
@@ -1089,7 +1089,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				organosJugadoresCli[jugDestino][organoColision] = "normal";
 				movJugador = "algo";
 			} else {
-				console.log("manejadorMov() - Virus. Organo inmunizado o no existe");
+				//console.log("manejadorMov() - Virus. Organo inmunizado o no existe");
 			}
 		}
 	}
@@ -1338,8 +1338,40 @@ function reDimContainer_instrucciones(pagina) {
 	}
 }
 
+function reDimAyudaLadronDeOrganos() {
+	console.log("reDimAyudaLadronDeOrganos()");
+
+	//posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+	var marginIzqDcha = 25;
+	var marginBottom = 15;
+	var posXNum = Math.floor(posCartasUsuario[0] + posCartasUsuario[4][0] + marginIzqDcha);
+	var posX = (Math.floor(posCartasUsuario[0] + posCartasUsuario[4][0] + marginIzqDcha)).toString() + "px";
+	var width = (Math.floor(windowWidth - posXNum - 2*marginIzqDcha)).toString() + "px";
+
+	var height = "auto";
+
+	//console.log("posXNum: "+posXNum+" - posX: "+posX);
+	//console.log("width: "+width);
+	//console.log("height: "+height);
+
+	$("#ayudaLadronDeOrganos").css("left", posX);
+	$("#ayudaLadronDeOrganos").css("width", width);
+	$("#ayudaLadronDeOrganos").css("height", height);
+
+	var elemAyudaLadronDeOrganos = document.getElementById('ayudaLadronDeOrganos');
+	var posAyudaLadronDeOrganos = elemAyudaLadronDeOrganos.getBoundingClientRect();
+
+	var top = (Math.floor(windowHeight - posAyudaLadronDeOrganos.height - marginBottom)).toString() + "px";
+
+	//console.log("bottom: "+top);
+
+	$("#ayudaLadronDeOrganos").css("top", top);
+
+
+}
+
 function doneResizing() {
-	console.log("Pantalla modificada");
+	console.log("doneResizing()");
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight;
 	

@@ -191,7 +191,7 @@ function abrirAyudaCartas (numCarta) {
 			$("#ayudaTransplante").css("display", "inline");
 			break;
 		case "ladron_de_organos":
-			$("#ayudaLadron_de_organos").css("display", "inline");
+			$("#ayudaLadronDeOrganos").css("visibility", "visible");
 			break;
 		case "contagio":
 			$("#ayudaContagio").css("display", "inline");
@@ -201,6 +201,8 @@ function abrirAyudaCartas (numCarta) {
 			break;
 		}
 	}
+	reDimAyudaLadronDeOrganos();
+	$("#ayudaLadronDeOrganos").css("visibility", "visible");
 }
 
 function cerrarAyudaCartas() {
@@ -218,7 +220,7 @@ function cerrarAyudaCartas() {
 		renderOrganosTransplante();
 	}
 
-	$("#ayudaLadron_de_organos").css("display", "none");
+	$("#ayudaLadronDeOrganos").css("visibility", "hidden");
 	$("#ayudaContagio").css("display", "none");
 }
 
@@ -283,7 +285,7 @@ Engine = new function () {
 		var pos1, pos2, pos3, pos4, pos5, pos6 = [];
 		switch(jugadores.length){
 		case 2:
-			posJugadores = [1, 2];
+			posJugadores = [1, 5];
 			break;
 		case 3:
 			posJugadores = [1, 3, 5]; //o [1, 2, 6];

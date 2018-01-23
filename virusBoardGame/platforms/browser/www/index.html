@@ -62,19 +62,19 @@
 
 	<div id="settingsForm" style="display: none;">
 		<form name="form_settings_user" onsubmit="return form_settings()"/>
-			<label class="label_form1 tittle_settings">Settings</label>
-			<label class="label_form1">Activar ayuda debil</label>
+			<label class="label_form1 tittle_settings">Ajustes</label>
+			<label class="label_form1">Activar ayuda débil</label>
 			<label class="label_form1 switch">
 			  	<input type="checkbox" name="ayudaDebilName" checked>
 			  	<span class="slider round"></span>
 			</label>
-			<label class="label_form2">Ayuda sobre todo a usar las cartas especiales. Se recomiendo dejar activado</label>
+			<label class="label_form2">Ayuda a usar las cartas especiales. Se recomienda dejar activado</label>
 			<label class="label_form1">Activar ayuda fuerte</label>
 			<label class="label_form1 switch">
 			  	<input type="checkbox" name="ayudaFuerteName" checked>
 			  	<span class="slider round"></span>
 			</label>
-			<label class="label_form2">Consiste en cuadros de ayuda explicando el funcionamiento de la mayoria de las funcionalidades del juego</label>
+			<label class="label_form2">Da información, de menor relevancia, sobre otros aspectos del juego</label>
 			<label class="label_form1">Recordar jugador</label>
 			<label class="label_form1 switch">
 			  	<input type="checkbox" name="autoLoginName" checked>
@@ -183,7 +183,22 @@
 		<div id="ayudaTransplantePie">(Toca en un recuadro superior para eliminar la seleccion)</div>
 	</div>
 
-	<div id="ayudaLadron_de_organos" style="display: none"; class="ayudaDebil">
+	<div id="ayudaLadronDeOrganos" style="visibility: hidden;">
+		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/ladronDeOrganos.png" />
+		<h1 class=tituloEnumInstrucciones>
+			<span class="tittleSeccion1">Carta especial: LADRÓN DE ÓRGANOS</span></br>
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
+			Simplemente arrastra la carta sobre el órgano que quieras robar
+		</h2>
+
+		<p class="textoEnumInstrucciones">
+			<b>Normas:</b></br>
+			<b>1.- </b>No puedes robar un órgano si ya lo tienes</br>
+			<b>2.- </b>Los órganos inmunizados <b>NO</b> se pueden robar</br>
+			<b>3.- </b>Cuando robas el órgano, también robas las medicinas y virus que estén sobre él.</br>
+		</p>
+
 	</div>
 
 	<div id="ayudaContagio" style="display: none"; class="ayudaDebil">

@@ -957,6 +957,8 @@ input:checked + .slider:before {
 }
 
 
+
+
 h1.tituloEnumInstrucciones {
 	text-align: center;
     font-size: larger;
@@ -1044,7 +1046,8 @@ p.textoEnumInstrucciones {
 
 /** Instrucciones **/
 #container_instrucciones1, #container_instrucciones2, #container_instrucciones3,
-#container_instrucciones4, #container_instrucciones5 {
+#container_instrucciones4, #container_instrucciones5 
+, #ayudaLadronDeOrganos{
 	/**font-family: 'PT Sans Caption', sans-serif;**/
 	position: absolute;
 	border: solid rgb(153, 0, 204) 5px;
