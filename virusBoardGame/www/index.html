@@ -155,23 +155,65 @@
 		<input class="boton" id="botonFinPartida" value="VOLVER A LA PANTALLA PRINCIPAL" onclick="backTo_InitMenu()" readonly="readonly"/>
 	</div>
 
-	<div id="ayudaError_medico" style="display: none"; class="ayudaDebil">
+	<div id="ayudaErrorMedico" style="visibility: hidden";">
+		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/errorMedico.png" />
+		<h1 class=tituloEnumInstrucciones>
+			<span class="tittleSeccion1">Carta especial: Error médico</span></br>
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
+			Arrastra la carta sobre cualquier recuadro de órganos de un rival.
+		</h2>
+
+		<p class="textoEnumInstrucciones">
+			¡Se trata de un cambio de cuerpo completo! Intercambia todos tus órganos por los órganos del jugador elegido independientemente de su estado. Esto incluye órganos <b>inmunizados</b>.
+		</p>
 	</div>
 
 	<div id="ayudaGuanteDeLatex" style="visibility: hidden;">
 		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/guanteDeLatex.png" />
-		<h2 class=tituloEnumInstrucciones>
+		<h1 class=tituloEnumInstrucciones>
 			<span class="tittleSeccion1">Carta especial: Guante de Latex</span></br>
-		</h2>
-		<h3 class="resaltadoEnumInstrucciones">
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
 			Arrastra la carta sobre cualquiera de los recuadros de órganos, tuyos o del rival
-		</h3>
+		</h2>
 
 		<p class="textoEnumInstrucciones">
-			Todos los jugadores, a excepción de ti, descartan su mano automáticamente. Ten en cuenta, que si no tienen cartas en la mano, perderán su turno robando cartas nuevas
+			Todos los jugadores, a excepción de ti, descartan su mano automáticamente. Ten en cuenta, que si no tienen cartas en la mano, perderán su turno robando cartas nuevas.
 		</p>
 	</div>
 
+	<div id="ayudaTransplante" style="visibility: hidden;">
+		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/transplante.png" />
+		<h1 class=tituloEnumInstrucciones>
+			<span class="tittleSeccion1">Carta especial: Transplante</span></br>
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
+			Arrastra la carta sobre un órgano del rival, y sobre un órgano tuyo. Da igual el orden.
+		</h2>
+
+		<p class="textoEnumInstrucciones">
+			Intercambia tu órgano por el del rival. No importa si los órganos son diferentes o si están sanos, infectados o vacunados.
+		</p>
+		<p class="textoEnumInstrucciones">
+			<b>Normas:</b></br>
+			<b>1.- </b>No puedes intercambiar órganos inmunizados</br>
+			<b>2.- </b>Tanto tu rival como tú no podéis ya tener el órgano que vais a recibir.</br>
+		</p>
+
+		<div id="ayudaTransplanteParteInf">
+			<div class="cartaIzq" onclick="removeOrgano1Transplante()">
+				<div class="tituloCartaIzq">Órgano 1</div>
+				<div class="imagenCartaIzq"></div>
+			</div>
+			<div class="cartaDcha" onclick="removeOrgano2Transplante()">
+				<div class="tituloCartaDcha">Órgano 2</div>
+				<div class="imagenCartaDcha"></div>
+			</div>
+		</div>
+		<div id="ayudaTransplantePie">(Toca en un recuadro superior para eliminar la seleccion)</div>
+	</div>
+	<!--
 	<div id="ayudaTransplante" style="display: none;" class=".ayudaDebil">
 		<div id="ayudaTransplanteParteSup">
 			<div class="iconoCartaEspecial">
@@ -193,15 +235,16 @@
 		</div>
 		<div id="ayudaTransplantePie">(Toca en un recuadro superior para eliminar la seleccion)</div>
 	</div>
+	-->
 
 	<div id="ayudaLadronDeOrganos" style="visibility: hidden;">
 		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/ladronDeOrganos.png" />
-		<h2 class=tituloEnumInstrucciones>
+		<h1 class=tituloEnumInstrucciones>
 			<span class="tittleSeccion1">Carta especial: LADRÓN DE ÓRGANOS</span></br>
-		</h2>
-		<h3 class="resaltadoEnumInstrucciones">
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
 			Simplemente arrastra la carta sobre el órgano que quieras robar
-		</h3>
+		</h2>
 
 		<p class="textoEnumInstrucciones">
 			<b>Normas:</b></br>

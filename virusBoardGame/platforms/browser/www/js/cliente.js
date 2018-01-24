@@ -93,6 +93,7 @@ function button_create() {
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "none");
+	$("#settingsForm").css("display", "none");
 	$("#ranquing").css("display", "none");
 	$("#login").css("display", "none");
 	$("#leave").css("display", "none");
@@ -118,6 +119,7 @@ function button_lista_partidas() {
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "none");
 	$("#settings").css("display", "none");
+	$("#settingsForm").css("display", "none");
 	$("#ranquing").css("display", "none");
 	$("#login").css("display", "none");
 	$("#leave").css("display", "none");
