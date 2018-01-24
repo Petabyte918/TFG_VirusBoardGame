@@ -1338,7 +1338,7 @@ function reDimContainer_instrucciones(pagina) {
 	}
 }
 
-function reDimAyudaLadronDeOrganos() {
+function reDimAyudaCartaEspecial(cartaEspecial) {
 	console.log("reDimAyudaLadronDeOrganos()");
 
 	//posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
@@ -1354,18 +1354,18 @@ function reDimAyudaLadronDeOrganos() {
 	//console.log("width: "+width);
 	//console.log("height: "+height);
 
-	$("#ayudaLadronDeOrganos").css("left", posX);
-	$("#ayudaLadronDeOrganos").css("width", width);
-	$("#ayudaLadronDeOrganos").css("height", height);
+	$("#"+cartaEspecial).css("left", posX);
+	$("#"+cartaEspecial).css("width", width);
+	$("#"+cartaEspecial).css("height", height);
 
-	var elemAyudaLadronDeOrganos = document.getElementById('ayudaLadronDeOrganos');
+	var elemAyudaLadronDeOrganos = document.getElementById(cartaEspecial);
 	var posAyudaLadronDeOrganos = elemAyudaLadronDeOrganos.getBoundingClientRect();
 
 	var top = (Math.floor(windowHeight - posAyudaLadronDeOrganos.height - marginBottom)).toString() + "px";
 
 	//console.log("bottom: "+top);
 
-	$("#ayudaLadronDeOrganos").css("top", top);
+	$("#"+cartaEspecial).css("top", top);
 
 
 }

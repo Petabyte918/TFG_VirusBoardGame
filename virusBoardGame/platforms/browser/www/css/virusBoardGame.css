@@ -1047,7 +1047,7 @@ p.textoEnumInstrucciones {
 /** Instrucciones **/
 #container_instrucciones1, #container_instrucciones2, #container_instrucciones3,
 #container_instrucciones4, #container_instrucciones5 
-, #ayudaLadronDeOrganos{
+, #ayudaLadronDeOrganos, #ayudaGuanteDeLatex, #ayudaErrorMedico, #ayudaTransplante, #ayudaContagio {
 	/**font-family: 'PT Sans Caption', sans-serif;**/
 	position: absolute;
 	border: solid rgb(153, 0, 204) 5px;
