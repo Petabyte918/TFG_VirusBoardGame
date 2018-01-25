@@ -148,7 +148,7 @@ a.num_jugadores {
 
 #descartes_boton {
 	position: absolute;
-	z-index: 10;
+	z-index: 50;
 }
 
 #container_form_create {
@@ -845,30 +845,6 @@ input:checked + .slider:before {
 
 }
 
-#ayudaTransplante {
-	position: absolute;
-    border: solid white 1px;
-    width: 30%;
-    right: 0.2em;
-    bottom: 0.2em;
-
-    border: solid rgb(153, 0, 204) 5px;
-    border-radius: 15px;
-
-    background: rgb(242, 204, 255);
-
-    z-index: 10;
-}
-
-#ayudaTransplanteParteSup,  {
-    border: solid rgb(153, 0, 204) 2px;
-    border-radius: 7px 7px 15px 15px;
-}
-
-#ayudaTransplanteParteInf {
-	margin-top: 0.3em;
-}
-
 #ayudaTransplantePie {
 	font-size: 0.7em;
 	text-align: center;
@@ -881,14 +857,14 @@ input:checked + .slider:before {
     text-align: -webkit-center;
 }	
 
-.tituloCartaIzq {
+.tituloCartaIzq, .tituloCartaDcha {
 	text-align: center;
 	color: rgb(191, 0, 255);
 	font-weight: bold;
 	text-decoration: underline;
 }
 
-.imagenCartaIzq {
+.imagenCartaIzq, .imagenCartaDcha {
 	height: 5em;
     border: solid rgb(153, 0, 204) 1px;
     border-radius: 7px;
@@ -904,44 +880,6 @@ input:checked + .slider:before {
     text-align: -webkit-center;
 }
 
-.tituloCartaDcha {
-	text-align: center;
-	color: rgb(191, 0, 255);
-	font-weight: bold;
-	text-decoration: underline;
-}
-
-.imagenCartaDcha {
-	height: 5em;
-    border: solid rgb(153, 0, 204) 1px;
-    border-radius: 7px;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    width: 4em;
-    background-size: cover;
-}
-
-.iconoCartaEspecial {
-    display: inline;
-    float: left;
-    width: 5em;
-    height: 5em;
-
-	background-repeat: no-repeat;
-	background-image: url(img/iconosEspeciales/iconoTransplante.png);
-	background-size: cover; 
-}
-
-.textoCartaEspecial {
-    display: inline;
-    font-size: 0.8em;
-}
-
-.tituloTextoCartaEspecial {
-	color: rgb(191, 0, 255);
-	font-weight: bold;
-}
-
 #iconoOrgano, #iconoVirus, #iconoMedicina, #iconoTratamiento {
 	float: left;
     width: 50px;
@@ -955,9 +893,6 @@ input:checked + .slider:before {
 
 	box-shadow: rgb(88,1,84) 0px 0px 5px 5px;;
 }
-
-
-
 
 h1.tituloEnumInstrucciones {
 	text-align: center;
@@ -1047,7 +982,8 @@ p.textoEnumInstrucciones {
 /** Instrucciones **/
 #container_instrucciones1, #container_instrucciones2, #container_instrucciones3,
 #container_instrucciones4, #container_instrucciones5 
-, #ayudaLadronDeOrganos, #ayudaGuanteDeLatex, #ayudaErrorMedico, #ayudaTransplante, #ayudaContagio {
+, #ayudaLadronDeOrganos, #ayudaGuanteDeLatex, #ayudaErrorMedico, #ayudaTransplante, #ayudaContagio,
+#ayudaDescartes {
 	/**font-family: 'PT Sans Caption', sans-serif;**/
 	position: absolute;
 	border: solid rgb(153, 0, 204) 5px;
@@ -1060,6 +996,16 @@ p.textoEnumInstrucciones {
     font-family: 'Lora', serif;
 
     z-index: 50;
+}
+
+#container_instrucciones1, #container_instrucciones2, #container_instrucciones3,
+#container_instrucciones4, #container_instrucciones5 {
+	z-index: 50;
+}
+
+#ayudaLadronDeOrganos, #ayudaGuanteDeLatex, #ayudaErrorMedico, #ayudaTransplante, #ayudaContagio,
+#ayudaDescartes {
+	z-index: 6;
 }
 
 span.tittleSeccion1 {

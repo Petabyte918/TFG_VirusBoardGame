@@ -148,6 +148,7 @@ function backTo_InitMenu() {
 	$("#ranquing").css("display", "inline");
 	$("#cuadroFinPartida").css("display", "none");
 	$("#instrucciones").css("display", "inline");
+	$("#pauseButton").css("visibility", "hidden");
 	var logged = localStorage.getItem("logged");
 	//console.log("backTo_InitMenu()->logged: "+logged);
 	if (logged == "true") {
@@ -664,9 +665,6 @@ socket.on('prepararPartida', function(datos_iniciales){
 
 	actualizarCanvas();
 	//actualizarCanvasMID();
-
-	//Probando ayudas
-	reDimAyudaLadronDeOrganos();
 })
 
 function esperarMovimiento(){
@@ -713,6 +711,7 @@ function esperarMovimiento(){
 						organosJugadoresCli: organosJugadoresCli,
 						movJugador: movJugador
 					};
+					cerrarAyudaCartas();
 					socket.emit('siguienteTurnoSrv', newDatos_partida);
 				}
 			}
@@ -832,7 +831,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 	//Guante de Latex
 	//El jugador de la carta no se descarta
-	if ((movJugador == "guante_de_latex") && (usuario != turno)) {
+	if ((movJugador == "guanteDeLatex") && (usuario != turno)) {
 		objetos[0].src = "";
 		objetos[1].src = "";
 		objetos[2].src = "";

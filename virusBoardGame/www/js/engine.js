@@ -175,28 +175,42 @@ function gestionarMov(movJugador){
 }
 
 function abrirAyudaCartas (numCarta) {
-	console.log("abrirAyudaCartas()");
+	console.log("abrirAyudaCartas()");	
+	//Antes de abrir nuevas cerramos las ya abiertas
+	cerrarAyudaCartas();
+
+	//Si estamos realizando un descarte no abrimos otras ayudas - Muy hacky
+	if (numCarta == "ayudaDescartes") {
+		reDimAyudaCartaEspecial("ayudaDescartes");
+		$("#ayudaDescartes").css("visibility", "visible");
+	}
+	if (finDescarte == false) {
+		return;
+	}
+
 	var cardType = cartasUsuario[numCarta].cardType;
 	var organType = cartasUsuario[numCarta].organType;
-
 	if (cardType == "tratamiento") {
 		switch (organType) {
-		case "error_medico":
+		case "errorMedico":
+			reDimAyudaCartaEspecial("ayudaErrorMedico");
 			$("#ayudaErrorMedico").css("visibility", "visible");
 			break;
-		case "guante_de_latex":
+		case "guanteDeLatex":
 			reDimAyudaCartaEspecial("ayudaGuanteDeLatex");
 			$("#ayudaGuanteDeLatex").css("visibility", "visible");
 			break;
 		case "transplante":
+			reDimAyudaCartaEspecial("ayudaTransplante");
 			$("#ayudaTransplante").css("visibility", "visible");
 			break;
-		case "ladron_de_organos":
+		case "ladronDeOrganos":
 			reDimAyudaCartaEspecial("ayudaLadronDeOrganos");
 			$("#ayudaLadronDeOrganos").css("visibility", "visible");
 			break;
 		case "contagio":
-			$("#ayudaContagio").css("visibility", "visible");
+			//reDimAyudaCartaEspecial("contagio");
+			//$("#ayudaContagio").css("visibility", "visible");
 			break;
 		default:
 			console.log("Abrir cartas imposible default");
@@ -210,18 +224,16 @@ function cerrarAyudaCartas() {
 	$("#ayudaErrorMedico").css("visibility", "hidden");
 	$("#ayudaGuanteDeLatex").css("visibility", "hidden");
 
-	//Solo si el transplante no esta en proceso
-	if (transplante.enProceso == false) {
+	//Solo si el transplante no esta en proceso y si lo esta no se descarta la carta
+	if ((transplante.enProceso == false) || (finDescarte == false)) {
 		$("#ayudaTransplante").css("visibility", "hidden");
-		transplante.organo1.organo = "";
-		transplante.organo1.numJug = -1;
-		transplante.organo2.organo = "";
-		transplante.organo2.numJug = -1;
 		renderOrganosTransplante();
 	}
 
 	$("#ayudaLadronDeOrganos").css("visibility", "hidden");
 	$("#ayudaContagio").css("visibility", "hidden");
+
+	$("#ayudaDescartes").css("visibility", "hidden");
 }
 
 function takeCard(){

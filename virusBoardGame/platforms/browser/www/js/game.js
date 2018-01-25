@@ -554,7 +554,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	}
 }
 
-function renderOrganosTransplante () {
+function renderOrganosTransplante() {
 	//Redimensionamos en relacion al tamaño de la carta
 	var heightCard = ($(".imagenCartaIzq").css("height")).replace("px","");;
 	var widthCard = (heightCard * (1013/1536)) + "px";
@@ -599,6 +599,9 @@ function renderOrganosTransplante () {
 			$(".imagenCartaDcha").css("background-image", "");
 			break;
 		}
+	} else {
+		$(".imagenCartaIzq").css("background-image", "");
+		$(".imagenCartaDcha").css("background-image", "");				
 	}
 }
 
@@ -1021,6 +1024,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	//Descarte
 	if (posDestino == 0) {
 		finDescarte = false;
+		abrirAyudaCartas("ayudaDescartes");
 		descartes[numCarta] = true;
 		actualizarCanvas();
 		$("#descartes_boton").css("display","inline");
@@ -1097,7 +1101,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	if (cardType == "tratamiento") {
 		//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 		switch (organType) {
-		case "error_medico":
+		case "errorMedico":
 			console.log("manejadorMov() - Error medico");
 			var auxCerebro = organosJugadoresCli[jugDestino].cerebro;
 			var auxCorazon = organosJugadoresCli[jugDestino].corazon;
@@ -1117,9 +1121,9 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 
 			movJugador = "algo";
 			break;
-		case "guante_de_latex":
+		case "guanteDeLatex":
 			console.log("manejadorMov() - Guante de latex");
-			movJugador = "guante_de_latex";
+			movJugador = "guanteDeLatex";
 			break;
 		case "transplante":
 			console.log("manejadorMov() - Transplante");
@@ -1179,7 +1183,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				}
 			}
 			break;
-		case "ladron_de_organos":
+		case "ladronDeOrganos":
 			console.log("manejadorMov() - Ladron de organos");
 			//Si no tengo el organo destino y se puede lo robo
 			if (organosJugadoresCli[usuario][organoColision] == "") {
@@ -1238,6 +1242,7 @@ function fin_transplante() {
 	transplante.organo1.numJug = -1;
 	transplante.organo2.organo = "";
 	transplante.organo2.numJug = -1;
+	renderOrganosTransplante();
 }
 
 function reDimPartidaRapida() {
@@ -1339,14 +1344,35 @@ function reDimContainer_instrucciones(pagina) {
 }
 
 function reDimAyudaCartaEspecial(cartaEspecial) {
-	console.log("reDimAyudaLadronDeOrganos()");
+	console.log("reDimAyudaCartaEspecial()");
 
-	//posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-	var marginIzqDcha = 25;
+	//Esto siendo estrictos no deberia ir aqui, pero no quiero ponerme a cambiar nombres Ej.:ayudaTransplante por ayudatransplante
+	//No es muy hacky
+	//Rectifico. lo estoy escondiendo pero al salir de la funcion lo hago visible. Hay que hacerlo desde la funcion anterior
+	//haciendo bien el cambio de nombres
+	/**if (cartaEspecial != "ayudaDescartes") {
+		var visibility = $("#"+cartaEspecial).css("visibility");
+		if (visibility == "visible") {
+			$("#"+cartaEspecial).css("visibility", "hidden");
+			return;
+		}
+	}**/
+
+	/**
+	posOrganosJugadores[1] = {
+		widthOrgano: widthOrgano,
+		heightOrgano:heightOrgano,
+		posCerebro: posCerebro,
+		posCorazon: posCorazon,
+		posHueso: posHueso,
+		posHigado: posHigado,
+		posComodin: posComodin
+	};**/
+	var marginIzqDcha = 40;
 	var marginBottom = 15;
-	var posXNum = Math.floor(posCartasUsuario[0] + posCartasUsuario[4][0] + marginIzqDcha);
-	var posX = (Math.floor(posCartasUsuario[0] + posCartasUsuario[4][0] + marginIzqDcha)).toString() + "px";
-	var width = (Math.floor(windowWidth - posXNum - 2*marginIzqDcha)).toString() + "px";
+	var posXNum = Math.floor(posOrganosJugadores[1].widthOrgano + posOrganosJugadores[1].posComodin[0] + marginIzqDcha);
+	var posX = (Math.floor(posOrganosJugadores[1].widthOrgano + posOrganosJugadores[1].posComodin[0] + marginIzqDcha)).toString() + "px";
+	var width = (Math.floor(windowWidth - posXNum - marginIzqDcha - 10)).toString() + "px";
 
 	var height = "auto";
 

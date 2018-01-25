@@ -155,32 +155,53 @@
 		<input class="boton" id="botonFinPartida" value="VOLVER A LA PANTALLA PRINCIPAL" onclick="backTo_InitMenu()" readonly="readonly"/>
 	</div>
 
-	<div id="ayudaError_medico" style="display: none"; class="ayudaDebil">
+	<div id="ayudaErrorMedico" style="visibility: hidden";">
+		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/errorMedico.png" />
+		<h1 class=tituloEnumInstrucciones>
+			<span class="tittleSeccion1">Carta especial: Error médico</span></br>
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
+			Arrastra la carta sobre cualquier recuadro de órganos de un rival.
+		</h2>
+
+		<p class="textoEnumInstrucciones">
+			¡Se trata de un cambio de cuerpo completo! Intercambia todos tus órganos por los órganos del jugador elegido independientemente de su estado. Esto incluye órganos <b>inmunizados</b>.
+		</p>
 	</div>
 
 	<div id="ayudaGuanteDeLatex" style="visibility: hidden;">
 		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/guanteDeLatex.png" />
-		<h2 class=tituloEnumInstrucciones>
+		<h1 class=tituloEnumInstrucciones>
 			<span class="tittleSeccion1">Carta especial: Guante de Latex</span></br>
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
+			Arrastra la carta sobre cualquiera de los recuadros de órganos, tuyos o de un rival
 		</h2>
-		<h3 class="resaltadoEnumInstrucciones">
-			Arrastra la carta sobre cualquiera de los recuadros de órganos, tuyos o del rival
-		</h3>
 
 		<p class="textoEnumInstrucciones">
-			Todos los jugadores, a excepción de ti, descartan su mano automáticamente. Ten en cuenta, que si no tienen cartas en la mano, perderán su turno robando cartas nuevas
+			Todos los jugadores, a excepción de ti, descartan su mano automáticamente. Ten en cuenta, que si no tienen cartas en la mano, perderán su turno robando cartas nuevas.
 		</p>
 	</div>
 
-	<div id="ayudaTransplante" style="display: none;" class=".ayudaDebil">
-		<div id="ayudaTransplanteParteSup">
-			<div class="iconoCartaEspecial">
-			</div>
-			<div class="textoCartaEspecial">
-				<a class="tituloTextoCartaEspecial">TRANSPLANTE<br></a>
-				<b>Intercambia</b> un órgano por otro entre dos jugadores cualesquiera. No importa si el color de estos órganos es diferente, ni si están sanos, infectados o vacunados. Sencillamente el jugador cambia el órgano escogido por otro, siempre y cuando ninguno de los dos jugadores tenga dos órganos del mismo color ni éstos estén inmunizados.
-			</div>
-		</div>
+	<div id="ayudaTransplante" style="visibility: hidden;">
+		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/transplante.png" />
+		<h1 class=tituloEnumInstrucciones>
+			<span class="tittleSeccion1">Carta especial: Transplante</span></br>
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
+			Arrastra la carta sobre un órgano de un jugador cualquiera, y vuélvela a arrastrar sobre otro órgano.
+		</h2>
+
+		<p class="textoEnumInstrucciones">
+			Intercambia un órgano por otro. No importa si los órganos son diferentes o si están sanos, infectados o vacunados.
+		</p>
+		<p class="textoEnumInstrucciones">
+			<b>Normas:</b></br>
+			<b>1.- </b>No puedes intercambiar órganos inmunizados.</br>
+			<b>2.- </b>No pueden transplantarse órganos que ya se tienen.</br>
+			<b>3.- </b>Si el cambio es ilegal, aparecerán los dos órganos para que puedas rectificar.</br>
+		</p>
+
 		<div id="ayudaTransplanteParteInf">
 			<div class="cartaIzq" onclick="removeOrgano1Transplante()">
 				<div class="tituloCartaIzq">Órgano 1</div>
@@ -196,12 +217,12 @@
 
 	<div id="ayudaLadronDeOrganos" style="visibility: hidden;">
 		<img id="iconoOrgano" src="img/cardImagesLQ/especiales/ladronDeOrganos.png" />
-		<h2 class=tituloEnumInstrucciones>
+		<h1 class=tituloEnumInstrucciones>
 			<span class="tittleSeccion1">Carta especial: LADRÓN DE ÓRGANOS</span></br>
-		</h2>
-		<h3 class="resaltadoEnumInstrucciones">
+		</h1>
+		<h2 class="resaltadoEnumInstrucciones">
 			Simplemente arrastra la carta sobre el órgano que quieras robar
-		</h3>
+		</h2>
 
 		<p class="textoEnumInstrucciones">
 			<b>Normas:</b></br>
@@ -214,21 +235,31 @@
 	<div id="ayudaContagio" style="display: none"; class="ayudaDebil">
 	</div>
 
+	<div id="ayudaDescartes" style="visibility: hidden;">
+		<h2 class="resaltadoEnumInstrucciones">
+			Descarte en proceso...
+		</h2>
+
+		<p class="textoEnumInstrucciones">
+			Sigue arrastrando ninguna o el resto de las cartas de tu mano a la zona de descarte, en el medio del tablero, y pulsa el botón <b>"Fin descarte"</b> para finalizar el turno.</br>
+		</p>
+	</div>
+
 	<div id="canvas_container" style="position: relative; display: none;">
 		<canvas id="canvas" width="1000px" height="700px"
-				style="position: absolute; left: 0; top: 0; z-index: 6;">
+				style="position: absolute; left: 0; top: 0; z-index: 20;">
 			Your browser does not support canvas
 		</canvas>
 		<canvas id="canvasAPO" width="1000px" height="700px"
-				style="position: absolute; left: 0; top: 0; z-index: 5;">
+				style="position: absolute; left: 0; top: 0; z-index: 15;">
 			Your browser does not support canvas
 		</canvas>
 		<canvas id="canvasMID" width="1000px" height="700px"
-				style="position: absolute; left: 0; top: 0; z-index: 4;">
+				style="position: absolute; left: 0; top: 0; z-index: 10;">
 			Your browser does not support canvas
 		</canvas>
 		<canvas id="canvasBG" width="1000px" height="700px"
-				style="position: absolute; left: 0; top: 0; z-index: 3;">
+				style="position: absolute; left: 0; top: 0; z-index: 5;">
 			Your browser does not support canvas
 		</canvas>
 	</div>
@@ -409,7 +440,7 @@
 			<img class="iconoEnumInstrucciones" src="css/img/iconosEspeciales/iconoTransplante.png" />
 			<span class="tittleSeccion2">TRANSPLANTE</span></br>
 			<span class="textoSeccion2">
-				<b>Intercambia</b> un órgano por otro entre dos jugadores cualesquiera. No importa si el color de los órganos es diferente, ni si están sanos, infectados o vacunados. Sencillamente el jugador cambia el órgano escogido por otro, siempre y cuando ninguno de los dos jugadpres tenga dos órganos del mismo colo ni estos estén inmunizados.</br>
+				<b>Intercambia</b> un órgano por otro entre dos jugadores cualesquiera. No importa si el color de los órganos es diferente, ni si están sanos, infectados o vacunados. Sencillamente el jugador cambia el órgano escogido por otro, siempre y cuando ninguno de los dos jugadores tenga dos órganos del mismo color ni estos estén inmunizados.</br>
 			</span>
 		</p>
 
