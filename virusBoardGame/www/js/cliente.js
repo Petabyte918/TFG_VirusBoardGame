@@ -7,10 +7,10 @@ var ayudaFuerte;
 var ayudaDebil;
 var gamePaused = "false";
 /** Establecimiento de la conexion con el servidor **/
-var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+//var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 
 //Local
-//var socket = io.connect('http://localhost:8090');
+var socket = io.connect('http://localhost:8090');
 socket.on('Connection OK', function (data) {
    	//console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
@@ -101,7 +101,7 @@ function button_create() {
 	$("#register").css("display", "none");
 	$("#cuadroPartidaRapida").css("display", "none");
 	$("#instrucciones").css("display", "none");
-	$("#ranquingList").css("display", "none");
+	$("#ranquingList").css("visibility", "hidden");
 	$("#container_instrucciones1").css("display", "none");
 	$("#container_instrucciones2").css("display", "none");
 	$("#container_instrucciones3").css("display", "none");
@@ -127,7 +127,7 @@ function button_lista_partidas() {
 	$("#register").css("display", "none");
 	$("#cuadroPartidaRapida").css("display", "none");
 	$("#instrucciones").css("display", "none");
-	$("#ranquingList").css("display", "none");
+	$("#ranquingList").css("visibility", "hidden");
 	$("#container_instrucciones1").css("display", "none");
 	$("#container_instrucciones2").css("display", "none");
 	$("#container_instrucciones3").css("display", "none");
@@ -202,12 +202,12 @@ function button_leave () {
 
 function button_ranquing () {
 	//console.log("button_ranquing()");
-	if ($("#ranquingList").css("display") == "block") {
+	if ($("#ranquingList").css("visibility") == "visible") {
 		$("#settingsForm").css("display","none");
-		$("#ranquingList").css("display", "none");
+		$("#ranquingList").css("visibility", "hidden");
 	} else {
 		$("#settingsForm").css("display","none");
-		$("#ranquingList").css("display", "block");
+		$("#ranquingList").css("visibility", "visible");
 		reDimRanquingList();
 	}
 	socket.emit('request_users', {request: 'create_ranquing'});
@@ -217,10 +217,10 @@ function button_settings () {
 	//console.log("button_settings");
 	if ($("#settingsForm").css("display") == "block") {
 		$("#settingsForm").css("display","none");
-		$("#ranquingList").css("display", "none");
+		$("#ranquingList").css("visibility", "hidden");
 	} else {
 		$("#settingsForm").css("display","block");
-		$("#ranquingList").css("display", "none");
+		$("#ranquingList").css("visibility", "hidden");
 	}
 }
 /** -------------------- **/
@@ -883,7 +883,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 	//Conforman el hilo de ejecucion del turno del usuario
 	esperarMovimiento(); //->setTimeOut
-	renderCountDown(30, new Date()); //->setTimeOut
+	renderCountDown(30, new Date(),"first"); //->setTimeOut
 });
 
 function pauseGame(){

@@ -107,7 +107,7 @@ function degToRad(degree) {
 		return degree * factor;
 }
 
-function renderCountDown(time, oldDate){
+function renderCountDown(time, oldDate, first){
 	//console.log("renderCountDown()");
 	var radius = 30;
 	var xCountDown = posCubosDescarte[1].x - radius;
@@ -131,7 +131,7 @@ function renderCountDown(time, oldDate){
 	}
 
 	//Limpiamos zona particular del canvas + (pxLinea + pxDifuminado)*2
-	cxMID.clearRect(xCountDown-10-radius, yCountDown-10-radius, radius*2+20, radius*2+20);
+	cxMID.clearRect(xCountDown-10-radius, yCountDown-10-radius +25, radius*2+20, radius*2+20);
 
 	//Fondo
 	cxMID.beginPath();
@@ -145,7 +145,7 @@ function renderCountDown(time, oldDate){
 	gradient.addColorStop(0, '#09303a');
 	gradient.addColorStop(1, 'black');
 	cxMID.fillStyle = gradient;
-	cxMID.arc(xCountDown,yCountDown,radius, 0, degToRad(360),false);
+	cxMID.arc(xCountDown,yCountDown + 25,radius, 0, degToRad(360),false);
 	cxMID.fill();
 	cxMID.stroke();
 
@@ -157,7 +157,7 @@ function renderCountDown(time, oldDate){
 	cxMID.shadowBlur = 2;
 	cxMID.shadowColor = '#28d1fa';
 
-	cxMID.arc(xCountDown,yCountDown,radius, degToRad(270), degToRad(((time*6)*ajuste)-90),false);
+	cxMID.arc(xCountDown,yCountDown + 25,radius, degToRad(270), degToRad(((time*6)*ajuste)-90),false);
 	cxMID.stroke();
 
 	//CountDown
@@ -165,38 +165,55 @@ function renderCountDown(time, oldDate){
 	cxMID.font = "20px Arial Bold";
 	cxMID.fillStyle = '#28d1fa';
 	if (seconds < 10){
-		cxMID.fillText(seconds, xCountDown - 5, yCountDown + 8);
+		cxMID.fillText(seconds, xCountDown - 5, yCountDown + 8 + 25);
 	} else {
-		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8);
+		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8 + 25);
 	}
 
 	//Texto numTurnos (Eliminamos difuminado, color y algunas cosas)
-	cxMID.font = "25px Arial Bold";
-	cxMID.fillStyle = '#09303a';
-	cxMID.shadowBlur = 1;
-	cxMID.shadowColor = 'white';
-	cxMID.fillText("Turno "+numTurno, xCountDown - 1.3*radius, yCountDown - 45);
+	if (first == "first") {
+		cxMID.font = "25px Arial Bold";
+		cxMID.fillStyle = '#09303a';
+		cxMID.shadowBlur = 1;
+		cxMID.shadowColor = 'white';
+		cxMID.fillText("Turno "+numTurno, xCountDown - 1.3*radius, yCountDown - 45);
 
-	//Vemos si avisamos que nos hemos saltado el turno alguna vez
-	if (infoJugadores[usuario].turnosPerdidos > 0) {
-		//Solo ponemos la advertencia el siguiente turno al que hemos pasado
-		if (infoJugadores[usuario].turnoPerdida + jugadores.length >= numTurno) {
-			//¡Cuidado!: Seremos expulsados
-			//si perdemos el turno
-			//X veces mas
-			cxMID.font = "10px Arial Bold";
-			cxMID.fillStyle = 'red';
-			cxMID.fillText("¡Cuidado!: Seremos expulsados", xCountDown - 2*radius, yCountDown - 45 + radius*3 + 14);
-			cxMID.fillText("       si perdemos el turno", xCountDown - 2*radius, yCountDown - 45+ radius*3 +28);
-			cxMID.font = "15px Arial Bold";
-			var numVeces = infoJugadores[usuario].limiteTurnosPerdidos - infoJugadores[usuario].turnosPerdidos;
-			cxMID.fillText("      "+numVeces+" veces mas", xCountDown - 2*radius, yCountDown - 45+ radius*3 + 45);
+		//Indicamos turno con texto de nombre usuario
+		var turnoJug = turno;
+		var pos  = posPorJugador[turno].posicion;
+		cxMID.shadowColor = "YellowGreen";
+		if (turnoJug.length > 8 ){
+			turnoJug = "Turno de: "+turnoJug.slice(0,8);
+		}
+		if (pos == 1) {
+			turnoJug = "TÚ turno";
+			cxMID.shadowColor = 'red';
+		}
+		cxMID.shadowBlur = 0;
+		cxMID.font = "18px Arial Bold";
+		cxMID.fillText(turnoJug, xCountDown - 1.3*radius - 25*2, yCountDown - 20);
+
+		//Vemos si avisamos que nos hemos saltado el turno alguna vez
+		if (infoJugadores[usuario].turnosPerdidos > 0) {
+			//Solo ponemos la advertencia el siguiente turno al que hemos pasado
+			if (infoJugadores[usuario].turnoPerdida + jugadores.length >= numTurno) {
+				//¡Cuidado!: Seremos expulsados
+				//si perdemos el turno
+				//X veces mas
+				cxMID.font = "10px Arial Bold";
+				cxMID.fillStyle = 'red';
+				cxMID.fillText("¡Cuidado!: Seremos expulsados", xCountDown - 2*radius, yCountDown - 45 + radius*3 + 14 + 25);
+				cxMID.fillText("       si perdemos el turno", xCountDown - 2*radius, yCountDown - 45 + radius*3 +28 + 25);
+				cxMID.font = "15px Arial Bold";
+				var numVeces = infoJugadores[usuario].limiteTurnosPerdidos - infoJugadores[usuario].turnosPerdidos;
+				cxMID.fillText("      "+numVeces+" veces mas", xCountDown - 2*radius, yCountDown - 45 + radius*3 + 45 + 25);
+			}
 		}
 	}
 
 	countDownSTO = setTimeout(function(){ 
 		if (time > 0) {
-			renderCountDown(time, now);
+			renderCountDown(time, now, "others");
 		} else {
 			//console.log("renderCountDown: el tiempo ha llegado a cero");
 			//Y nos chivamos al servidor
@@ -402,7 +419,61 @@ function actualizarCanvasMID(){
 				renderOrgano(posOrgano, estadoOrgano);
 			}
 		}
+		//Escribimos el nombre del usuario
+		renderUsername(pos, jugador, posOrgano.width, posOrgano.height);
 	}
+}
+
+function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
+	console.log("renderUsername()");
+	console.log("pos: "+pos);
+	console.log("jugador: "+jugador);
+
+	var jugador = jugador;
+
+	var posX;
+	var posY;
+
+	cxMID.font = "bold 22px sans-serif";
+	switch(pos) {
+	case 1:
+		posX = posOrganosJugadores[pos].posCerebro[0]
+		posY = posOrganosJugadores[pos].posCerebro[1] - 20;
+		break;
+	case 2:
+		console.log("renderUsername-> pos2 no programada");
+		posX = -20;
+		posY = -20;
+		break;
+	case 3:
+		posX = posOrganosJugadores[pos].posCerebro[0]
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
+		break;
+	case 4:
+		posX = posOrganosJugadores[pos].posCerebro[0]
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
+		break;
+	case 5:
+		posX = posOrganosJugadores[pos].posCerebro[0]
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
+		break;
+	case 6:
+		console.log("renderUsername-> pos6 no programada");
+		posX = -20;
+		posY = -20;
+		break;
+	default:
+		console.log("Problema escribiendo nombres de jugadores");
+		break;					
+	}
+
+	if (jugador.length > 8 ){
+		jugador = "Usuario: "+jugador.slice(0,8);
+	}
+	if (pos == 1) {
+		jugador = "TÚ";
+	}
+	cxMID.fillText(jugador, posX, posY);
 }
 
 function renderOrgano(posOrgano, estadoOrgano) {
@@ -1247,15 +1318,6 @@ function fin_transplante() {
 
 function reDimPartidaRapida() {
 	//console.log("reDimPartidaRapida()");
-
-	//Partida Rapida
-	//Derecha de boton jugar
-	//var elemBotonJug = document.getElementById('boton_jugar');
-	//var posBotonJug = elemBotonJug.getBoundingClientRect();
-	//var posX = (Math.floor(posBotonJug.left + posBotonJug.width + 10)).toString()+"px";
-	//var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
-
-	//Izquierda de boton jugar
 	var elemBotonJug = document.getElementById('boton_jugar');
 	var posBotonJug = elemBotonJug.getBoundingClientRect();
 
@@ -1264,9 +1326,8 @@ function reDimPartidaRapida() {
 	var posPartRapida = elemPartidaRapida.getBoundingClientRect();
 
 	var posX = (Math.floor(posBotonJug.left - posPartRapida.width - 10)).toString()+"px";
-	var posY = (Math.floor(posBotonJug.top + posBotonJug.height -110)).toString()+"px";
+	var posY = (Math.floor(posBotonJug.top)).toString()+"px";
 
-	console.log("posX: "+posX+", posY: "+posY);
 	$("#cuadroPartidaRapida").css("left", posX);
 	$("#cuadroPartidaRapida").css("top", posY);
 }
@@ -1276,11 +1337,34 @@ function reDimRanquingList() {
 	var elemBotonJug = document.getElementById('boton_jugar');
 	var posBotonJug = elemBotonJug.getBoundingClientRect();
 
-	console.log("windowWidth: "+windowWidth);
+	var widthRanquingList = (Math.floor(windowWidth - posBotonJug.right - 15))
+	var widthRanquingListStr = widthRanquingList.toString() + "px";
 
-	var widthRanquingList = (Math.floor(windowWidth - posBotonJug.right - 15)).toString() + "px";
 
-	$("#ranquingList").css("width", widthRanquingList);
+	var elemNumPos = document.getElementById('ranquingPos');
+	var posNumPos = elemNumPos.getBoundingClientRect();
+	var elemUsuario = document.getElementById('ranquingUsuario');
+	var posUsuario = elemUsuario.getBoundingClientRect();
+	var elemPercent = document.getElementById('ranquingPercent');
+	var posPercent = elemPercent.getBoundingClientRect();
+	var elemWins = document.getElementById('ranquingWins');
+	var posWins = elemWins.getBoundingClientRect();
+	var elemTotal = document.getElementById('ranquingTotal');
+	var posTotal = elemTotal.getBoundingClientRect();
+
+	//La anchura de todas las cajas mas unos 50px de margenes
+	var widthMin = posNumPos.width + posUsuario.width + posPercent.width + posWins.width + posTotal.width +65;
+	var widthMinStr = widthMin.toString() + "px";
+	console.log("widthRanquingList: "+widthRanquingList);
+	console.log("widthMin: "+widthMin);
+
+	if (widthMin > widthRanquingList) {
+		console.log("Descuadre");
+		$("#ranquingList").css("width", widthMinStr);
+	} else {
+		console.log("Bien");
+		$("#ranquingList").css("width", widthRanquingListStr);
+	}
 }
 
 function reDimContainer_instrucciones(pagina) {
