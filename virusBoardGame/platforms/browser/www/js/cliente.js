@@ -5,6 +5,7 @@ var idPartidaEsperando = "";
 var enPartidaEsperando = false;
 var ayudaFuerte;
 var ayudaDebil;
+var logged = "false";
 var gamePaused = "false";
 /** Establecimiento de la conexion con el servidor **/
 //var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
@@ -23,7 +24,7 @@ windowWidth = window.innerWidth;
 windowHeight = window.innerHeight;
 
 function configInicial() {
-	//console.log("configInicial()");
+	console.log("configInicial()");
 
 	var autoLogin = localStorage.getItem('autoLogin');
 	if (autoLogin == "") {
@@ -149,8 +150,6 @@ function backTo_InitMenu() {
 	$("#cuadroFinPartida").css("display", "none");
 	$("#instrucciones").css("display", "inline");
 	$("#pauseButton").css("visibility", "hidden");
-	var logged = localStorage.getItem("logged");
-	//console.log("backTo_InitMenu()->logged: "+logged);
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
 		$("#userNameContainer").css("display", "block");
@@ -198,6 +197,7 @@ function button_leave () {
 	document.form_login_user.loginName.value = "";
 	document.form_login_user.loginPass.value = "";
 	localStorage.setItem("logged", "false");
+	logged = "false";
 }
 
 function button_ranquing () {
@@ -256,12 +256,14 @@ socket.on('login_user-OK', function(message) {
 	$("#leave").css("display", "block");
 
 	localStorage.setItem("logged", "true");
+	logged = "true";
 });
 
 socket.on('login_user-KO', function(message) {
 	localStorage.removeItem('loginName');
 	localStorage.removeItem('loginPass');
 	localStorage.setItem("logged", "false");
+	logged = "false";
 
 	//console.log("login_user-KO: "+message);
 	document.getElementById("loginCorrection").innerHTML = "Usuario o contraseña incorrectos";
@@ -856,18 +858,6 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 
-	//Compruebo si me han echado de la partida
-	if (jugadores.indexOf(usuario) == -1) {
-		//console.log("Hemos sido expulsados de la partida");
-		backTo_InitMenu();
-		return;
-	}
-
-	//Comprobamos si nos estamos reenchando a la partida
-	//if (cartasUsuario.length <= 0){
-	//	handleReconect();
-	//}
-
 	if (datos_partida.organosJugadoresCli != undefined){
 		for (var jugador in datos_partida.organosJugadoresCli){
 			organosJugadoresCli[jugador].cerebro = datos_partida.organosJugadoresCli[jugador].cerebro;
@@ -918,6 +908,11 @@ socket.on('contineGame', function(datos_partida) {
 	renderCountDown(30, new Date()); //->setTimeOut
 })
 
+socket.on('expulsadoPartida', function() {
+	console.log("socket.on->expulsadoPartida");	
+	backTo_InitMenu();
+})
+
 function representarMov(movJugador) {
 
 }
@@ -931,6 +926,7 @@ function checkCards() {
 }
 
 socket.on('terminarPartida', function(data){
+	console.log("socket.on->terminarPartida");
 	//Dibujamos organos por ultima vez
 	if (data.organosJugadoresCli != undefined){
 		for (var jugador in data.organosJugadoresCli){
@@ -948,8 +944,7 @@ socket.on('terminarPartida', function(data){
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
 
-	//console.log("Terminar Partida");
-	//console.log("Ganador: "+data.ganador);
+	//Representamos cuadro fin de partida
 
 	var widthElem = parseInt(($("#cuadroFinPartida").css("width")).replace("px",""));
 	var heightElem = parseInt(($("#cuadroFinPartida").css("height")).replace("px",""));
@@ -957,12 +952,7 @@ socket.on('terminarPartida', function(data){
 	var borderElem = parseInt(($("#cuadroFinPartida").css("border-width")).replace("px",""));
 	var paddingTopElem = parseInt(($("#cuadroFinPartida").css("padding-top")).replace("px",""));
 	var paddingLeftElem = parseInt(($("#cuadroFinPartida").css("padding-left")).replace("px",""));
-	/**console.log("widthElem: "+widthElem);
-	console.log("heightElem: "+heightElem);
-	console.log("marginElem: "+marginElem);
-	console.log("borderElem: "+borderElem);
-	console.log("paddingTopElem: "+paddingTopElem);
-	console.log("paddingLeftElem: "+paddingLeftElem);**/
+
 	var posX = (windowWidth - widthElem)/2 - marginElem - borderElem - paddingLeftElem;
 	var posY = (windowHeight - heightElem)/2 - marginElem - borderElem - paddingTopElem;
 	var posXStr = (Math.floor(posX)).toString()+"px";
@@ -970,7 +960,16 @@ socket.on('terminarPartida', function(data){
 	$("#cuadroFinPartida").css("left", posXStr);
 	$("#cuadroFinPartida").css("top", posYStr);
 
-	document.getElementById("jugadorFinPartida").innerHTML = data.ganador;
+	if (data.ganador == usuario) {
+		$("#jugadorFinPartida").css("visibility", "hidden");
+		document.getElementById("cartelFinPartida").innerHTML = "¡HAS GANADO!"
+	} else {
+		document.getElementById("cartelFinPartida").innerHTML = "Ha ganado el jugador"
+		$("#jugadorFinPartida").css("visibility", "visible");
+		document.getElementById("jugadorFinPartida").innerHTML = data.ganador;
+
+	}
+
 	$("#pauseButton").css("visibility", "hidden");
 	$("#cuadroFinPartida").css("display", "block");
 })

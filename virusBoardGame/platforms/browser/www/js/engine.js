@@ -296,6 +296,9 @@ Engine = new function () {
 		//6 posiciones libres. La propia, una a la izq, tres enfrente y otra a la dcha
 		var pos1, pos2, pos3, pos4, pos5, pos6 = [];
 		switch(jugadores.length){
+		case 1:
+			posJugadores = [1];
+			break;
 		case 2:
 			posJugadores = [1, 5];
 			break;
