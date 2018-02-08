@@ -5,6 +5,7 @@ var idPartidaEsperando = "";
 var enPartidaEsperando = false;
 var ayudaFuerte;
 var ayudaDebil;
+var logged = "false";
 var gamePaused = "false";
 /** Establecimiento de la conexion con el servidor **/
 //var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
@@ -23,7 +24,7 @@ windowWidth = window.innerWidth;
 windowHeight = window.innerHeight;
 
 function configInicial() {
-	//console.log("configInicial()");
+	console.log("configInicial()");
 
 	var autoLogin = localStorage.getItem('autoLogin');
 	if (autoLogin == "") {
@@ -149,8 +150,6 @@ function backTo_InitMenu() {
 	$("#cuadroFinPartida").css("display", "none");
 	$("#instrucciones").css("display", "inline");
 	$("#pauseButton").css("visibility", "hidden");
-	var logged = localStorage.getItem("logged");
-	//console.log("backTo_InitMenu()->logged: "+logged);
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
 		$("#userNameContainer").css("display", "block");
@@ -198,6 +197,7 @@ function button_leave () {
 	document.form_login_user.loginName.value = "";
 	document.form_login_user.loginPass.value = "";
 	localStorage.setItem("logged", "false");
+	logged = "false";
 }
 
 function button_ranquing () {
@@ -256,12 +256,14 @@ socket.on('login_user-OK', function(message) {
 	$("#leave").css("display", "block");
 
 	localStorage.setItem("logged", "true");
+	logged = "true";
 });
 
 socket.on('login_user-KO', function(message) {
 	localStorage.removeItem('loginName');
 	localStorage.removeItem('loginPass');
 	localStorage.setItem("logged", "false");
+	logged = "false";
 
 	//console.log("login_user-KO: "+message);
 	document.getElementById("loginCorrection").innerHTML = "Usuario o contraseña incorrectos";

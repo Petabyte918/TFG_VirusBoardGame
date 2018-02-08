@@ -464,9 +464,9 @@ input.botonCrearPartida {
 
     background-color: rgba(128, 0, 0, 0.8);
     -webkit-transition-property: width, height; /* Safari */
-    -webkit-transition-duration: 0.5s; /* Safari */
+    -webkit-transition-duration: 2s; /* Safari */
     transition-property: width, height;
-    transition-duration: 0.5s;
+    transition-duration: 2s;
 
     border: solid #330000 2px;
     -ms-border-radius:8px;
