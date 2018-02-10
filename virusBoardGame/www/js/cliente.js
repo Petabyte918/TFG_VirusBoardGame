@@ -891,7 +891,7 @@ function pauseGame(){
 }
 
 socket.on('pauseGame', function(datos_partida) {
-	//console.log("socket.on->pauseGame");
+	console.log("socket.on->pauseGame");
 	gamePaused = "true";
 	//Cambiamos color
 	$("#pauseButton").css("background-color","red");
@@ -900,7 +900,7 @@ socket.on('pauseGame', function(datos_partida) {
 })
 
 socket.on('contineGame', function(datos_partida) {
-	//console.log("socket.on->continueGame");	
+	console.log("socket.on->continueGame");	
 	gamePaused = "false";
 	//Cambiamos color
 	$("#pauseButton").css("background-color","green");
@@ -910,20 +910,37 @@ socket.on('contineGame', function(datos_partida) {
 
 socket.on('expulsadoPartida', function() {
 	console.log("socket.on->expulsadoPartida");	
-	backTo_InitMenu();
+	//En lugar de volver inmediatamente al menu principal, mostramos cartel de expulsado
+	//similar al de haber acabado la partida
+	//backTo_InitMenu();
+
+	//Reseteamos cosas
+	clearTimeout(countDownSTO);
+	clearTimeout(esperarMovSTO);
+
+	//Representamos cuadro fin de partida
+	var widthElem = parseInt(($("#cuadroFinPartida").css("width")).replace("px",""));
+	var heightElem = parseInt(($("#cuadroFinPartida").css("height")).replace("px",""));
+	var marginElem = parseInt(($("#cuadroFinPartida").css("margin")).replace("px",""));
+	var borderElem = parseInt(($("#cuadroFinPartida").css("border-width")).replace("px",""));
+	var paddingTopElem = parseInt(($("#cuadroFinPartida").css("padding-top")).replace("px",""));
+	var paddingLeftElem = parseInt(($("#cuadroFinPartida").css("padding-left")).replace("px",""));
+
+	var posX = (windowWidth - widthElem)/2 - marginElem - borderElem - paddingLeftElem;
+	var posY = (windowHeight - heightElem)/2 - marginElem - borderElem - paddingTopElem;
+	var posXStr = (Math.floor(posX)).toString()+"px";
+	var posYStr = (Math.floor(posY)).toString()+"px";
+	$("#cuadroFinPartida").css("left", posXStr);
+	$("#cuadroFinPartida").css("top", posYStr);
+
+	$("#cartelFinPartida").css("color", "darkred");
+	document.getElementById("cartelFinPartida").innerHTML = "¡HAS sido expulsado de la partida!"
+	document.getElementById("jugadorFinPartida").innerHTML = "(Por estar inactivo 3 turnos)";
+	$("#jugadorFinPartida").css("visibility", "visible");
+
+	$("#pauseButton").css("visibility", "hidden");
+	$("#cuadroFinPartida").css("display", "block");
 })
-
-function representarMov(movJugador) {
-
-}
-
-function checkCards() {
-	for (var i = 0; i < objetos.length; i++) {
-		if (objetos[i].src == ""){
-			nuevaCarta(i);
-		}
-	}
-}
 
 socket.on('terminarPartida', function(data){
 	console.log("socket.on->terminarPartida");
@@ -945,7 +962,6 @@ socket.on('terminarPartida', function(data){
 	clearTimeout(esperarMovSTO);
 
 	//Representamos cuadro fin de partida
-
 	var widthElem = parseInt(($("#cuadroFinPartida").css("width")).replace("px",""));
 	var heightElem = parseInt(($("#cuadroFinPartida").css("height")).replace("px",""));
 	var marginElem = parseInt(($("#cuadroFinPartida").css("margin")).replace("px",""));
@@ -960,11 +976,12 @@ socket.on('terminarPartida', function(data){
 	$("#cuadroFinPartida").css("left", posXStr);
 	$("#cuadroFinPartida").css("top", posYStr);
 
+	$("#cartelFinPartida").css("color", "darkslateblue");
 	if (usuario.indexOf(data.ganador) > -1) {
 		$("#jugadorFinPartida").css("visibility", "hidden");
-		document.getElementById("cartelFinPartida").innerHTML = "¡HAS GANADO!"
+		document.getElementById("cartelFinPartida").innerHTML = "¡HAS GANADO!";
 	} else {
-		document.getElementById("cartelFinPartida").innerHTML = "Ha ganado el jugador"
+		document.getElementById("cartelFinPartida").innerHTML = "Ha ganado el jugador";
 		$("#jugadorFinPartida").css("visibility", "visible");
 		document.getElementById("jugadorFinPartida").innerHTML = data.ganador;
 

@@ -349,6 +349,18 @@ function nuevaCarta(numCarta){
 	objetos[numCarta].src = newCard.picture;
 }
 
+function representarMov(movJugador) {
+
+}
+
+function checkCards() {
+	for (var i = 0; i < objetos.length; i++) {
+		if (objetos[i].src == ""){
+			nuevaCarta(i);
+		}
+	}
+}
+
 //En el canvas mid estan los turnos y los organos de los jugadores
 function actualizarCanvasMID(){
 	//console.log("actualizarCanvasMID");
