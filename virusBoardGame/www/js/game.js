@@ -179,6 +179,8 @@ function renderCountDown(time, oldDate, first){
 		cxMID.fillText("Turno "+numTurno, xCountDown - 1.3*radius, yCountDown - 45);
 
 		//Indicamos turno con texto de nombre usuario
+		//Texto independiente al que se maneja como nombre de usuario en el servidor
+		//en este caso es el mismo, peor podria ser otro
 		var turnoJug = turno;
 		var pos  = posPorJugador[turno].posicion;
 		cxMID.shadowColor = "YellowGreen";

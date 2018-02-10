@@ -960,7 +960,7 @@ socket.on('terminarPartida', function(data){
 	$("#cuadroFinPartida").css("left", posXStr);
 	$("#cuadroFinPartida").css("top", posYStr);
 
-	if (data.ganador == usuario) {
+	if (usuario.indexOf(data.ganador) > -1) {
 		$("#jugadorFinPartida").css("visibility", "hidden");
 		document.getElementById("cartelFinPartida").innerHTML = "¡HAS GANADO!"
 	} else {
