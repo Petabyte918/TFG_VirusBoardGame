@@ -172,8 +172,8 @@ function renderCountDown(time, oldDate, first){
 
 	//Texto numTurnos (Eliminamos difuminado, color y algunas cosas)
 	if (first == "first") {
-		cxMID.font = "25px Arial Bold";
-		cxMID.fillStyle = '#09303a';
+		cxMID.font = "900 25px Arial";
+		cxMID.fillStyle = 'black';
 		cxMID.shadowBlur = 1;
 		cxMID.shadowColor = 'white';
 		cxMID.fillText("Turno "+numTurno, xCountDown - 1.3*radius, yCountDown - 45);
@@ -184,16 +184,21 @@ function renderCountDown(time, oldDate, first){
 		var turnoJug = turno;
 		var pos  = posPorJugador[turno].posicion;
 		cxMID.shadowColor = "YellowGreen";
+		cxMID.shadowBlur = 0;
+		cxMID.font = "900 20px Arial";
+
 		if (turnoJug.length > 8 ){
-			turnoJug = "Turno de: "+turnoJug.slice(0,8);
+			turnoJug = "Turno de "+turnoJug.slice(0,8);
 		}
 		if (pos == 1) {
 			turnoJug = "TÚ turno";
 			cxMID.shadowColor = 'red';
+			cxMID.fillText(turnoJug, xCountDown - 1.3*radius, yCountDown - 20);
+		} else {
+			cxMID.fillText(turnoJug, xCountDown - 1.3*radius - 25*2, yCountDown - 20);
 		}
-		cxMID.shadowBlur = 0;
-		cxMID.font = "18px Arial Bold";
-		cxMID.fillText(turnoJug, xCountDown - 1.3*radius - 25*2, yCountDown - 20);
+
+
 
 		//Vemos si avisamos que nos hemos saltado el turno alguna vez
 		if (infoJugadores[usuario].turnosPerdidos > 0) {
@@ -202,7 +207,7 @@ function renderCountDown(time, oldDate, first){
 				//¡Cuidado!: Seremos expulsados
 				//si perdemos el turno
 				//X veces mas
-				cxMID.font = "10px Arial Bold";
+				cxMID.font = "12px Arial bold";
 				cxMID.fillStyle = 'red';
 				cxMID.fillText("¡Cuidado!: Seremos expulsados", xCountDown - 2*radius, yCountDown - 45 + radius*3 + 14 + 25);
 				cxMID.fillText("       si perdemos el turno", xCountDown - 2*radius, yCountDown - 45 + radius*3 +28 + 25);
@@ -231,7 +236,7 @@ function renderCountDown(time, oldDate, first){
 }
 
 function indicarTurno(turno) {
-	//console.log("indicarTurno()-game.js");
+	console.log("indicarTurno(turno)");
 	var numJugadores = jugadores.length;
 	var index = jugadores.indexOf(turno);
 	var posX, posY, widthJug, heightJug = 0;
@@ -287,21 +292,7 @@ function indicarTurno(turno) {
 	cxMID.fillRect(posX, posY, widthJug, heightJug);
 
 	//Creamos el marco de 20 px de grosor
-	//console.log("PosX: "+posX);
-	//console.log("PosY: "+posY);
-	//console.log("widthJug: "+widthJug);
-	//console.log("heightJug: "+heightJug);
 	cxMID.clearRect(posX + 5, posY + 5, widthJug - 10, heightJug - 10);
-
-	/** Logs para dibujar espacio de descartes
-	posX = ((windowWidth / 6) * 1);
-	posY = ((windowHeight / 3) * 1);
-	widthJug =  (((windowWidth / 6) * 5) - posX);
-	heightJug = (((windowHeight / 3) * 2) - posY);
-	cxMID.fillStyle = 'red';
-	cxMID.fillRect(posX, posY, widthJug, heightJug);**/
-
-	actualizarCanvasMID();
 }
 
 function asignarJugadoresAPosiciones(){
@@ -504,9 +495,30 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	if (estadoOrgano == ""){
 		cxMID.fillStyle = 'black';
 		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
-		cxMID.fillStyle = 'white';
+		cxMID.fillStyle = '#D3D3D3';
 		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
-
+		var img1 = new Image();
+		img1.src = src;
+		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
+		if (posJug == 2) {
+			img1.onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cxMID.save();
+				cxMID.globalAlpha = 0.3;
+				cxMID.translate(x, y);
+				cxMID.translate(widthOrgano, 0);
+				cxMID.rotate(Math.PI/2);
+				cxMID.drawImage(img1, 0, 0, heightOrgano, widthOrgano); //Ojo que invertimos dimensiones
+				cxMID.restore();
+			}
+		} else {
+			img1.onload = function(){
+				cxMID.save();
+				cxMID.globalAlpha = 0.4;
+				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
+				cxMID.restore();
+			}
+		}
 	}
 
 	//Marco negro (en fondo blanco) y encima la imagen->como va la imagen encima no es necesario el fondo blanco

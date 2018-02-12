@@ -869,7 +869,8 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 
 	checkCards();
-	indicarTurno(turno);
+	//indicarTurno(turno);
+	actualizarCanvasMID();
 
 	//Conforman el hilo de ejecucion del turno del usuario
 	esperarMovimiento(); //->setTimeOut
