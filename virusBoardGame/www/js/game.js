@@ -109,9 +109,10 @@ function degToRad(degree) {
 
 function renderCountDown(time, oldDate, first){
 	//console.log("renderCountDown()");
+	//posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
 	var radius = 30;
-	var xCountDown = posCubosDescarte[1].x - radius*0;
-	var yCountDown = posCubosDescarte[1].y + radius*6;
+	var xCountDown = posCartasUsuario[2][0] - radius*2.2;
+	var yCountDown = posCartasUsuario[2][1] + radius*2.2;
 
 	//Cada vez que cambiemos el tiempo del cronometro hay que ajustar el valor
 	//multiplicando el tiempo por (60/valorcronometro)
@@ -170,18 +171,20 @@ function renderCountDown(time, oldDate, first){
 		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8 + 25);
 	}
 
-	//Texto numTurnos (Eliminamos difuminado, color y algunas cosas)
+	//Evitamos redibujar texto en cada ciclo del crono (Eliminamos difuminado, color raro...etc)
 	if (first == "first") {
+		
+		//Numero de turno
 		cxMID.font = "900 25px Arial";
 		cxMID.fillStyle = 'black';
 		cxMID.shadowBlur = 1;
 		cxMID.shadowColor = 'white';
-		cxMID.fillText("Turno "+numTurno, xCountDown - 2*radius, yCountDown - 45);
+		cxMID.fillText("Turno "+numTurno, xCountDown - 1.5*radius, yCountDown - 25);
 
 		//Indicamos turno con texto de nombre usuario
 		//Texto independiente al que se maneja como nombre de usuario en el servidor
 		//en este caso es el mismo, peor podria ser otro
-		var turnoJug = turno;
+		/**var turnoJug = turno;
 		var pos  = posPorJugador[turno].posicion;
 		cxMID.shadowColor = "YellowGreen";
 		cxMID.shadowBlur = 0;
@@ -198,8 +201,7 @@ function renderCountDown(time, oldDate, first){
 			cxMID.fillText(turnoJug, xCountDown - 2*radius, yCountDown - 20);
 		} else {
 			cxMID.fillText(turnoJug, xCountDown - 2*radius - 25*2, yCountDown - 20);
-		}
-
+		}**/
 
 		//Vemos si avisamos que nos hemos saltado el turno alguna vez
 		if (infoJugadores[usuario].turnosPerdidos > 0) {
