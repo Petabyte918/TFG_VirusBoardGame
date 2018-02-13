@@ -186,18 +186,19 @@ function renderCountDown(time, oldDate, first){
 		cxMID.shadowColor = "YellowGreen";
 		cxMID.shadowBlur = 0;
 		cxMID.font = "900 20px Arial";
+		cxMID.fillStyle = 'FireBrick';
 
 		if (turnoJug.length > 8 ){
 			turnoJug = "Turno de "+turnoJug.slice(0,8);
 		}
 		if (pos == 1) {
 			turnoJug = "TÚ turno";
+			cxMID.fillStyle = 'ForestGreen';
 			cxMID.shadowColor = 'red';
 			cxMID.fillText(turnoJug, xCountDown - 1.3*radius, yCountDown - 20);
 		} else {
 			cxMID.fillText(turnoJug, xCountDown - 1.3*radius - 25*2, yCountDown - 20);
 		}
-
 
 
 		//Vemos si avisamos que nos hemos saltado el turno alguna vez
@@ -235,7 +236,8 @@ function renderCountDown(time, oldDate, first){
 	}, 250);
 }
 
-function indicarTurno(turno) {
+//En desuso
+/**function indicarTurno(turno) {
 	console.log("indicarTurno(turno)");
 	var numJugadores = jugadores.length;
 	var index = jugadores.indexOf(turno);
@@ -293,7 +295,7 @@ function indicarTurno(turno) {
 
 	//Creamos el marco de 20 px de grosor
 	cxMID.clearRect(posX + 5, posY + 5, widthJug - 10, heightJug - 10);
-}
+}**/
 
 function asignarJugadoresAPosiciones(){
 	var fin = false;
@@ -354,7 +356,9 @@ function checkCards() {
 
 //En el canvas mid estan los turnos y los organos de los jugadores
 function actualizarCanvasMID(){
-	//console.log("actualizarCanvasMID");
+	console.log("actualizarCanvasMID()");
+	//Limpiamos el canvas antes de dibujar nada
+	cxMID.clearRect(0, 0, windowWidth, windowHeight);
 	var estadoOrgano, pos;
 	var posOrgano = {};
 	//Puedo recorrer los jugadores desde el array de jugadores o desde los indices de organosJugadoresCli
@@ -440,26 +444,26 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	var posY;
 
 	cxMID.font = "bold 22px sans-serif";
+	cxMID.fillStyle = 'FireBrick';
 	switch(pos) {
 	case 1:
-		posX = posOrganosJugadores[pos].posCerebro[0]
+		posX = posOrganosJugadores[pos].posCerebro[0];
 		posY = posOrganosJugadores[pos].posCerebro[1] - 20;
 		break;
 	case 2:
-		console.log("renderUsername-> pos2 no programada");
-		posX = -20;
-		posY = -20;
+		posX = posOrganosJugadores[pos].posCerebro[0] + widthOrgano + 20 + 12;
+		posY = posOrganosJugadores[pos].posCerebro[1];
 		break;
 	case 3:
-		posX = posOrganosJugadores[pos].posCerebro[0]
+		posX = posOrganosJugadores[pos].posCerebro[0];
 		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
 		break;
 	case 4:
-		posX = posOrganosJugadores[pos].posCerebro[0]
+		posX = posOrganosJugadores[pos].posCerebro[0];
 		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
 		break;
 	case 5:
-		posX = posOrganosJugadores[pos].posCerebro[0]
+		posX = posOrganosJugadores[pos].posCerebro[0];
 		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
 		break;
 	case 6:
@@ -473,12 +477,22 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	}
 
 	if (jugador.length > 8 ){
-		jugador = "Usuario: "+jugador.slice(0,8);
+		jugador = "Jugador "+jugador.slice(0,8);
 	}
 	if (pos == 1) {
 		jugador = "TÚ";
+		cxMID.fillStyle = 'ForestGreen';
+		cxMID.fillText(jugador, posX, posY);
+	} else if (pos == 2) {
+		cxMID.save();
+		cxMID.translate(posX, posY);
+		cxMID.rotate(Math.PI/2);
+		cxMID.fillText(jugador, 0, 0);
+		cxMID.restore();
+		
+	} else {
+		cxMID.fillText(jugador, posX, posY);
 	}
-	cxMID.fillText(jugador, posX, posY);
 }
 
 function renderOrgano(posOrgano, estadoOrgano) {
@@ -492,6 +506,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 
 	//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 	//Marco negro en fondo blanco
+	cxMID.shadowBlur = 0;
 	if (estadoOrgano == ""){
 		cxMID.fillStyle = 'black';
 		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
@@ -504,7 +519,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 			img1.onload = function(){
 				//console.log("objetos[0] :"+objetos[0]);
 				cxMID.save();
-				cxMID.globalAlpha = 0.3;
+				cxMID.globalAlpha = 0.4;
 				cxMID.translate(x, y);
 				cxMID.translate(widthOrgano, 0);
 				cxMID.rotate(Math.PI/2);
@@ -513,10 +528,11 @@ function renderOrgano(posOrgano, estadoOrgano) {
 			}
 		} else {
 			img1.onload = function(){
-				cxMID.save();
+				//cxMID.save();
 				cxMID.globalAlpha = 0.4;
 				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
-				cxMID.restore();
+				cxMID.globalAlpha = 1;
+				//cxMID.restore();
 			}
 		}
 	}
@@ -640,14 +656,6 @@ function renderOrgano(posOrgano, estadoOrgano) {
 				}
 			}
 		}
-
-
-		/**
-		cxMID.globalAlpha = 0.2;
-		cxMID.fillStyle = 'blue';
-	    cxMID.fillRect(x, y, widthOrgano, heightOrgano);;
-	    cxMID.globalAlpha = 1.0;
-	    **/
 	}
 }
 
