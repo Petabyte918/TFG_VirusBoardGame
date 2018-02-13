@@ -150,6 +150,7 @@ function backTo_InitMenu() {
 	$("#cuadroFinPartida").css("display", "none");
 	$("#instrucciones").css("display", "inline");
 	$("#pauseButton").css("visibility", "hidden");
+	$("#listaTurnos").css("visibility", "hidden");
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
 		$("#userNameContainer").css("display", "block");
@@ -854,7 +855,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	turno = datos_partida.turno;
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
-    infoJugadores = datos_partida.infoJugadores,
+    infoJugadores = datos_partida.infoJugadores;
 	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 
@@ -869,6 +870,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 
 	checkCards();
+	reDimListaTurnos();
 	//indicarTurno(turno);
 	actualizarCanvasMID();
 
@@ -940,6 +942,7 @@ socket.on('expulsadoPartida', function() {
 	$("#jugadorFinPartida").css("visibility", "visible");
 
 	$("#pauseButton").css("visibility", "hidden");
+	$("#listaTurnos").css("visibility", "hidden");
 	$("#cuadroFinPartida").css("display", "block");
 })
 
@@ -989,7 +992,12 @@ socket.on('terminarPartida', function(data){
 	}
 
 	$("#pauseButton").css("visibility", "hidden");
+	$("#listaTurnos").css("visibility", "hidden");
 	$("#cuadroFinPartida").css("display", "block");
+
+
+	//Pendiene dejar a null variables globales
+	infoJugadores = null;
 })
 /** -------------------- **/
 

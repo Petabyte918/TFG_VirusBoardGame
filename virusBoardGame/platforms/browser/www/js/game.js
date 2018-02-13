@@ -110,7 +110,7 @@ function degToRad(degree) {
 function renderCountDown(time, oldDate, first){
 	//console.log("renderCountDown()");
 	var radius = 30;
-	var xCountDown = posCubosDescarte[1].x - radius;
+	var xCountDown = posCubosDescarte[1].x - radius*0;
 	var yCountDown = posCubosDescarte[1].y + radius*6;
 
 	//Cada vez que cambiemos el tiempo del cronometro hay que ajustar el valor
@@ -176,7 +176,7 @@ function renderCountDown(time, oldDate, first){
 		cxMID.fillStyle = 'black';
 		cxMID.shadowBlur = 1;
 		cxMID.shadowColor = 'white';
-		cxMID.fillText("Turno "+numTurno, xCountDown - 1.3*radius, yCountDown - 45);
+		cxMID.fillText("Turno "+numTurno, xCountDown - 2*radius, yCountDown - 45);
 
 		//Indicamos turno con texto de nombre usuario
 		//Texto independiente al que se maneja como nombre de usuario en el servidor
@@ -193,11 +193,11 @@ function renderCountDown(time, oldDate, first){
 		}
 		if (pos == 1) {
 			turnoJug = "TÚ turno";
-			cxMID.fillStyle = 'ForestGreen';
+			cxMID.fillStyle = '#003321';
 			cxMID.shadowColor = 'red';
-			cxMID.fillText(turnoJug, xCountDown - 1.3*radius, yCountDown - 20);
+			cxMID.fillText(turnoJug, xCountDown - 2*radius, yCountDown - 20);
 		} else {
-			cxMID.fillText(turnoJug, xCountDown - 1.3*radius - 25*2, yCountDown - 20);
+			cxMID.fillText(turnoJug, xCountDown - 2*radius - 25*2, yCountDown - 20);
 		}
 
 
@@ -1389,14 +1389,14 @@ function reDimRanquingList() {
 	//La anchura de todas las cajas mas unos 50px de margenes
 	var widthMin = posNumPos.width + posUsuario.width + posPercent.width + posWins.width + posTotal.width +65;
 	var widthMinStr = widthMin.toString() + "px";
-	console.log("widthRanquingList: "+widthRanquingList);
-	console.log("widthMin: "+widthMin);
+	//console.log("widthRanquingList: "+widthRanquingList);
+	//console.log("widthMin: "+widthMin);
 
 	if (widthMin > widthRanquingList) {
-		console.log("Descuadre");
+		//console.log("Descuadre");
 		$("#ranquingList").css("width", widthMinStr);
 	} else {
-		console.log("Bien");
+		//console.log("Bien");
 		$("#ranquingList").css("width", widthRanquingListStr);
 	}
 }
@@ -1514,6 +1514,57 @@ function reDimAyudaCartaEspecial(cartaEspecial) {
 
 }
 
+function reDimListaTurnos() {
+	console.log("reDimListaTurnos()");
+	//Aseguramos solo mostrar en partida
+	if ((infoJugadores == null) || (infoJugadores == "") || (infoJugadores == undefined)) {
+		return;
+	}
+
+	//redimensionamos en relacion al cronometro
+	var radius = 30;
+	var xMax = posCubosDescarte[1].x - radius*2 - 20;
+	var yCountDown = posCubosDescarte[1].y + radius*6;
+	var xMin = posOrganosJugadores[2].widthOrgano + posOrganosJugadores[2].posComodin[0] + 20;
+	var maxWidth = xMax - xMin;
+	var maxHeight = windowHeight - yCountDown - 50;
+
+	var posXStr = (Math.floor(xMin)).toString() + "px";
+	var posYStr = (Math.floor(yCountDown)).toString() + "px";
+	var maxWidthStr = (Math.floor(maxWidth)).toString() + "px";
+	var maxHeightStr = (Math.floor(maxHeight)).toString() + "px";
+
+	//console.log("posXStr: "+ posXStr);
+	//console.log("posYStr: "+posYStr);
+	//console.log("widthMaxStr: "+ maxWidthStr);
+	//console.log("heightMaxStr: "+maxHeightStr);
+	
+	$("#listaTurnos").css("left", posXStr);
+	$("#listaTurnos").css("top", posYStr);
+	$("#listaTurnos").css("max-width", maxWidthStr);
+	$("#listaTurnos").css("max-height", maxHeightStr);
+
+	var nombreJug = ""; 
+	var textListaTurnos = "";
+	for (var i = 0; i < jugadores.length; i++) {
+		if (jugadores[i] == usuario) {
+			nombreJug = "<b>TÚ</b>";
+		} else {
+			nombreJug = infoJugadores[jugadores[i]].nombre;
+		}
+		
+		if (jugadores[i] == turno) {
+			textListaTurnos += "<p class='textListaTurnosActual'><b>"+(i+1)+".- </b>"+nombreJug+"</br></p>";
+		} else {
+			textListaTurnos += "<p><b>"+(i+1)+".- </b>"+nombreJug+"</br></p>";
+		}
+		
+	}
+	document.getElementById("textoListaTurnos").innerHTML = textListaTurnos;
+
+	$("#listaTurnos").css("visibility","visible");
+}
+
 function doneResizing() {
 	console.log("doneResizing()");
 	windowWidth = window.innerWidth;
@@ -1521,6 +1572,7 @@ function doneResizing() {
 	
 	reDimPartidaRapida();
 	reDimRanquingList();
+	reDimListaTurnos();
 	reDimContainer_instrucciones();
 
 	//Redimensionamos la configuracion inicial

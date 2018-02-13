@@ -524,8 +524,10 @@ Engine = new function () {
 	}
 	this.initPauseButton = function() {
 		$("#pauseButton").css("visibility","visible");
+		var elemPauseButton = document.getElementById("pauseButton");
+		var posPauseButton = elemPauseButton.getBoundingClientRect();
 
-		var left = (Math.floor(posCubosDescarte[1].x - 50)).toString()+"px";
+		var left = (Math.floor(posOrganosJugadores[1].posCerebro[0] - posPauseButton.width - 20)).toString()+"px";
 		//Algo hardCoding. El 84 es la altura del elemento..claro, que tp se va a cambiar y estas hasta los huevos
 		var top = (Math.floor(windowHeight - 84 - 30)).toString()+"px";
 

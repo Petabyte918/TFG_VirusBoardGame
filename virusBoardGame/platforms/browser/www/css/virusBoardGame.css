@@ -710,12 +710,6 @@ input.botonCrearPartida {
 	font-size: x-large;
 }
 
-#pauseButton {
-	width: 1em;
-	height: 1em;
-	border: 1px solid black;
-}
-
 /** sliders **/
 .switch {
   position: relative;
@@ -886,7 +880,7 @@ p.textoEnumInstrucciones {
 
 #pauseButton {
 	visibility: hidden;
-	z-index: 50;
+	z-index: 500;
 	top: 10em;
     left: 10em;
     position: absolute;
@@ -917,6 +911,50 @@ p.textoEnumInstrucciones {
     box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
     border-radius: 10em;
 }
+
+#listaTurnos {
+	position: absolute;
+	border: solid firebrick 4px;
+    box-shadow: inset 0px 0px 4px 4px #4d0000, 10px 10px 20px 5px rgba(0,0,0,0.75);
+    border-radius: 15px;
+
+    background: url(img/bloqNotas.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+	padding: 7px;
+    font-size: 0.95em;
+
+    font-family: 'Lora', serif;
+
+    z-index: 50;
+
+	width: 30em;
+	height: 30em;
+}
+
+#tittleListaTurnos {
+	text-align: left;
+    font-size: larger;	
+    margin: 0px;
+    margin-bottom: 0.5em;
+	width: 100%;
+}
+
+#textoListaTurnos {
+	float: left;
+    margin-top: 2px;
+    margin-bottom: 2px;
+	width: 100%;
+}
+
+#textoListaTurnos > p {
+	margin: 0px;
+}
+
+p.textListaTurnosActual {
+	background-color: rgba(178, 34, 34, 0.4); /** firebrick **/
+}
+
 
 /** Instrucciones **/
 #container_instrucciones1, #container_instrucciones2, #container_instrucciones3,
