@@ -23,28 +23,13 @@ var countDownSTO;
 var esperarMovSTO;
 var idDoneResizing;
 
-function actualizarCanvasBG (){
-	var widthCarta = posCartasUsuario[0];
-	var heightCarta = posCartasUsuario[1];
-	var posCarta1 = posCartasUsuario[2];
-	var posCarta2 = posCartasUsuario[3];
-	var posCarta3 = posCartasUsuario[4];
+function actualizarCanvasBG(){
 
 	//Imagen del fondo en BG
 	var img0 = new Image();
 	img0.src = "img/BG/tapete_verde-claro.jpg";
 	img0.onload = function(){
 		cxBG.drawImage(img0, 0, 0, windowWidth, windowHeight);
-		
-
-		//"Containers" de las diferentes cartas de usuario
-		/**var img = new Image();
-		img.src = "img/cardImages/reversoCarta.jpg";
-		img.onload = function(){
-			cxBG.drawImage(img, posCarta1[0], posCarta1[1], widthCarta, heightCarta);
-			cxBG.drawImage(img, posCarta2[0], posCarta2[1], widthCarta, heightCarta);
-			cxBG.drawImage(img, posCarta3[0], posCarta3[1], widthCarta, heightCarta);
-		}**/
 
 		//Imagenes de lso diferentes cubos de basura de la zona de descartes
 		var widthCubo = posCubosDescarte.widthCubo;
@@ -98,7 +83,6 @@ function actualizarCanvasBG (){
 			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
 			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
 		}
-
 	}
 }
 
@@ -109,10 +93,10 @@ function degToRad(degree) {
 
 function renderCountDown(time, oldDate, first){
 	//console.log("renderCountDown()");
-	//posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+	//posCartasUsuario = {width, height, posCarta1 = {x,y}, posCarta2 = {x,y}, posCarta3 = {x,y}};
 	var radius = 30;
-	var xCountDown = posCartasUsuario[2][0] - radius*2.2;
-	var yCountDown = posCartasUsuario[2][1] + radius*2.2;
+	var xCountDown = posCartasUsuario.carta1.x - radius*2.2;
+	var yCountDown = posCartasUsuario.carta1.y + radius*2.2;
 
 	//Cada vez que cambiemos el tiempo del cronometro hay que ajustar el valor
 	//multiplicando el tiempo por (60/valorcronometro)
@@ -432,6 +416,7 @@ function actualizarCanvasMID(){
 		}
 		//Escribimos el nombre del usuario
 		renderUsername(pos, jugador, posOrgano.width, posOrgano.height);
+		DeckOfCards.reDimDeckOfCards();
 	}
 }
 
@@ -757,7 +742,7 @@ function actualizarCanvas(){
 		} else {
 			img1.src = objetos[0].src;
 			img1.onload = function(){
-				//console.log("objetos[0] :"+objetos[0]);
+				console.log("objetos[0].y :"+objetos[0].y);
 				cxAPO.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
 			}
 		}
@@ -791,27 +776,25 @@ function actualizarCanvas(){
 }
 
 function moveObjects(){
-	var offsetCartasUsuario = 0;
-	offsetCartasUsuario = (posCartasUsuario[1] - posCartasUsuario[0]) / 2;
 
 	objetos.push({
-		x: posCartasUsuario[2][0], y: posCartasUsuario[2][1] + offsetCartasUsuario,
-		xOrigen: posCartasUsuario[2][0], yOrigen: posCartasUsuario[2][1] + offsetCartasUsuario,
-		width: posCartasUsuario[0], height: posCartasUsuario[1],
+		x: posCartasUsuario.carta1.x, y: posCartasUsuario.carta1.y,
+		xOrigen: posCartasUsuario.carta1.x, yOrigen: posCartasUsuario.carta1.y,
+		width: posCartasUsuario.width, height: posCartasUsuario.height,
 		numCarta: 0,
 		src: cartasUsuario[0].picture
 	});
 	objetos.push({
-		x: posCartasUsuario[3][0], y: posCartasUsuario[3][1] + offsetCartasUsuario,
-		xOrigen: posCartasUsuario[3][0], yOrigen: posCartasUsuario[3][1] + offsetCartasUsuario,
-		width: posCartasUsuario[0], height: posCartasUsuario[1],
+		x: posCartasUsuario.carta2.x, y: posCartasUsuario.carta2.y,
+		xOrigen: posCartasUsuario.carta2.x, yOrigen: posCartasUsuario.carta2.y,
+		width: posCartasUsuario.width, height: posCartasUsuario.height,
 		numCarta: 1,
 		src: cartasUsuario[1].picture
 	});
 	objetos.push({
-		x: posCartasUsuario[4][0], y: posCartasUsuario[4][1] + offsetCartasUsuario,
-		xOrigen: posCartasUsuario[4][0], yOrigen: posCartasUsuario[4][1] + offsetCartasUsuario,
-		width: posCartasUsuario[0], height: posCartasUsuario[1],
+		x: posCartasUsuario.carta3.x, y: posCartasUsuario.carta3.y,
+		xOrigen: posCartasUsuario.carta3.x, yOrigen: posCartasUsuario.carta3.y,
+		width: posCartasUsuario.width, height: posCartasUsuario.height,
 		numCarta: 2,
 		src: cartasUsuario[2].picture
 	});
@@ -914,7 +897,6 @@ function moveObjects(){
 			}
 		}
 
-		//Movil - ordenador
 		cv.onmousemove = function(event) {
 			touch = event;
 			//console.log("Onmousemove");
@@ -977,10 +959,10 @@ function checkCollision() {
 	var colision = -1;
 	//Si la colision es en la zona donde dejamos las cartas, la contamos como -1
 	//posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
-	if ((touch.pageX < (posCartasUsuario[4][0] + posCartasUsuario[0])) && //posCarta3.x + widthCarta
-		(touch.pageX > posCartasUsuario[2][0]) && //posCarta1.x
-		(touch.pageY < (posCartasUsuario[4][1] + posCartasUsuario[1])) && //posCarta3.y + heightCarta
-		(touch.pageY > posCartasUsuario[2][1])) { //posCarta2.y
+	if ((touch.pageX < (posCartasUsuario.carta3.x + posCartasUsuario.width)) && //posCarta3.x + widthCarta
+		(touch.pageX > posCartasUsuario.carta1.x) && 
+		(touch.pageY < (posCartasUsuario.carta3.y + posCartasUsuario.height)) && //posCarta3.y + heightCarta
+		(touch.pageY > posCartasUsuario.carta1.y)) { //posCarta2.y
 		//console.log("Colision zona zona dibujo cartas usuario");
 		colision = -1;
 	}

@@ -14,7 +14,7 @@ var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num d
 							//Busco pasandole la posicion del jugador
 var posOrganosJugadores = {}; //posOrganosJugadores[posJug] Informacion para dibujar los organos de los jugadores
 var cartasUsuario = []; //Cartas que tiene en la mano cada jugador
-var posCartasUsuario = []; //Informacion para dibujar las cartas de la mano
+var posCartasUsuario = {}; //Informacion para dibujar las cartas de la mano
 var posCubosDescarte = {};
 var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
 var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
@@ -35,6 +35,14 @@ function colorAleatorio() {
 
 function cambiaApass(caja) {
 	console.log("cambiaApass()-"+caja);
+}
+
+function isEmpty(data) {
+	if ((data == undefined) || (data == null) || (data == "")) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function shuffle(array) {
@@ -247,7 +255,7 @@ function takeCard(){
     }
 }
 
-Engine = new function () {
+Engine = new function() {
 	//Responsive canvas
 	this.initCanvas = function(){
 
@@ -490,20 +498,37 @@ Engine = new function () {
 		}
 	}	
 	this.initPosCartasUsuario = function(){
+		//1536px width
+		//1013px height
 
-		var distDisp = posCubosDescarte[1].y + posCubosDescarte.heightCubo;
-		//La altura de las cartas del usuario sera proporcional al espacio entre los cubos y los organos del usuario
-		var heightCarta = (posOrganosJugadores[1].posCerebro[1] - distDisp - 70) * 0.90;
-		//La anchura de las cartas del usuario esta en proporcion con (1536/1013)
-		var widthCarta = heightCarta * (1013/1536);
+		var widthCarta = ((windowWidth/3)/4);
+		var heightCarta = widthCarta * (1536/1013);
+		var sepEntreCartas = 8; //max = widthCarta/4
 
-		//La posY sera centrada entre los cubos y el espacio para los organos
-		var posY = ((distDisp - heightCarta) / 2) + posCubosDescarte[1].y;
+		//Desde el limite de alto de la pos1
+		//var posY = ((windowHeight/3)*2);
+		//Aprovechamos que los descartes no ocupan toda su altura y comenzamos desde ahí
+		var posYDeck = Math.floor(windowHeight/3); //De DeckOfCards.initDeckOfCards();
+		var widthDeck = Math.floor((windowWidth/3)/3); //De DeckOfCards.initDeckOfCards();
+		var heightDeck = Math.floor(widthDeck*210/148); //De DeckOfCards.initDeckOfCards();
+		var posY = posYDeck + heightDeck + sepEntreCartas;
 
-		var posCarta1 = [windowWidth/2 - widthCarta*1.5 - 10, posY];
-		var posCarta2 = [windowWidth/2 - widthCarta*0.5, posY];
-		var posCarta3 = [windowWidth/2 + widthCarta*0.5 + 10, posY];
-		posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
+		console.log("windowWidth: "+windowWidth);
+		console.log("windowHeight: "+windowHeight);
+		console.log("posY: "+posY);
+
+		var posCarta1 = {x: windowWidth/2 - widthCarta*1.5 - sepEntreCartas, 
+						 y: posY};
+		var posCarta2 = {x: windowWidth/2 - widthCarta*0.5,
+						 y: posY};
+		var posCarta3 = {x: windowWidth/2 + widthCarta*0.5 + sepEntreCartas,
+						 y: posY};
+
+		posCartasUsuario = {width: widthCarta, 
+							height: heightCarta,
+							carta1: posCarta1,
+							carta2: posCarta2,
+							carta3: posCarta3};
 
 	}
 	this.initFinDescartesButton = function() {
@@ -514,13 +539,6 @@ Engine = new function () {
 		var posY = posCubosDescarte[4].y - 5;
 
 		$("#descartes_boton").css({"top": posY, "left": posX});
-
-
-		/** Colocacion por cartas de usuario
-		var posX = posCartasUsuario[4][0] + posCartasUsuario[0] + 20;
-		var posY = posCartasUsuario[4][1] + 20;
-
-		$("#descartes_boton").css({"top": posY, "left": posX});**/
 	}
 	this.initPauseButton = function() {
 		$("#pauseButton").css("visibility","visible");
@@ -536,3 +554,63 @@ Engine = new function () {
 	}
 }
 
+DeckOfCards = new function() {
+	//148px width
+	//210px height
+	this.deckData = {};
+	this.descartesData = {};
+
+	this.tmp = 0;
+
+	this.initDeckOfCards = function() {
+		var width = Math.floor((windowWidth/3)/3);
+		var height = Math.floor(width*210/148);
+		var posXDeck = Math.floor(windowWidth/2 - width);
+		var posYDeck = Math.floor(windowHeight/3);
+
+		this.deckData = {x: posXDeck, y: posYDeck, width: width, height: height};
+
+		var posXDescartes = Math.floor(windowWidth/2 + 10);
+		var posYDescartes = Math.floor(windowHeight/3);
+
+		//Los ajustes de tamanio finales son debidos a la diferencia de tamanio entre el mazo y la carta del reverso,
+		//por el efecto profundidad del mazo
+		this.descartesData = {x: posXDescartes, y: posYDescartes+5, width: width*0.91, height: height*0.91};
+	}
+	this.renderDeck = function() {
+		var deck = new Image();
+		deck.src = 'img/cardImagesLQ/deckCardsLQ.png';
+
+		var posX = this.deckData.x;
+		var posY = this.deckData.y;
+		var width = this.deckData.width;
+		var height = this.deckData.height;
+
+		deck.onload = function(){
+			cxBG.drawImage(deck, posX, posY, width, height);
+		}
+	}
+	this.renderDescarte = function(src) {
+		var descarte = new Image();
+
+		if (isEmpty(src)) {
+			descarte.src = 'img/cardImagesLQ/reverseCardLQ.png';
+		} else {
+			descarte.src = src;
+		}
+
+		var posX = this.descartesData.x;
+		var posY = this.descartesData.y;
+		var width = this.descartesData.width;
+		var height = this.descartesData.height;
+
+		descarte.onload = function(){
+			cxBG.drawImage(descarte, posX, posY, width, height);
+		}
+	}
+	this.reDimDeckOfCards =  function() {
+		this.initDeckOfCards();
+		this.renderDeck();
+		this.renderDescarte();
+	}
+}
