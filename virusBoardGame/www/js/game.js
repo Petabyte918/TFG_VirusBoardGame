@@ -30,59 +30,6 @@ function actualizarCanvasBG(){
 	img0.src = "img/BG/tapete_verde-claro.jpg";
 	img0.onload = function(){
 		cxBG.drawImage(img0, 0, 0, windowWidth, windowHeight);
-
-		//Imagenes de lso diferentes cubos de basura de la zona de descartes
-		var widthCubo = posCubosDescarte.widthCubo;
-		var heightCubo = posCubosDescarte.heightCubo;
-
-		var cubo1 = posCubosDescarte[1];
-		var img1 = new Image();
-		img1.src = "img/descartesImages/cuboAmarillo.png";
-		img1.onload = function(){
-			cxBG.drawImage(img1, cubo1.x, cubo1.y, widthCubo, heightCubo);
-
-			cxBG.font = "bold 50px Arial";
-			cxBG.fillStyle = "rgba(60,179,113,0.1)";
-			cxBG.strokeStyle = "rgba(0,0,0,0.1)";
-			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
-			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
-		}
-		var cubo2 = posCubosDescarte[2];
-		var img2 = new Image();
-		img2.src = "img/descartesImages/cuboRojo.png"
-		img2.onload = function(){
-			cxBG.drawImage(img2, cubo2.x, cubo2.y, widthCubo, heightCubo);
-
-			cxBG.font = "bold 50px Arial";
-			cxBG.fillStyle = "rgba(60,179,113,0.1)";
-			cxBG.strokeStyle = "rgba(0,0,0,0.1)";
-			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
-			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
-		}
-		var cubo3 = posCubosDescarte[3];
-		var img3 = new Image();
-		img3.src = "img/descartesImages/cuboAzul.png";
-		img3.onload = function(){
-			cxBG.drawImage(img3, cubo3.x, cubo3.y, widthCubo, heightCubo);
-
-			cxBG.font = "bold 50px Arial";
-			cxBG.fillStyle = "rgba(60,179,113,0.1)";
-			cxBG.strokeStyle = "rgba(0,0,0,0.1)";
-			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
-			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
-		}
-		var cubo4 = posCubosDescarte[4];	
-		var img4 = new Image();
-		img4.src = "img/descartesImages/cuboVerde.png";
-		img4.onload = function(){
-			cxBG.drawImage(img4, cubo4.x, cubo4.y, widthCubo, heightCubo);
-
-			cxBG.font = "bold 50px Arial";
-			cxBG.fillStyle = "rgba(60,179,113,0.1)";
-			cxBG.strokeStyle = "rgba(0,0,0,0.1)";
-			cxBG.fillText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
-			cxBG.strokeText("Zona de descartes", ((windowWidth / 6) * 2), ((windowHeight / 2)));
-		}
 	}
 }
 
@@ -742,7 +689,7 @@ function actualizarCanvas(){
 		} else {
 			img1.src = objetos[0].src;
 			img1.onload = function(){
-				console.log("objetos[0].y :"+objetos[0].y);
+				//console.log("objetos[0].y :"+objetos[0].y);
 				cxAPO.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
 			}
 		}
@@ -1116,7 +1063,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		abrirAyudaCartas("ayudaDescartes");
 		descartes[numCarta] = true;
 		actualizarCanvas();
-		$("#descartes_boton").css("display","inline");
+		$("#descartes_boton").css("visibility","visible");
 	}
 	//Descarte-block. Si estamos en proceso de descarte no podemos hacer otra cosa hasta acabar
 	if (finDescarte == false) {
@@ -1307,7 +1254,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 
 function fin_descarte() {
 	finDescarte = true;
-	$("#descartes_boton").css("display","none");
+	$("#descartes_boton").css("visibility","hidden");
 	if (descartes[0] == true) {
 		nuevaCarta(0);
 	}
@@ -1448,18 +1395,6 @@ function reDimContainer_instrucciones(pagina) {
 function reDimAyudaCartaEspecial(cartaEspecial) {
 	console.log("reDimAyudaCartaEspecial()");
 
-	//Esto siendo estrictos no deberia ir aqui, pero no quiero ponerme a cambiar nombres Ej.:ayudaTransplante por ayudatransplante
-	//No es muy hacky
-	//Rectifico. lo estoy escondiendo pero al salir de la funcion lo hago visible. Hay que hacerlo desde la funcion anterior
-	//haciendo bien el cambio de nombres
-	/**if (cartaEspecial != "ayudaDescartes") {
-		var visibility = $("#"+cartaEspecial).css("visibility");
-		if (visibility == "visible") {
-			$("#"+cartaEspecial).css("visibility", "hidden");
-			return;
-		}
-	}**/
-
 	/**
 	posOrganosJugadores[1] = {
 		widthOrgano: widthOrgano,
@@ -1489,26 +1424,33 @@ function reDimAyudaCartaEspecial(cartaEspecial) {
 	var elemAyudaLadronDeOrganos = document.getElementById(cartaEspecial);
 	var posAyudaLadronDeOrganos = elemAyudaLadronDeOrganos.getBoundingClientRect();
 
-	var top = (Math.floor(windowHeight - posAyudaLadronDeOrganos.height - marginBottom)).toString() + "px";
+	var top = (Math.floor(windowHeight - posAyudaLadronDeOrganos.height - marginBottom));
 
-	//console.log("bottom: "+top);
+	//Si se trata de un descarte tengo en cuenta donde he colocado el boton de fin descartes
+	if (cartaEspecial == "ayudaDescartes") {
+		var elemDescartesButton = document.getElementById("descartes_boton");
+		var posDescartesButton = elemDescartesButton.getBoundingClientRect();
+		top= Math.floor(top - (windowHeight - posDescartesButton.top - 10));
+	}
+
+	var topStr = top.toString() + "px";
 
 	$("#"+cartaEspecial).css("top", top);
-
-
 }
 
 function reDimListaTurnos() {
 	console.log("reDimListaTurnos()");
 	//Aseguramos solo mostrar en partida
-	if ((infoJugadores == null) || (infoJugadores == "") || (infoJugadores == undefined)) {
+	if (isEmpty(infoJugadores)) {
 		return;
 	}
 
 	//redimensionamos en relacion al cronometro
 	var radius = 30;
-	var xMax = posCubosDescarte[1].x - radius*2 - 20;
-	var yCountDown = posCubosDescarte[1].y + radius*6;
+	var xCountDown = posCartasUsuario.carta1.x - radius*2.2;
+	var yCountDown = posCartasUsuario.carta1.y + radius*2.2;
+	
+	var xMax = xCountDown - radius*2 - 20;
 	var xMin = posOrganosJugadores[2].widthOrgano + posOrganosJugadores[2].posComodin[0] + 20;
 	var maxWidth = xMax - xMin;
 	var maxHeight = windowHeight - yCountDown - 50;
@@ -1518,9 +1460,11 @@ function reDimListaTurnos() {
 	var maxWidthStr = (Math.floor(maxWidth)).toString() + "px";
 	var maxHeightStr = (Math.floor(maxHeight)).toString() + "px";
 
+	console.log("xMax: "+xMax);
+	console.log("xMin: "+xMin);
 	//console.log("posXStr: "+ posXStr);
 	//console.log("posYStr: "+posYStr);
-	//console.log("widthMaxStr: "+ maxWidthStr);
+	console.log("widthMaxStr: "+ maxWidthStr);
 	//console.log("heightMaxStr: "+maxHeightStr);
 	
 	$("#listaTurnos").css("left", posXStr);
@@ -1564,7 +1508,6 @@ function doneResizing() {
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	Engine.initCubosDescarte();
 	Engine.initPosCartasUsuario();
 	Engine.initFinDescartesButton();
 

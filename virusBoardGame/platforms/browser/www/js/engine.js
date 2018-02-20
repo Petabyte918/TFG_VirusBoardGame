@@ -15,7 +15,6 @@ var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num d
 var posOrganosJugadores = {}; //posOrganosJugadores[posJug] Informacion para dibujar los organos de los jugadores
 var cartasUsuario = []; //Cartas que tiene en la mano cada jugador
 var posCartasUsuario = {}; //Informacion para dibujar las cartas de la mano
-var posCubosDescarte = {};
 var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
 var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
@@ -472,30 +471,6 @@ Engine = new function() {
 			posHigado: posHigado,
 			posComodin: posComodin
 		};
-	}
-	this.initCubosDescarte = function(){
-		var widthCubo = ((windowWidth / 6) * 0.65) - 20;
-		var heightCubo = (widthCubo * 0.9) //(180/201) Para mantener la prop de la imagen
-
-		posCubosDescarte.widthCubo = widthCubo;
-		posCubosDescarte.heightCubo = heightCubo;
-
-		posCubosDescarte[1] = {
-			x: ((windowWidth / 2) - widthCubo * 2 - 30),
-			y: ((windowHeight / 3) + 30)
-		}
-		posCubosDescarte[2] = {
-			x: ((windowWidth / 2) - widthCubo * 1 - 10),
-			y: ((windowHeight / 3) + 30)
-		}
-		posCubosDescarte[3] = {
-			x: ((windowWidth / 2) + widthCubo * 0 + 10),
-			y: ((windowHeight / 3) + 30)
-		}
-		posCubosDescarte[4] = {
-			x: ((windowWidth / 2) + widthCubo * 1 + 30),
-			y: ((windowHeight / 3) + 30)
-		}
 	}	
 	this.initPosCartasUsuario = function(){
 		//1536px width
@@ -532,11 +507,11 @@ Engine = new function() {
 
 	}
 	this.initFinDescartesButton = function() {
-		/** Colocacion Por cubos de descarte **/
-		var widthCubo = ((windowWidth / 6) * 0.65) - 20;
+		var elemDescartesButton = document.getElementById("descartes_boton");
+		var posDescartesButton = elemDescartesButton.getBoundingClientRect();
 
-		var posX = posCubosDescarte[4].x + widthCubo + 10;
-		var posY = posCubosDescarte[4].y - 5;
+		var posX = (Math.floor(windowWidth - posDescartesButton.width - 20)).toString()+"px";
+		var posY = (Math.floor(windowHeight - posDescartesButton.height - 20)).toString()+"px";
 
 		$("#descartes_boton").css({"top": posY, "left": posX});
 	}

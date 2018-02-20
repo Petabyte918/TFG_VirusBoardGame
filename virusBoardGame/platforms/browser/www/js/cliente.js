@@ -652,7 +652,6 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	Engine.initCubosDescarte();
 	Engine.initPosCartasUsuario();
 	Engine.initFinDescartesButton();
 	Engine.initPauseButton();
@@ -846,7 +845,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 	//Pero solo le permitimos recuperar sus cartas en SU turno
 	if ((finDescarte == false) && (usuario == datos_partida.turno)) {
-		$("#descartes_boton").css("display","inline");
+		$("#descartes_boton").css("visibility","visible");
 	}
 
 	//Una vez representado el movimiento del jugador, borramos el mov
