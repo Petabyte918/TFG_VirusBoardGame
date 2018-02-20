@@ -473,8 +473,9 @@ Engine = new function() {
 		};
 	}	
 	this.initPosCartasUsuario = function(){
-		//1536px width
-		//1013px height
+		//console.log("Engine.initPosCartasUsuario()");
+		//1536px width //console.log("windowWidth: "+windowWidth);
+		//1013px height //console.log("windowHeight: "+windowHeight);
 
 		var widthCarta = ((windowWidth/3)/4);
 		var heightCarta = widthCarta * (1536/1013);
@@ -487,10 +488,6 @@ Engine = new function() {
 		var widthDeck = Math.floor((windowWidth/3)/3); //De DeckOfCards.initDeckOfCards();
 		var heightDeck = Math.floor(widthDeck*210/148); //De DeckOfCards.initDeckOfCards();
 		var posY = posYDeck + heightDeck + sepEntreCartas;
-
-		console.log("windowWidth: "+windowWidth);
-		console.log("windowHeight: "+windowHeight);
-		console.log("posY: "+posY);
 
 		var posCarta1 = {x: windowWidth/2 - widthCarta*1.5 - sepEntreCartas, 
 						 y: posY};

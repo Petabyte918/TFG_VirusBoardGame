@@ -665,7 +665,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	prepararOrganosJugadoresCli();
 	moveObjects();
 
-	actualizarCanvas();
+	actualizarCanvasAPO();
 	//actualizarCanvasMID();
 })
 
@@ -841,7 +841,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		descartes[1] = true;
 		descartes[2] = true;
 		finDescarte = false;
-		actualizarCanvas();
+		actualizarCanvasAPO();
 	}
 	//Pero solo le permitimos recuperar sus cartas en SU turno
 	if ((finDescarte == false) && (usuario == datos_partida.turno)) {
@@ -880,6 +880,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 function pauseGame(){
 	console.log("pauseGame()");
+
 	var datos_partida = {
 		idPartida: idPartida
 	};
@@ -888,7 +889,6 @@ function pauseGame(){
 		socket.emit('pauseGame', datos_partida);
 	} else if (gamePaused == "true") {
 		socket.emit('continueGame', datos_partida);
-
 	}
 }
 

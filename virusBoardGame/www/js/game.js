@@ -23,6 +23,7 @@ var objetos = [];
 var countDownSTO;
 var esperarMovSTO;
 var idDoneResizing;
+var reDimCanvasON = false;;
 
 function actualizarCanvasBG(){
 
@@ -104,7 +105,8 @@ function renderCountDown(time, oldDate, first){
 	}
 
 	//Evitamos redibujar texto en cada ciclo del crono (Eliminamos difuminado, color raro...etc)
-	if (first == "first") {
+	if ((first == "first") || (reDimCanvas == true)) {
+		reDimCanvasON = false;
 		
 		//Numero de turno
 		cxMID.font = "900 25px Arial";
@@ -685,7 +687,7 @@ function actualizarCanvasFrontal() {
 	}
 }
 
-function actualizarCanvas(){
+function actualizarCanvasAPO(){
 	//console.log("Actualizar canvas");
 	cxAPO.clearRect(0, 0, windowWidth, windowHeight);
 	var img1 = new Image();
@@ -730,6 +732,7 @@ function actualizarCanvas(){
 }
 
 function moveObjects(){
+	console.log("moveObjects()");
 
 	objetos.push({
 		x: posCartasUsuario.carta1.x, y: posCartasUsuario.carta1.y,
@@ -816,7 +819,7 @@ function moveObjects(){
 			if (objetoActual != null){
 				checkCollision();
 				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
-				actualizarCanvas();
+				actualizarCanvasAPO();
 				actualizarCanvasFrontal();
 			}
 			//	2Eliminar o no objeto
@@ -887,7 +890,7 @@ function moveObjects(){
 			if (objetoActual != null){
 				checkCollision();
 				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
-				actualizarCanvas();
+				actualizarCanvasAPO();
 				actualizarCanvasFrontal();
 			}
 			//	2Eliminar o no objeto
@@ -896,6 +899,32 @@ function moveObjects(){
 			objetoActual = null;
 		}
 	}
+}
+
+function actObjects() {
+	console.log("actObjects()");
+
+	objetos[0] = {
+		x: posCartasUsuario.carta1.x, y: posCartasUsuario.carta1.y,
+		xOrigen: posCartasUsuario.carta1.x, yOrigen: posCartasUsuario.carta1.y,
+		width: posCartasUsuario.width, height: posCartasUsuario.height,
+		numCarta: 0,
+		src: cartasUsuario[0].picture
+	};
+	objetos[1] = {
+		x: posCartasUsuario.carta2.x, y: posCartasUsuario.carta2.y,
+		xOrigen: posCartasUsuario.carta2.x, yOrigen: posCartasUsuario.carta2.y,
+		width: posCartasUsuario.width, height: posCartasUsuario.height,
+		numCarta: 1,
+		src: cartasUsuario[1].picture
+	};
+	objetos[2] = {
+		x: posCartasUsuario.carta3.x, y: posCartasUsuario.carta3.y,
+		xOrigen: posCartasUsuario.carta3.x, yOrigen: posCartasUsuario.carta3.y,
+		width: posCartasUsuario.width, height: posCartasUsuario.height,
+		numCarta: 2,
+		src: cartasUsuario[2].picture
+	};
 }
 
 //Devuelve el numero de la pos. donde ha habido colision, 0 si descarte o -1 si hay error
@@ -957,10 +986,18 @@ function checkCollision() {
 		colision = 6;
 	}
 	//Posicion 0 (central = descarte)
-	else if ((touch.pageX < ((windowWidth / 6) * 5)) &&
+	/**else if ((touch.pageX < ((windowWidth / 6) * 5)) &&
 		(touch.pageX > (windowWidth / 6) * 1) &&
 		(touch.pageY > (windowHeight / 3) * 1) &&
 		(touch.pageY < (windowHeight / 3) * 2)) {
+		//console.log("Colision zona 0");
+		colision = 0;
+	} **/
+	//Posición 0 exacta en mazo descarte
+	else if  ( (touch.pageX < (DeckOfCards.descartesData.x + DeckOfCards.descartesData.width)) &&
+		(touch.pageX > DeckOfCards.descartesData.x) &&
+		(touch.pageY > DeckOfCards.descartesData.y) &&
+		(touch.pageY < (DeckOfCards.descartesData.y + DeckOfCards.descartesData.height)) ) {
 		//console.log("Colision zona 0");
 		colision = 0;
 	}
@@ -1069,7 +1106,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		finDescarte = false;
 		abrirAyudaCartas("ayudaDescartes");
 		descartes[numCarta] = true;
-		actualizarCanvas();
+		actualizarCanvasAPO();
 		$("#descartes_boton").css("visibility","visible");
 	}
 	//Descarte-block. Si estamos en proceso de descarte no podemos hacer otra cosa hasta acabar
@@ -1276,7 +1313,7 @@ function fin_descarte() {
 	descartes[1] = false;
 	descartes[2] = false;
 	movJugador = "algo";
-	actualizarCanvas();
+	actualizarCanvasAPO();
 }
 
 function fin_transplante() {
@@ -1446,7 +1483,7 @@ function reDimAyudaCartaEspecial(cartaEspecial) {
 }
 
 function reDimListaTurnos() {
-	console.log("reDimListaTurnos()");
+	//console.log("reDimListaTurnos()");
 	//Aseguramos solo mostrar en partida
 	if (isEmpty(infoJugadores)) {
 		return;
@@ -1467,11 +1504,11 @@ function reDimListaTurnos() {
 	var maxWidthStr = (Math.floor(maxWidth)).toString() + "px";
 	var maxHeightStr = (Math.floor(maxHeight)).toString() + "px";
 
-	console.log("xMax: "+xMax);
-	console.log("xMin: "+xMin);
+	//console.log("xMax: "+xMax);
+	//console.log("xMin: "+xMin);
 	//console.log("posXStr: "+ posXStr);
 	//console.log("posYStr: "+posYStr);
-	console.log("widthMaxStr: "+ maxWidthStr);
+	//console.log("widthMaxStr: "+ maxWidthStr);
 	//console.log("heightMaxStr: "+maxHeightStr);
 	
 	$("#listaTurnos").css("left", posXStr);
@@ -1500,6 +1537,28 @@ function reDimListaTurnos() {
 	$("#listaTurnos").css("visibility","visible");
 }
 
+function reDimCanvas() {
+	//No tiene porque ir con doneResizing()
+	windowWidth = window.innerWidth;
+	windowHeight = window.innerHeight;
+
+	//Parte de preparar partida
+	Engine.initCanvas();
+	Engine.initPosOrganosJugadores();
+	Engine.initPosCartasUsuario();
+	Engine.initFinDescartesButton();
+	Engine.initPauseButton();
+
+	actualizarCanvasBG();
+
+	actObjects();
+	actualizarCanvasAPO();
+
+	//Parte de los turnos
+	actualizarCanvasMID();
+	reDimCanvasON = true;
+}
+
 function doneResizing() {
 	console.log("doneResizing()");
 	windowWidth = window.innerWidth;
@@ -1510,19 +1569,7 @@ function doneResizing() {
 	reDimListaTurnos();
 	reDimContainer_instrucciones();
 
-	//Redimensionamos la configuracion inicial
-	/**
-	Engine.initCanvas();
-	Engine.initJugadores();
-	Engine.initPosOrganosJugadores();
-	Engine.initPosCartasUsuario();
-	Engine.initFinDescartesButton();
-
-	actualizarCanvasBG();
-	actualizarCanvasMID();
-	indicarTurno(turno);
-	actualizarCanvas();
-	actualizarCanvasFrontal();**/
+	reDimCanvas();
 }
 
 $(document).ready(function(){
@@ -1534,7 +1581,7 @@ $(document).ready(function(){
 	window.onload = function(){
 		console.log("Window onload");
 
-		//Controlamos el resizing de la ventana
+		//Para no llamar a doneResizing() un millon de veces
 		$(window).resize(function() {
 		    clearTimeout(idDoneResizing);
 		    idDoneResizing = setTimeout(doneResizing, 50);	 
