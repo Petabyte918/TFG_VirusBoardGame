@@ -17,6 +17,7 @@ var cxAPO, cvAPO = null;
 var cvMID, cxMID = null;
 var cvBG, cxBG = null;
 var inicioX = 0, inicioY = 0;
+var imgOnload = {}; //Reuso de imagenes ya cargadas una vez
 var windowWidth, windowHeight = 0;
 var objetos = [];
 var countDownSTO;
@@ -660,21 +661,27 @@ function removeOrgano2Transplante(){
 
 //Ideas de mejora a futuro ->
 //1. Renderizar la imagen que se mueve y las otras a diferente ritmo -> DESCARTADA
-//2. Detectar la colision en el canvas de las cartas pero dibujar unicamente la que se mueve en otro sola ->Hecho
-//3. Tener las imagenes siempre cargadas y solo dibujarlas en el contexto. Y cuando robo cartas, cargarlas
-//4. Posibilidad de dibujar siempre pero borrar solo cada cierta diferencia de pixeles
+//2. Detectar la colision en el canvas de las cartas pero dibujar unicamente la que se mueve en otro sola -> HECHO
+//3. Tener las imagenes siempre cargadas. ->Las vamos dejando cargadas segun aparecen de momento -> HECHO Y SOLUCIONADO
+//4. Posibilidad de dibujar siempre pero borrar solo cada cierta diferencia de pixeles -> Lag, DESCARTADA
 
 function actualizarCanvasFrontal() {
 	cx.clearRect(0, 0, windowWidth, windowHeight);
 	if (objetoActual != null) {
-		var img0 = new Image();
-		img0.src = objetoActual.src;
-		img0.onload = function(){
-			//console.log("objetos[0] :"+objetos[0]);
-			cx.drawImage(img0, objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
+		if (imgOnload[objetoActual.src] == null) {
+
+			imgOnload[objetoActual.src] = new Image();
+			imgOnload[objetoActual.src].src = objetoActual.src;
+			imgOnload[objetoActual.src].onload = function(){
+				//console.log("objetos[0] :"+objetos[0]);
+				cx.drawImage(imgOnload[objetoActual.src], objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
+			}
+		} else {
+			cx.drawImage(imgOnload[objetoActual.src], objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
 		}
 	} else {
-
+		//console.log("Objeto actual es NULL");
+		//objetoActual[objetoActual.src] == null; //Dejamos imagenes cargadas
 	}
 }
 
