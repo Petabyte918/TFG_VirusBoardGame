@@ -14,7 +14,8 @@ var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num d
 							//Busco pasandole la posicion del jugador
 var posOrganosJugadores = {}; //posOrganosJugadores[posJug] Informacion para dibujar los organos de los jugadores
 var cartasUsuario = []; //Cartas que tiene en la mano cada jugador
-var posCartasUsuario = {}; //Informacion para dibujar las cartas de la mano
+var posCartasUsuario = {}; //Datos cartas usuario
+var posPlayersHandCards = {}; //Datos cartas otros jugadores
 var organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
 var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
@@ -471,7 +472,93 @@ Engine = new function() {
 			posHigado: posHigado,
 			posComodin: posComodin
 		};
-	}	
+	}
+	this.initPosPlayersHandCards = function() {
+		//1536px width //console.log("windowWidth: "+windowWidth);
+		//1013px height //console.log("windowHeight: "+windowHeight);
+		var posCarta1, posCarta2, posCarta3 = {};
+		var posX, posY = 0;
+		var imgSrc = 'img/cardImagesLQ/reverseCardLQ.png';
+
+		imgOnload[imgSrc] = new Image();
+		imgOnload[imgSrc].src = imgSrc;
+
+		if (windowWidth/windowHeight < 1.6) {
+			var widthCarta = ((windowWidth/3)/4) * 0.8; //Relacion de tamaño igual que cartas de usuario, pero mas pequenias
+			var heightCarta = widthCarta * (1536/1013);
+		} else {
+			var posYUsername = posOrganosJugadores[1].posCerebro[1] - 20;
+			var posUser = ((windowHeight/3)*2);
+			var heightCarta = (posYUsername - posUser) * 0.8; //Relacion de tamaño igual que cartas de usuario, pero mas pequenias
+			var widthCarta = (heightCarta * (1013/1536));
+		}
+
+		var sepEntreCartas = 4; //max = widthCarta/4
+		var sepDesdeOrganos = 32; //Hay que separarlo de los nombres de jugadores
+		
+		posPlayersHandCards.widthCarta = widthCarta;
+		posPlayersHandCards.heightCarta = heightCarta;
+		posPlayersHandCards.sepEntreCartas = sepEntreCartas;
+		posPlayersHandCards.imgSrc = imgSrc;
+
+		//Posicion 1
+		posPlayersHandCards[1] = null;
+
+		//Posicion 2
+		posX = posOrganosJugadores[2].posCerebro[0] + posOrganosJugadores[2].widthOrgano + sepDesdeOrganos*2;
+
+		posCarta1 = {x: posX,
+				  y: windowHeight/2 - widthCarta*1.5 - sepEntreCartas}
+		posCarta2 = {x: posX,
+				  y: windowHeight/2 - widthCarta*0.5}
+		posCarta3 = {x: posX,
+				  y: windowHeight/2 + widthCarta*0.5 + sepEntreCartas}
+
+		posPlayersHandCards[2] = {carta1: posCarta1,
+								  carta2: posCarta2,
+								  carta3: posCarta3};
+
+		//Posicion 3
+		posY = posOrganosJugadores[3].posCerebro[1] + posOrganosJugadores[3].heightOrgano + sepDesdeOrganos;
+
+		posCarta1 = {x: (windowWidth/6)*1 - widthCarta*1.5 - sepEntreCartas,
+				  y: posY}
+		posCarta2 = {x: (windowWidth/6)*1 - widthCarta*0.5,
+				  y: posY}
+		posCarta3 = {x: (windowWidth/6)*1 + widthCarta*0.5 + sepEntreCartas,
+				  y: posY}
+
+		posPlayersHandCards[3] = {carta1: posCarta1,
+								  carta2: posCarta2,
+								  carta3: posCarta3};
+
+		//Posicion 4
+		posY = posOrganosJugadores[4].posCerebro[1] + posOrganosJugadores[4].heightOrgano + sepDesdeOrganos;
+
+		posCarta1 = {x: (windowWidth/6)*3 - widthCarta*1.5 - sepEntreCartas,
+				  y: posY}
+		posCarta2 = {x: (windowWidth/6)*3 - widthCarta*0.5,
+				  y: posY}
+		posCarta3 = {x: (windowWidth/6)*3 + widthCarta*0.5 + sepEntreCartas,
+				  y: posY}
+
+		posPlayersHandCards[4] = {carta1: posCarta1,
+								  carta2: posCarta2,
+								  carta3: posCarta3};		
+		//Posicion 5
+		posY = posOrganosJugadores[5].posCerebro[1] + posOrganosJugadores[5].heightOrgano + sepDesdeOrganos;
+
+		posCarta1 = {x: (windowWidth/6)*5 - widthCarta*1.5 - sepEntreCartas,
+				  y: posY}
+		posCarta2 = {x: (windowWidth/6)*5 - widthCarta*0.5,
+				  y: posY}
+		posCarta3 = {x: (windowWidth/6)*5 + widthCarta*0.5 + sepEntreCartas,
+				  y: posY}
+
+		posPlayersHandCards[5] = {carta1: posCarta1,
+								  carta2: posCarta2,
+								  carta3: posCarta3};	
+	}
 	this.initPosCartasUsuario = function(){
 		//console.log("Engine.initPosCartasUsuario()");
 		//1536px width //console.log("windowWidth: "+windowWidth);
@@ -545,22 +632,22 @@ DeckOfCards = new function() {
 	this.tmp = 0;
 
 	this.initDeckOfCards = function() {
-
+		var reduccion = 0.8;
 		if (windowWidth/windowHeight < 1.6) {
-			var width = Math.floor((windowWidth/3)/3);
-			var height = Math.floor(width*210/148);
+			var width = ((windowWidth/3)/3) * reduccion;
+			var height = width*210/148;
 		} else {
-			var height = Math.floor(windowHeight/4);
-			var width = Math.floor(height*148/210);
+			var height = (windowHeight/4) * reduccion;
+			var width = height*148/210;
 		}
 
-		var posXDeck = Math.floor(windowWidth/2 - width);
-		var posYDeck = Math.floor(windowHeight/3);
+		var posXDeck = windowWidth/2 - width;
+		var posYDeck = windowHeight/2 - height/1.5; //No esta centrado sino algo mas arriba
 
 		this.deckData = {x: posXDeck, y: posYDeck, width: width, height: height};
 
-		var posXDescartes = Math.floor(windowWidth/2 + 10);
-		var posYDescartes = Math.floor(windowHeight/3);
+		var posXDescartes = windowWidth/2 + 10;
+		var posYDescartes = windowHeight/2 - height/1.5; //No esta centrado sino algo mas arriba
 
 		//Los ajustes de tamanio finales son debidos a la diferencia de tamanio entre el mazo y la carta del reverso,
 		//por el efecto profundidad del mazo

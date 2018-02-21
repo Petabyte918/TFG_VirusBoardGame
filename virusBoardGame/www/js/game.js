@@ -32,6 +32,9 @@ function actualizarCanvasBG(){
 	img0.src = "img/BG/tapete_verde-claro.jpg";
 	img0.onload = function(){
 		cxBG.drawImage(img0, 0, 0, windowWidth, windowHeight);
+
+		//Mazo de cartas y mazo de descartes
+		DeckOfCards.reDimDeckOfCards();
 	}
 }
 
@@ -365,21 +368,39 @@ function actualizarCanvasMID(){
 			}
 		}
 		//Escribimos el nombre del usuario
-		renderUserCards(pos, "ninguna");
 		renderUsername(pos, jugador, posOrgano.width, posOrgano.height);
 	}
 }
 
-function renderUserCards(pos, ultCartaUsada) {
+function renderPlayerBackCards(pos, ultCartaUsada) {
 	//Nuestras cartas no las pintamos
 	if (pos == 1) {
 		return;
 	}
 
+	var width = posPlayersHandCards.widthCarta;
+	var height = posPlayersHandCards.heightCarta;
+	var imgSrc = posPlayersHandCards.imgSrc;
+
 	//Borramos el hueco de las cartas y un poco mas
 	//Pintamos cada carta
-	for (var i = 1; i <= 3; i++) {
-
+	imgOnload[imgSrc].onload = function() {
+		for (var carta in posPlayersHandCards[pos]) {
+			var posX = posPlayersHandCards[pos][carta].x;
+			var posY = posPlayersHandCards[pos][carta].y;
+			if (pos == 2) {
+				cxAPO.save();
+				cxAPO.translate(posX, posY);
+				cxAPO.translate(width + 10, 0);
+				cxAPO.rotate(Math.PI/2);
+				cxAPO.drawImage(imgOnload[imgSrc], 0, 0, width, height); //Ojo que invertimos dimensiones
+				cxAPO.restore();
+			} else {
+				console.log("posX: "+posX);
+				console.log("posY: "+posY);
+				cxAPO.drawImage(imgOnload[imgSrc], posX, posY, width, height);
+			}
+		}
 	}
 
 	//Señalamos la ultima carta usada por el jugador y al cabo de x tiempo, borramos la señal
@@ -405,7 +426,7 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	switch(pos) {
 	case 1:
 		posX = posOrganosJugadores[pos].posCerebro[0];
-		posY = posOrganosJugadores[pos].posCerebro[1] - 15;
+		posY = posOrganosJugadores[pos].posCerebro[1] - 12;
 		break;
 	case 2:
 		posX = posOrganosJugadores[pos].posCerebro[0] + widthOrgano + 15;
@@ -413,15 +434,15 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 		break;
 	case 3:
 		posX = posOrganosJugadores[pos].posCerebro[0];
-		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 15;
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 25;
 		break;
 	case 4:
 		posX = posOrganosJugadores[pos].posCerebro[0];
-		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 15;
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 25;
 		break;
 	case 5:
 		posX = posOrganosJugadores[pos].posCerebro[0];
-		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 15;
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 25;
 		break;
 	case 6:
 		console.log("renderUsername-> pos6 no programada");
@@ -708,7 +729,7 @@ function actualizarCanvasFrontal() {
 }
 
 function actualizarCanvasAPO(){
-	//console.log("Actualizar canvas");
+	//console.log("actualizarCanvasAPO()");
 	cxAPO.clearRect(0, 0, windowWidth, windowHeight);
 	var img1 = new Image();
 	if ((objetos[0].src != "") && (descartes[0] == false)){
@@ -748,6 +769,11 @@ function actualizarCanvasAPO(){
 				cxAPO.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
 			}
 		}
+	}
+
+	for (var jugador in organosJugadoresCli) {
+		var pos = organosJugadoresCli[jugador].posicion;
+		renderPlayerBackCards(pos, "ninguna");
 	}
 }
 
@@ -1565,6 +1591,7 @@ function reDimCanvas() {
 	//Parte de preparar partida
 	Engine.initCanvas();
 	Engine.initPosOrganosJugadores();
+	Engine.initPosPlayersHandCards();
 	Engine.initPosCartasUsuario();
 	Engine.initFinDescartesButton();
 	Engine.initPauseButton();

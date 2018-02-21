@@ -652,6 +652,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
+	Engine.initPosPlayersHandCards();
 	Engine.initPosCartasUsuario();
 	Engine.initFinDescartesButton();
 	Engine.initPauseButton();
