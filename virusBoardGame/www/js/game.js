@@ -385,23 +385,23 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	switch(pos) {
 	case 1:
 		posX = posOrganosJugadores[pos].posCerebro[0];
-		posY = posOrganosJugadores[pos].posCerebro[1] - 20;
+		posY = posOrganosJugadores[pos].posCerebro[1] - 15;
 		break;
 	case 2:
-		posX = posOrganosJugadores[pos].posCerebro[0] + widthOrgano + 20 + 12;
+		posX = posOrganosJugadores[pos].posCerebro[0] + widthOrgano + 15;
 		posY = posOrganosJugadores[pos].posCerebro[1];
 		break;
 	case 3:
 		posX = posOrganosJugadores[pos].posCerebro[0];
-		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 15;
 		break;
 	case 4:
 		posX = posOrganosJugadores[pos].posCerebro[0];
-		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 15;
 		break;
 	case 5:
 		posX = posOrganosJugadores[pos].posCerebro[0];
-		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 20 + 12;
+		posY = posOrganosJugadores[pos].posCerebro[1] + heightOrgano + 15;
 		break;
 	case 6:
 		console.log("renderUsername-> pos6 no programada");
@@ -413,7 +413,7 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 		break;					
 	}
 
-	if (jugador.length > 8 ){
+	if (jugador.length > 8) {
 		jugador = "Jugador "+jugador.slice(0,8);
 	}
 	if (pos == 1) {

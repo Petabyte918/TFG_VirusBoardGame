@@ -477,17 +477,27 @@ Engine = new function() {
 		//1536px width //console.log("windowWidth: "+windowWidth);
 		//1013px height //console.log("windowHeight: "+windowHeight);
 
-		var widthCarta = ((windowWidth/3)/4);
-		var heightCarta = widthCarta * (1536/1013);
+		if (windowWidth/windowHeight < 1.6) {
+			var widthCarta = ((windowWidth/3)/4);
+			var heightCarta = widthCarta * (1536/1013);
+		} else {
+			var posYUsername = posOrganosJugadores[1].posCerebro[1] - 20;
+			var posUser = ((windowHeight/3)*2);
+			var heightCarta = posYUsername - posUser;
+			var widthCarta = heightCarta * (1013/1536);
+		}
+
 		var sepEntreCartas = 8; //max = widthCarta/4
 
-		//Desde el limite de alto de la pos1
-		//var posY = ((windowHeight/3)*2);
+		//Debajo del mazo de descartes
 		//Aprovechamos que los descartes no ocupan toda su altura y comenzamos desde ahí
-		var posYDeck = Math.floor(windowHeight/3); //De DeckOfCards.initDeckOfCards();
-		var widthDeck = Math.floor((windowWidth/3)/3); //De DeckOfCards.initDeckOfCards();
-		var heightDeck = Math.floor(widthDeck*210/148); //De DeckOfCards.initDeckOfCards();
-		var posY = posYDeck + heightDeck + sepEntreCartas;
+		//var posYDeck = Math.floor(windowHeight/3); //De DeckOfCards.initDeckOfCards();
+		//var widthDeck = Math.floor((windowWidth/3)/3); //De DeckOfCards.initDeckOfCards();
+		//var heightDeck = Math.floor(widthDeck*210/148); //De DeckOfCards.initDeckOfCards();
+		//var posY = posYDeck + heightDeck + sepEntreCartas;
+
+		//Justo encima del nombre de jugador
+		var posY = posOrganosJugadores[1].posCerebro[1] - 40 - heightCarta;
 
 		var posCarta1 = {x: windowWidth/2 - widthCarta*1.5 - sepEntreCartas, 
 						 y: posY};
@@ -535,8 +545,15 @@ DeckOfCards = new function() {
 	this.tmp = 0;
 
 	this.initDeckOfCards = function() {
-		var width = Math.floor((windowWidth/3)/3);
-		var height = Math.floor(width*210/148);
+
+		if (windowWidth/windowHeight < 1.6) {
+			var width = Math.floor((windowWidth/3)/3);
+			var height = Math.floor(width*210/148);
+		} else {
+			var height = Math.floor(windowHeight/4);
+			var width = Math.floor(height*148/210);
+		}
+
 		var posXDeck = Math.floor(windowWidth/2 - width);
 		var posYDeck = Math.floor(windowHeight/3);
 
