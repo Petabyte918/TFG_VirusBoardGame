@@ -365,8 +365,28 @@ function actualizarCanvasMID(){
 			}
 		}
 		//Escribimos el nombre del usuario
+		renderUserCards(pos, "ninguna");
 		renderUsername(pos, jugador, posOrgano.width, posOrgano.height);
-		DeckOfCards.reDimDeckOfCards();
+	}
+}
+
+function renderUserCards(pos, ultCartaUsada) {
+	//Nuestras cartas no las pintamos
+	if (pos == 1) {
+		return;
+	}
+
+	//Borramos el hueco de las cartas y un poco mas
+	//Pintamos cada carta
+	for (var i = 1; i <= 3; i++) {
+
+	}
+
+	//Señalamos la ultima carta usada por el jugador y al cabo de x tiempo, borramos la señal
+	if (ultCartaUsada != "ninguna") {
+		setTimeout(function(){ 
+			renderUserCards(pos, "ninguna")
+		}, 1500);
 	}
 }
 
