@@ -1583,6 +1583,18 @@ function reDimListaTurnos() {
 	$("#listaTurnos").css("visibility","visible");
 }
 
+function reDimReloadButton() {
+	//console.log("reDimReloadButton()");
+	$("#reloadButton").css("visibility","visible");
+	$("#exitButton").css("visibility","visible");
+}
+
+function reDimExitButton() {
+	//console.log("reDimExitButton()");
+	$("#reloadButton").css("visibility","visible");
+	$("#exitButton").css("visibility","visible");
+}
+
 function reDimCanvas() {
 	//No tiene porque ir con doneResizing()
 	windowWidth = window.innerWidth;
@@ -1615,6 +1627,8 @@ function doneResizing() {
 	reDimRanquingList();
 	reDimListaTurnos();
 	reDimContainer_instrucciones();
+	reDimReloadButton(); //Solo para hacerlos visibles
+	reDimExitButton(); //Solo para hacerlos visibles
 
 	reDimCanvas();
 }

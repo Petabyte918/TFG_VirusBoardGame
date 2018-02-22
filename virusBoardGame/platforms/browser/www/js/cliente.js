@@ -151,6 +151,8 @@ function backTo_InitMenu() {
 	$("#instrucciones").css("display", "inline");
 	$("#pauseButton").css("visibility", "hidden");
 	$("#listaTurnos").css("visibility", "hidden");
+	$("#reloadButton").css("visibility","hidden");
+	$("#exitButton").css("visibility","hidden");
 	if (logged == "true") {
 		$("#leave").css("display", "inline");
 		$("#userNameContainer").css("display", "block");
@@ -641,9 +643,8 @@ socket.on('prepararPartida', function(datos_iniciales){
 	//console.log("prepararPartida");
 
 	idPartida = datos_iniciales.idPartida;
-	//No guardamos al usuario antes, no nos hace falta e igualmente debemos guardalo aqui si tenemos un idPartida
-	//guardado pero el servidor ya ha eliminado la partida o nos ha eliminado de la partida
 	jugadores = datos_iniciales.jugadores;
+
 	cartasUsuario.push(datos_iniciales.carta1);
 	cartasUsuario.push(datos_iniciales.carta2);
 	cartasUsuario.push(datos_iniciales.carta3);
@@ -652,21 +653,21 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	Engine.initPosPlayersHandCards();
+	//Engine.initPosPlayersHandCards();
 	Engine.initPosCartasUsuario();
-	Engine.initFinDescartesButton();
-	Engine.initPauseButton();
+	//Engine.initFinDescartesButton();
+	//Engine.initPauseButton();
 
-	actualizarCanvasBG();
+	//actualizarCanvasBG();
 
 	//Crea dos arrays para poder buscar informacion comodamente.
 	asignarJugadoresAPosiciones();
 	asignarPosicionesAJugadores();
 
 	prepararOrganosJugadoresCli();
-	moveObjects();
+	//moveObjects();
 
-	actualizarCanvasAPO();
+	//actualizarCanvasAPO();
 	//actualizarCanvasMID();
 })
 
@@ -870,9 +871,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 
 	checkCards();
-	reDimListaTurnos();
-	//indicarTurno(turno);
-	actualizarCanvasMID();
+	doneResizing(); //Resetea todo
 
 	//Conforman el hilo de ejecucion del turno del usuario
 	esperarMovimiento(); //->setTimeOut
@@ -900,7 +899,7 @@ socket.on('pauseGame', function(datos_partida) {
 	$("#pauseButton").css("background-color","red");
 	clearTimeout(countDownSTO); //->setTimeOut
 	clearTimeout(esperarMovSTO); //->setTimeOut
-})
+});
 
 socket.on('contineGame', function(datos_partida) {
 	console.log("socket.on->continueGame");	
@@ -909,7 +908,29 @@ socket.on('contineGame', function(datos_partida) {
 	$("#pauseButton").css("background-color","green");
 	esperarMovimiento(); //->setTimeOut
 	renderCountDown(30, new Date()); //->setTimeOut
-})
+});
+
+function reloadGame() {
+	console.log("reloadGame()");
+
+	doneResizing();
+}
+
+function exitGame() {
+	console.log("exitGame()");
+	$("#sureExitGameButton").css("visibility", "visible");
+}
+
+function noExitGame() {
+	console.log("noExitGame()");
+	$("#sureExitGameButton").css("visibility", "hidden");
+}
+
+function yesExitGame() {
+	console.log("yesExitGame()");
+	$("#sureExitGameButton").css("visibility", "hidden");
+
+}
 
 socket.on('expulsadoPartida', function() {
 	console.log("socket.on->expulsadoPartida");	
@@ -943,6 +964,8 @@ socket.on('expulsadoPartida', function() {
 
 	$("#pauseButton").css("visibility", "hidden");
 	$("#listaTurnos").css("visibility", "hidden");
+	$("#reloadButton").css("visibility","hidden");
+	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
 })
 
@@ -993,6 +1016,8 @@ socket.on('terminarPartida', function(data){
 
 	$("#pauseButton").css("visibility", "hidden");
 	$("#listaTurnos").css("visibility", "hidden");
+	$("#reloadButton").css("visibility","hidden");
+	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
 
 

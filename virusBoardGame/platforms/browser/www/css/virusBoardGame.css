@@ -906,12 +906,155 @@ p.textoEnumInstrucciones {
 	height: 82px;
 	width: 82px;
 
-	background-color: white;
+	background-repeat: no-repeat;
+	background-color: green;
+	background-image: url(img/pauseButton1.png);
+	background-size: cover;
 
 	-webkit-box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
     -moz-box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
     box-shadow: 0px 0px 0px 0px #197b1d, 0px 0px 0px 6px rgba(0, 0, 0, 0.9);
     border-radius: 10em;
+}
+
+#reloadButton {
+	visibility: hidden;
+	z-index: 500;
+	height: 45px;
+	width: 45px;
+	position: absolute;
+	bottom: 67px;
+	left: 7px;
+
+	background-repeat: no-repeat;
+	background-color: green;
+	background-image: url(img/reload-icon.png);
+	background-size: cover;
+
+	border: solid OliveDrab 4px;
+    box-shadow: inset 0px 0px 4px 4px #202a0a, 5px 7px 15px 3px rgba(0,0,0,0.75);
+    border-radius: 30px;
+}
+
+#reloadButton:active {
+	height: 43px;
+	width: 43px;
+
+	bottom: 65px;
+	left: 10px;
+}
+
+/** 60px de dif entre el boton de reloadGame y el de exitGame **/
+#exitButton {
+	visibility: hidden;
+	z-index: 500;
+	height: 45px;
+	width: 45px;
+	position: absolute;
+	bottom: 7px;
+	left: 7px;
+
+	background-repeat: no-repeat;
+	background-color: green;
+	background-image: url(img/exit-icon.png);
+	background-size: cover;
+
+	border: solid firebrick 4px;
+    box-shadow: inset 0px 0px 4px 4px #4d0000, 5px 7px 15px 3px rgba(0,0,0,0.75);
+    border-radius: 30px;
+}
+
+#exitButton:active {
+	height: 43px;
+	width: 43px;
+
+	bottom: 5px;
+	left: 10px;
+}
+
+#sureExitGameButton {
+	visibility: hidden;
+    position: absolute;
+    max-width: 50%;
+    top: 20%;
+    left: 21%;
+    z-index: 1000;
+    margin: 16px;
+    padding: 15px 25px;
+
+    font-family: 'Oleo Script', Arial, sans-serif;
+    font-size: 20px;
+
+    background-color: #2dc234;
+    background-image: -webkit-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+    background-image: -moz-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+    background-image: -o-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+    background-image: linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+
+    -ms-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+
+    -webkit-box-shadow: 5px 7px 5px #197b1d, 0 0px 20px rgba(0, 0, 0, .4);
+    -moz-box-shadow: 5px 7px 5px #197b1d, 0 0px 20px rgba(0, 0, 0, .4);
+    box-shadow: 5px 7px 5px #197b1d, 0 0px 20px rgba(0, 0, 0, .4);
+
+    color: #fff;
+    display: block;
+    font-family: 'Oleo Script', Arial, sans-serif;
+    font-size: 30px;
+    line-height: 1;
+
+
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px rgba(25, 123, 29, .7);
+}
+
+#noExitGameButton, #yesExitGameButton {
+	position: relative;
+	width: 30%;
+    padding: 15px 0px;
+    display: inline;
+    margin: 25px;
+    
+    background-color: #2AAA00;
+    background-image: -webkit-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+    background-image: -moz-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+    background-image: -o-linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+    background-image: linear-gradient(rgba(41, 150, 47, .8), rgba(45, 194, 52, .2));
+
+    -ms-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+
+    -webkit-box-shadow: 0 8px 0 #197b1d, 0 10px 20px rgba(0, 0, 0, .4);
+    -moz-box-shadow: 0 8px 0 #197b1d, 0 10px 20px rgba(0, 0, 0, .4);
+    box-shadow: 0 8px 0 #197b1d, 0 10px 20px rgba(0, 0, 0, .4);
+
+    color: #fff;
+    display: block;
+    font-family: 'Oleo Script', Arial, sans-serif;
+    font-size: 30px;
+    line-height: 1;
+
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px rgba(25, 123, 29, .7);
+}
+
+#noExitGameButton:active, #yesExitGameButton:active {
+	top: 5px;
+}
+
+#noExitGameButton {
+	float: left;
+}
+
+#yesExitGameButton {
+	float: right;
 }
 
 #listaTurnos {
