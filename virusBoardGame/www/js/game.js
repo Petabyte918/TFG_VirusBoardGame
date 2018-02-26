@@ -1658,3 +1658,92 @@ $(document).ready(function(){
 })
 
 
+socket.on('abandonarPartida', function(datos_partida) {
+		var idJugador = socket.id;
+		var idPartida = datos_partida.idPartida;
+
+		if (isEmpty(partidas[idPartida])) {
+			return;
+		}
+
+
+		var jugadores = datos_partida.jugadores;
+		var infoJugadores = datos_partida.infoJugadores;
+		var turno =  datos_partida.turno;
+		var numTurno = datos_partida.numTurno;
+		var deckOfCardsPartida = datos_partida.deckOfCardsPartida;
+		var organosJugadoresCli = datos_partida.organosJugadoresCli;
+		var movJugador = datos_partida.movJugador;
+
+		var userName = playersSrv[idJugador].nombre;
+		if (isEmpty(userName)) {
+			console.log("Jugador "+userName+" ha abandonado la partida");			
+		} else {
+			console.log("Jugador "+idJugador+" ha abandonado la partida");
+		}
+
+		//Entorno juego
+		//Lo elimino del array y por ende de los turnos (ya no le vuelve a tocar)
+		var posJug = jugadores.indexOf(idJugador);
+		if (posJug != -1) { //Ojo, que si ya esta eliminado te cargas otro..y puede haber replicas
+			jugadores.splice(posJug, 1);
+		}
+
+		//Lo elimino de infoJugadores
+		delete infoJugadores[idJugador];
+
+		//Evita dibujarlo en cliente
+		delete organosJugadoresCli[idJugador]
+
+		//Entorno servidor
+		//Le elimino de partidas
+		var posJug = partidas[idPartida].gamePlayers.indexOf(idJugador);
+		if (posJug != -1) { //Ojo, que si ya esta eliminado te cargas otro..y puede haber replicas
+			partidas[idPartida].gamePlayers.splice(posJug, 1);
+
+			partidas[idPartida].gameNumPlayers = partidas[idPartida].gameNumPlayers - 1;
+			io.to(idJugador).emit('partidaAbandonadaOK');
+		}
+
+		//Si no quedan mas jugadores, elimino la partida
+		if (partidas[idPartida].gameNumPlayers == 0) {
+			console.log("No quedan mas jugadores, partida eliminada");
+			delete partidas[idPartida];
+			delete estadoPartidas[idPartida];
+		} else { //Si quedan mas jugadores retransmito
+			//Si es el turno del jugador que abandona, avanzamos turno
+			if (turno == socket.id) {
+				var index = jugadores.indexOf(turno);
+				if (index < (jugadores.length -1)) {
+					index++;
+				} else {
+					index = 0;
+				}
+				var numTurno = datos_partida.numTurno + 1;
+			}
+
+			//Retransmito el avance de turno
+			var newDatos_partida = {
+				idPartida: idPartida,
+				jugadores: jugadores,
+				infoJugadores: infoJugadores,
+				turno: jugadores[index],
+				numTurno: numTurno,
+				deckOfCardsPartida: deckOfCardsPartida,
+				organosJugadoresCli: organosJugadoresCli,
+				movJugador: movJugador
+			};
+			estadoPartidas[idPartida] = newDatos_partida;
+
+			//Enviamos la jugada a todos los participantes
+			var socketid = "";
+			//Por si llegan mensajes retrasados y la partida ya ha sido eliminada
+			if (partidas[idPartida] != undefined) {
+				for (var i = 0; i < partidas[idPartida].gamePlayers.length; i++){
+					socketid = partidas[idPartida].gamePlayers[i];
+
+					io.to(socketid).emit('siguienteTurnoCli', newDatos_partida);
+				}
+			}
+		}
+	})

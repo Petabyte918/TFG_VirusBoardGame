@@ -486,7 +486,7 @@ socket.on('player_leaved', function() {
 	actualizar_partidas();
 }); 
 
-function actualizar_partidas(){
+function actualizar_partidas() {
 	//console.log("function actualizar_partidas()");
 	socket.emit('actualizar_partidas');
 }
@@ -978,6 +978,8 @@ socket.on('partidaAbandonadaOK', function(data) {
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
+
+	actualizar_partidas();
 });
 
 socket.on('expulsadoPartida', function(data) {
@@ -1015,6 +1017,8 @@ socket.on('expulsadoPartida', function(data) {
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
+
+	actualizar_partidas();
 });
 
 socket.on('terminarPartida', function(data){
