@@ -577,6 +577,7 @@ function actualizar_listaPartidas() {
 	}
 }			
 
+//Partida en sala de espera
 function joinPartida(idPartida , flag) {
 	//console.log("joinPartida()");
 
@@ -608,6 +609,7 @@ function joinPartida(idPartida , flag) {
 	}
 }
 
+//Partida en sala de espera
 function leavePartida(idPartida) {
 	//console.log("leavePartida()");
 	var enPartida = false;
@@ -653,22 +655,22 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	//Engine.initPosPlayersHandCards();
+	Engine.initPosPlayersHandCards();
 	Engine.initPosCartasUsuario();
-	//Engine.initFinDescartesButton();
-	//Engine.initPauseButton();
+	Engine.initFinDescartesButton();
+	Engine.initPauseButton();
 
-	//actualizarCanvasBG();
+	actualizarCanvasBG();
 
 	//Crea dos arrays para poder buscar informacion comodamente.
 	asignarJugadoresAPosiciones();
 	asignarPosicionesAJugadores();
 
 	prepararOrganosJugadoresCli();
-	//moveObjects();
+	moveObjects();
 
-	//actualizarCanvasAPO();
-	//actualizarCanvasMID();
+	actualizarCanvasAPO();
+	actualizarCanvasMID();
 })
 
 function esperarMovimiento(){
@@ -735,15 +737,6 @@ function comunicarTiempoAgotado () {
 
 socket.on('tiempo_agotadoOK', function() {
 	//console.log("Servidor ha recibido correctamente el turno perdido. Retransmitimos avanzar turno");
-	//Avanzamos turno - NO -> En principio ya avanzamos turno en el servidor
-	/**var index = jugadores.indexOf(turno);
-	if (index < (jugadores.length -1)) {
-		index++;
-	} else {
-		index = 0;
-	}
-	turno = jugadores[index];
-	numTurno = numTurno++;**/
 
 	//Todos los demas jugadores aumentaran este turno, pero tenemos un "seguro" en socket.on('siguienteTurnoCli'
 	//pero si no, daria igual
@@ -868,6 +861,14 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 			organosJugadoresCli[jugador].hueso = datos_partida.organosJugadoresCli[jugador].hueso;
 			organosJugadoresCli[jugador].organoComodin = datos_partida.organosJugadoresCli[jugador].organoComodin;
 		}
+		//Lo dejo como aviso a navegantes. Lo de abajo es caca
+		//organosJugadoresCli = datos_partida.organosJugadoresCli;
+		//Si un jugador ha sido eliminado, tb lo eliminamos de nuestra lista de organosJugadoresCli
+		for (var jugador in organosJugadoresCli) {
+			if (isEmpty(datos_partida.organosJugadoresCli[jugador])) {
+				delete organosJugadoresCli[jugador];
+			}
+		}
 	}
 
 	checkCards();
@@ -929,10 +930,57 @@ function noExitGame() {
 function yesExitGame() {
 	console.log("yesExitGame()");
 	$("#sureExitGameButton").css("visibility", "hidden");
-
+	var datos_partida = {
+		idPartida: idPartida,
+		jugadores: jugadores,
+		infoJugadores: infoJugadores,
+		turno: turno,
+		numTurno : numTurno,
+		deckOfCardsPartida: deckOfCards,
+		organosJugadoresCli: organosJugadoresCli,
+		movJugador: movJugador
+	};
+	socket.emit('abandonarPartida', datos_partida);
 }
 
-socket.on('expulsadoPartida', function() {
+socket.on('partidaAbandonadaOK', function(data) {
+	console.log("socket.on->partidaAbandonadaOK");	
+	//En lugar de volver inmediatamente al menu principal, mostramos cartel de expulsado
+	//similar al de haber acabado la partida
+	//backTo_InitMenu();
+
+	//Reseteamos cosas
+	clearTimeout(countDownSTO);
+	clearTimeout(esperarMovSTO);
+
+	//Representamos cuadro fin de partida
+	var widthElem = parseInt(($("#cuadroFinPartida").css("width")).replace("px",""));
+	var heightElem = parseInt(($("#cuadroFinPartida").css("height")).replace("px",""));
+	var marginElem = parseInt(($("#cuadroFinPartida").css("margin")).replace("px",""));
+	var borderElem = parseInt(($("#cuadroFinPartida").css("border-width")).replace("px",""));
+	var paddingTopElem = parseInt(($("#cuadroFinPartida").css("padding-top")).replace("px",""));
+	var paddingLeftElem = parseInt(($("#cuadroFinPartida").css("padding-left")).replace("px",""));
+
+	var posX = (windowWidth - widthElem)/2 - marginElem - borderElem - paddingLeftElem;
+	var posY = (windowHeight - heightElem)/2 - marginElem - borderElem - paddingTopElem;
+	var posXStr = (Math.floor(posX)).toString()+"px";
+	var posYStr = (Math.floor(posY)).toString()+"px";
+	$("#cuadroFinPartida").css("left", posXStr);
+	$("#cuadroFinPartida").css("top", posYStr);
+
+	$("#cartelFinPartida").css("color", "darkred");
+	document.getElementById("cartelFinPartida").innerHTML = "¡HAS abandonado la partida!"
+	document.getElementById("jugadorFinPartida").innerHTML = "(Looser)";
+	$("#jugadorFinPartida").css("visibility", "visible");
+
+	$("#pauseButton").css("visibility", "hidden");
+	$("#listaTurnos").css("visibility", "hidden");
+	$("#reloadButton").css("visibility","hidden");
+	$("#exitButton").css("visibility","hidden");
+	$("#cuadroFinPartida").css("display", "block");
+});
+
+socket.on('expulsadoPartida', function(data) {
 	console.log("socket.on->expulsadoPartida");	
 	//En lugar de volver inmediatamente al menu principal, mostramos cartel de expulsado
 	//similar al de haber acabado la partida
@@ -967,7 +1015,7 @@ socket.on('expulsadoPartida', function() {
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
-})
+});
 
 socket.on('terminarPartida', function(data){
 	console.log("socket.on->terminarPartida");
@@ -1022,6 +1070,7 @@ socket.on('terminarPartida', function(data){
 
 
 	//Pendiene dejar a null variables globales
+	idPartida = "";
 	infoJugadores = null;
 })
 /** -------------------- **/

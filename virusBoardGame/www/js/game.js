@@ -23,7 +23,7 @@ var objetos = [];
 var countDownSTO;
 var esperarMovSTO;
 var idDoneResizing;
-var reDimCanvasON = false;;
+var reDimCanvasON = true;
 
 function actualizarCanvasBG(){
 
@@ -108,7 +108,7 @@ function renderCountDown(time, oldDate, first){
 	}
 
 	//Evitamos redibujar texto en cada ciclo del crono (Eliminamos difuminado, color raro...etc)
-	if ((first == "first") || (reDimCanvas == true)) {
+	if ((first == "first") || (reDimCanvasON == true)) {
 		reDimCanvasON = false;
 		
 		//Numero de turno
@@ -936,8 +936,7 @@ function moveObjects(){
 			if (objetoActual != null){
 				checkCollision();
 				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
-				actualizarCanvasAPO();
-				actualizarCanvasFrontal();
+				reDimCanvas();
 			}
 			//	2Eliminar o no objeto
 			//	3Agregarlo o no a algun sitio
@@ -1600,8 +1599,12 @@ function reDimCanvas() {
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight;
 
+	//Para redibujar texto en canvas
+	reDimCanvasON = true; 
+
 	//Parte de preparar partida
 	Engine.initCanvas();
+	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
 	Engine.initPosPlayersHandCards();
 	Engine.initPosCartasUsuario();
@@ -1622,6 +1625,8 @@ function doneResizing() {
 	console.log("doneResizing()");
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight;
+
+	first = true;
 	
 	reDimPartidaRapida();
 	reDimRanquingList();
@@ -1630,7 +1635,9 @@ function doneResizing() {
 	reDimReloadButton(); //Solo para hacerlos visibles
 	reDimExitButton(); //Solo para hacerlos visibles
 
-	reDimCanvas();
+	if (idPartida != "") {
+		reDimCanvas();
+	}
 }
 
 $(document).ready(function(){
