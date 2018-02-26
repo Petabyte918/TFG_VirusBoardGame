@@ -621,6 +621,38 @@ Engine = new function() {
 		$("#pauseButton").css("left", left);
 		$("#pauseButton").css("top", top);
 	}
+	this.varsToInit = function () {
+		//ENGINE
+		idPartida = "";
+		turno = "";
+		jugadores = [];
+		infoJugadores = {};
+		deckOfCards = [];
+		movJugador = "";
+
+		//Informacion exclusiva de cada cliente
+		posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
+									//Busco pasandole la posicion del jugador
+		posOrganosJugadores = {}; //posOrganosJugadores[posJug] Informacion para dibujar los organos de los jugadores
+		cartasUsuario = []; //Cartas que tiene en la mano cada jugador
+		posCartasUsuario = {}; //Datos cartas usuario
+		posPlayersHandCards = {}; //Datos cartas otros jugadores
+		organosJugadoresCli = {}; //Informacion de los jugadores y sus organos
+		jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
+		posPorJugador = {}; //Dado un jugador te devuelve una posicion
+		descartes = {0: false, 1: false, 2: false}; //
+		transplante = {enProceso: false, organo1: {organo: "", numJug: -1}, organo2: {organo: "", numJug: -1}};
+
+		//GAME
+		objetos = [];
+		var reDimCanvasON = true;
+
+		//CLIENTE
+		var lista_partidas = {};
+		var idPartidaEsperando = "";
+		var enPartidaEsperando = false;
+		var gamePaused = "false";
+	}
 }
 
 DeckOfCards = new function() {

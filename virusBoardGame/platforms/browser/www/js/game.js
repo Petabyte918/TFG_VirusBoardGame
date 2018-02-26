@@ -1656,5 +1656,3 @@ $(document).ready(function(){
 		});
 	}
 })
-
-

@@ -486,7 +486,7 @@ socket.on('player_leaved', function() {
 	actualizar_partidas();
 }); 
 
-function actualizar_partidas(){
+function actualizar_partidas() {
 	//console.log("function actualizar_partidas()");
 	socket.emit('actualizar_partidas');
 }
@@ -560,7 +560,7 @@ function actualizar_listaPartidas() {
 						'<a class="leave_partida">SALIR</a>'+
 					'</li>'
 				);
-			} else {
+			} else { //Esto era para reengancharse a una partida
 				//Si estoy en partida me salto las partidas llenas si no son la mía
 				if (lista_partidas[id].gamePlayers.length >= lista_partidas[id].gameNumPlayers) {
 					continue;
@@ -978,6 +978,9 @@ socket.on('partidaAbandonadaOK', function(data) {
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
+
+	Engine.varsToInit();
+	actualizar_partidas();
 });
 
 socket.on('expulsadoPartida', function(data) {
@@ -1015,6 +1018,9 @@ socket.on('expulsadoPartida', function(data) {
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
+
+	Engine.varsToInit();
+	actualizar_partidas();
 });
 
 socket.on('terminarPartida', function(data){
