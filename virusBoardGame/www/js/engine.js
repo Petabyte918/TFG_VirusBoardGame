@@ -645,13 +645,13 @@ Engine = new function() {
 
 		//GAME
 		objetos = [];
-		var reDimCanvasON = true;
+		reDimCanvasON = true;
 
 		//CLIENTE
-		var lista_partidas = {};
-		var idPartidaEsperando = "";
-		var enPartidaEsperando = false;
-		var gamePaused = "false";
+		lista_partidas = {};
+		idPartidaEsperando = "";
+		enPartidaEsperando = false;
+		gamePaused = "false";
 	}
 }
 
