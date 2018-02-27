@@ -373,6 +373,8 @@ function actualizarCanvasMID(){
 }
 
 function renderPlayerBackCards(pos, ultCartaUsada) {
+	console.log("renderPlayerBackCards()");
+	console.log("renderPlayerBackCards->pos: "+pos);
 	//Nuestras cartas no las pintamos
 	if (pos == 1) {
 		return;
@@ -384,7 +386,9 @@ function renderPlayerBackCards(pos, ultCartaUsada) {
 
 	//Borramos el hueco de las cartas y un poco mas
 	//Pintamos cada carta
-	imgOnload[imgSrc].onload = function() {
+	var img = new Image();
+	img.src = imgSrc;
+	img.onload = function() {
 		for (var carta in posPlayersHandCards[pos]) {
 			var posX = posPlayersHandCards[pos][carta].x;
 			var posY = posPlayersHandCards[pos][carta].y;
@@ -393,12 +397,12 @@ function renderPlayerBackCards(pos, ultCartaUsada) {
 				cxAPO.translate(posX, posY);
 				cxAPO.translate(width + 10, 0);
 				cxAPO.rotate(Math.PI/2);
-				cxAPO.drawImage(imgOnload[imgSrc], 0, 0, width, height); //Ojo que invertimos dimensiones
+				cxAPO.drawImage(img, 0, 0, width, height); //Ojo que invertimos dimensiones
 				cxAPO.restore();
 			} else {
 				console.log("posX: "+posX);
 				console.log("posY: "+posY);
-				cxAPO.drawImage(imgOnload[imgSrc], posX, posY, width, height);
+				cxAPO.drawImage(img, posX, posY, width, height);
 			}
 		}
 	}
@@ -413,8 +417,8 @@ function renderPlayerBackCards(pos, ultCartaUsada) {
 
 function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	console.log("renderUsername()");
-	console.log("pos: "+pos);
-	console.log("jugador: "+jugador);
+	//console.log("pos: "+pos);
+	//console.log("jugador: "+jugador);
 
 	var jugador = jugador;
 
