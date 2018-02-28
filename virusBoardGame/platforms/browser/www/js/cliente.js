@@ -788,6 +788,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 	//Actualizo datos
 	if (datos_partida.movJugador.tipoMov == "abandonarPartida") {
+		console.log("Recibido jugador que abandona partida. Actualizo datos y canvas");
 		//Actualizo ciertos datos
 		jugadores = datos_partida.jugadores;
    		infoJugadores = datos_partida.infoJugadores;

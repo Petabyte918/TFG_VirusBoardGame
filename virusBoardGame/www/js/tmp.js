@@ -30,6 +30,7 @@ FUNCIONES RENDER
 renderPlayerBackCards()->En cxAPO->Pinta el reverso de las cartas de la mano de los demas jugadores
 
 VARIABLES
+-----CLIENTE-----
 infojugadores = {
 	turnosPerdidos: 0, 
 	nombre: playersSrv[jugadores[i]].nombre,
@@ -43,3 +44,40 @@ movJugador = {
 	texto: "",
 	tipoMov: ""
 };
+
+-----SERVER-----
+partidas[idPartida] = {
+	idPartida: idPartida, 				-- str
+	gameName: gameName, 				-- str
+	gameNumPlayers: gameNumPlayers, 	-- int
+	gamePlayers: gamePlayers, 			-- array
+	estado: "esperando"
+};
+
+var newDatos_partida = {
+	idPartida: idPartida,
+	jugadores: jugadores,
+	infoJugadores: infoJugadores,
+	turno: jugadores[index],
+	numTurno: numTurno,
+	deckOfCardsPartida: deckOfCardsPartida,
+	organosJugadoresCli: organosJugadoresCli,
+	movJugador: movJugador
+};
+estadoPartidas[idPartida] = newDatos_partida;
+
+//Copia por valor y no por referencia ojo (su pm. 8 horas por)
+var jugadores = shuffle(partidas[idPartida].gamePlayers.slice());
+
+var cloneUsers = extend({}, doc);
+
+
+//Debugging - para no tener que escribir todo el rato
+for (var jugador in estadoPartidas[idPartida].infoJugadores) {
+	console.log("estadoPartidas[idPartida].infoJugadores[jugador]: "+ estadoPartidas[idPartida].infoJugadores[jugador]);
+}
+
+for (var i = 0; i < partidas[idPartida].gamePlayers.length; i++) {
+	console.log("partidas[idPartida].gamePlayers[i]]6: "+partidas[idPartida].gamePlayers[i]);
+}
+
