@@ -7,7 +7,12 @@ var turno;
 var jugadores = [];
 var infoJugadores = {};
 var deckOfCards = [];
-var movJugador = "";
+var movJugador = {
+	jugOrigen: "",
+	jugDestino: "",
+	texto: "",
+	tipoMov: ""
+};
 
 //Informacion exclusiva de cada cliente
 var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
@@ -628,7 +633,12 @@ Engine = new function() {
 		jugadores = [];
 		infoJugadores = {};
 		deckOfCards = [];
-		movJugador = "";
+		movJugador = {
+			jugOrigen: "",
+			jugDestino: "",
+			texto: "",
+			tipoMov: ""
+		};
 
 		//Informacion exclusiva de cada cliente
 		posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total

@@ -169,8 +169,12 @@ function renderCountDown(time, oldDate, first){
 			fin_descarte();
 			//Por si se nos ha pasado el tiempo en medio de un transplante
 			fin_transplante();
-			movJugador = "tiempo_agotado";
-
+			movJugador = {
+				jugOrigen: "",
+				jugDestino: "",
+				texto: "",
+				tipoMov: "tiempo_agotado"
+			}
 		}
 	}, 250);
 }
@@ -295,7 +299,7 @@ function checkCards() {
 
 //En el canvas mid estan los turnos y los organos de los jugadores
 function actualizarCanvasMID(){
-	console.log("actualizarCanvasMID()");
+	//console.log("actualizarCanvasMID()");
 	//Limpiamos el canvas antes de dibujar nada
 	cxMID.clearRect(0, 0, windowWidth, windowHeight);
 	var estadoOrgano, pos;
@@ -373,8 +377,8 @@ function actualizarCanvasMID(){
 }
 
 function renderPlayerBackCards(pos, ultCartaUsada) {
-	console.log("renderPlayerBackCards()");
-	console.log("renderPlayerBackCards->pos: "+pos);
+	//console.log("renderPlayerBackCards()");
+	//console.log("renderPlayerBackCards->pos: "+pos);
 	//Nuestras cartas no las pintamos
 	if (pos == 1) {
 		return;
@@ -400,8 +404,8 @@ function renderPlayerBackCards(pos, ultCartaUsada) {
 				cxAPO.drawImage(img, 0, 0, width, height); //Ojo que invertimos dimensiones
 				cxAPO.restore();
 			} else {
-				console.log("posX: "+posX);
-				console.log("posY: "+posY);
+				//console.log("posX: "+posX);
+				//console.log("posY: "+posY);
 				cxAPO.drawImage(img, posX, posY, width, height);
 			}
 		}
@@ -416,7 +420,7 @@ function renderPlayerBackCards(pos, ultCartaUsada) {
 }
 
 function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
-	console.log("renderUsername()");
+	//console.log("renderUsername()");
 	//console.log("pos: "+pos);
 	//console.log("jugador: "+jugador);
 
@@ -951,7 +955,7 @@ function moveObjects(){
 }
 
 function actObjects() {
-	console.log("actObjects()");
+	//console.log("actObjects()");
 
 	objetos[0] = {
 		x: posCartasUsuario.carta1.x, y: posCartasUsuario.carta1.y,
@@ -1182,7 +1186,12 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		//console.log("organtype: "+organType);
 		if (organosJugadoresCli[jugDestino][organType] == ""){
 			organosJugadoresCli[jugDestino][organType] = "normal";
-			movJugador = "algo";
+			movJugador = {
+				jugOrigen: "",
+				jugDestino: "",
+				texto: "",
+				tipoMov: "algo"
+			};
 		} else {
 			//console.log("manejadorMov() - Organo repetido");
 		}
@@ -1198,13 +1207,28 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
 				organosJugadoresCli[jugDestino][organoColision] = "normal";
-				movJugador = "algo";
+				movJugador = {
+					jugOrigen: "",
+					jugDestino: "",
+					texto: "",
+					tipoMov: "algo"
+				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
 				organosJugadoresCli[jugDestino][organoColision] = "vacunado";
-				movJugador = "algo";
+				movJugador = {
+					jugOrigen: "",
+					jugDestino: "",
+					texto: "",
+					tipoMov: "algo"
+				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
 				organosJugadoresCli[jugDestino][organoColision] = "inmunizado";
-				movJugador = "algo";
+				movJugador = {
+					jugOrigen: "",
+					jugDestino: "",
+					texto: "",
+					tipoMov: "algo"
+				};
 			} else {
 				//console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
 			}
@@ -1214,13 +1238,28 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
 				organosJugadoresCli[jugDestino][organoColision] = "";
-				movJugador = "algo";
+				movJugador = {
+					jugOrigen: "",
+					jugDestino: "",
+					texto: "",
+					tipoMov: "algo"
+				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
 				organosJugadoresCli[jugDestino][organoColision] = "enfermo";
-				movJugador = "algo";
+				movJugador = {
+					jugOrigen: "",
+					jugDestino: "",
+					texto: "",
+					tipoMov: "algo"
+				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
 				organosJugadoresCli[jugDestino][organoColision] = "normal";
-				movJugador = "algo";
+				movJugador = {
+					jugOrigen: "",
+					jugDestino: "",
+					texto: "",
+					tipoMov: "algo"
+				};
 			} else {
 				//console.log("manejadorMov() - Virus. Organo inmunizado o no existe");
 			}
@@ -1248,11 +1287,21 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			organosJugadoresCli[usuario].hueso = auxHueso;
 			organosJugadoresCli[usuario].organoComodin = auxOrganoComodin;
 
-			movJugador = "algo";
+			movJugador = {
+				jugOrigen: "",
+				jugDestino: "",
+				texto: "",
+				tipoMov: "algo"
+			};
 			break;
 		case "guanteDeLatex":
 			console.log("manejadorMov() - Guante de latex");
-			movJugador = "guanteDeLatex";
+			movJugador = {
+				jugOrigen: "",
+				jugDestino: "",
+				texto: "",
+				tipoMov: "guanteDeLatex"
+			};
 			break;
 		case "transplante":
 			console.log("manejadorMov() - Transplante");
@@ -1289,7 +1338,12 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
 					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
 					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
-					movJugador = "true";
+					movJugador = {
+						jugOrigen: "",
+						jugDestino: "",
+						texto: "",
+						tipoMov: "algo"
+					};
 					fin_transplante();
 				}
 				//2: si no que los organos, para el cambio esten vacios
@@ -1303,7 +1357,12 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					organosJugadoresCli[jug2][organo1] = estadoOrgano1;
 					organosJugadoresCli[jug1][organo1] = "";
 					organosJugadoresCli[jug2][organo2] = "";
-					movJugador = "true";
+					movJugador = {
+						jugOrigen: "",
+						jugDestino: "",
+						texto: "",
+						tipoMov: "algo"
+					};
 					fin_transplante();
 				} else {
 					console.log("El transplante no ha sido posible");
@@ -1323,21 +1382,31 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 
 					organosJugadoresCli[usuario][organoColision] = estadoOrgano;
 					organosJugadoresCli[jugDestino][organoColision] = "";
-					movJugador = "true";
+					movJugador = {
+						jugOrigen: "",
+						jugDestino: "",
+						texto: "",
+						tipoMov: "algo"
+					};
 				}
 			}
 			break;
 		case "contagio":
 			//Mov valido pero de momento no hacemos nada
 			console.log("Contagio");
-			movJugador = "true";
+			movJugador = {
+				jugOrigen: "",
+				jugDestino: "",
+				texto: "",
+				tipoMov: "algo"
+			};
 			break;
 		default:
 			console.log("Error grave en manejadorMov()-switch tratamiento");
 		}
 	}
 	
-	if (movJugador != "") {
+	if (movJugador.tipoMov != "") {
 		//console.log("Movimiento valido");
 		nuevaCarta(numCarta);
 	} else {
@@ -1361,7 +1430,12 @@ function fin_descarte() {
 	descartes[0] = false;
 	descartes[1] = false;
 	descartes[2] = false;
-	movJugador = "algo";
+	movJugador = {
+		jugOrigen: "",
+		jugDestino: "",
+		texto: "",
+		tipoMov: "algo"
+	};
 	actualizarCanvasAPO();
 }
 

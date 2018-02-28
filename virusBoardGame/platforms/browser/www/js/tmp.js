@@ -28,3 +28,18 @@ Edicion Imagenes
 
 FUNCIONES RENDER
 renderPlayerBackCards()->En cxAPO->Pinta el reverso de las cartas de la mano de los demas jugadores
+
+VARIABLES
+infojugadores = {
+	turnosPerdidos: 0, 
+	nombre: playersSrv[jugadores[i]].nombre,
+	limiteTurnosPerdidos: 3,
+	turnoPerdida: 0
+}
+
+movJugador = {
+	jugOrigen: "",
+	jugDestino: "",
+	texto: "",
+	tipoMov: ""
+};

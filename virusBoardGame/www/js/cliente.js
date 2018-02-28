@@ -675,11 +675,11 @@ socket.on('prepararPartida', function(datos_iniciales){
 
 function esperarMovimiento(){
 	esperarMovSTO = setTimeout(function(){ 
-		if (movJugador == "") {
+		if (movJugador.tipoMov == "") {
 			//console.log("Esperando movimiento");
 			esperarMovimiento();
 		} else {
-			if (movJugador == "tiempo_agotado") {
+			if (movJugador.tipoMov == "tiempo_agotado") {
 				var newDatos_partida = {
 					idPartida: idPartida,
 					jugadores: jugadores,
@@ -703,10 +703,10 @@ function esperarMovimiento(){
 						ganador: infoJugadores[ganador].nombre,
 						organosJugadoresCli: organosJugadoresCli
 					}
+					console.log("esperarMovimiento(): "+idPartida);
 					socket.emit('terminarPartida', data);
 				} else {
 					//Si no hay ganador seguimos con el juego
-					console.log("Nuestro movimiento ha sido: "+movJugador);
 					var newDatos_partida = {
 						idPartida: idPartida,
 						jugadores: jugadores,
@@ -728,33 +728,13 @@ function esperarMovimiento(){
 function comunicarTiempoAgotado () {
 	datos = {
 		idPartida: idPartida,
-		turno: turno,
-		numTurno: numTurno
+		infoJugadores: infoJugadores,
+		numTurno: numTurno,
+		turno: turno
 	}
 	//console.log("Avisamos al servidor que puede haber un jugador inactivo");
 	socket.emit('tiempo_agotado', datos);
 }
-
-socket.on('tiempo_agotadoOK', function() {
-	//console.log("Servidor ha recibido correctamente el turno perdido. Retransmitimos avanzar turno");
-
-	//Todos los demas jugadores aumentaran este turno, pero tenemos un "seguro" en socket.on('siguienteTurnoCli'
-	//pero si no, daria igual
-	infoJugadores[turno].turnosPerdidos++;
-	infoJugadores[turno].turnoPerdida = numTurno;
-	//Avisamos al servidor que retransmita el cambio de turno
-	var newDatos_partida = {
-		idPartida: idPartida,
-		jugadores: jugadores,
-		infoJugadores: infoJugadores,
-		turno: turno,
-		numTurno : numTurno,
-		deckOfCardsPartida: deckOfCards,
-		organosJugadoresCli: organosJugadoresCli,
-		movJugador: movJugador
-	};
-	socket.emit('siguienteTurnoSrv', newDatos_partida);
-});
 
 function checkPartidaTerminada(){
 	//Dos formas de ganar. Tener un cuerpo entero completo SANO...
@@ -806,20 +786,25 @@ function checkPartidaTerminada(){
 socket.on('siguienteTurnoCli', function(datos_partida){
 	//console.log("siguienteTurnoCli");
 
-	//Si el anterior jugador ha perdido el turno, llegaran uno o varios mensajes
-	//Usamos el primero y saltamos el resto
-	//Si el turno que teniamos guardado, es igual al turno que nos llega es que el turno ya ha sido procesado
-	//Si hubiera problemas, subir mas arriba esta instruccion turno = datos_partida.turno;
+	//Actualizo datos
+	if (datos_partida.movJugador.tipoMov == "abandonarPartida") {
+		//Actualizo ciertos datos
+		jugadores = datos_partida.jugadores;
+   		infoJugadores = datos_partida.infoJugadores;
+		representarMov(datos_partida.movJugador.tipoMov);
+		doneResizing();
+	}
+
+	//Evitamos replicas
 	if (turno == datos_partida.turno) {
 		//console.log("Mensajes retrasados de pierde turno");
 		return;
 	}
+	turno = datos_partida.turno;
 
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
 	cerrarAyudaCartas();
-
-	movJugador = datos_partida.movJugador;
 
 	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
 	//enviado por el servidor)
@@ -828,7 +813,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 	//Guante de Latex
 	//El jugador de la carta no se descarta
-	if ((movJugador == "guanteDeLatex") && (usuario != turno)) {
+	if ((movJugador.tipoMov == "guanteDeLatex") && (usuario != turno)) {
 		objetos[0].src = "";
 		objetos[1].src = "";
 		objetos[2].src = "";
@@ -844,16 +829,20 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 
 	//Una vez representado el movimiento del jugador, borramos el mov
-	movJugador = "";
+	movJugador = {
+		jugOrigen: "",
+		jugDestino: "",
+		texto: "",
+		tipoMov: ""
+	};
 
-	turno = datos_partida.turno;
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
     infoJugadores = datos_partida.infoJugadores;
 	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 
-	if (datos_partida.organosJugadoresCli != undefined){
+	if (!(isEmpty(datos_partida.organosJugadoresCli))) {
 		for (var jugador in datos_partida.organosJugadoresCli){
 			organosJugadoresCli[jugador].cerebro = datos_partida.organosJugadoresCli[jugador].cerebro;
 			organosJugadoresCli[jugador].corazon = datos_partida.organosJugadoresCli[jugador].corazon;
