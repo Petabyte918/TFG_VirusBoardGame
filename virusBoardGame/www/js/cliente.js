@@ -790,10 +790,17 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	if (datos_partida.movJugador.tipoMov == "abandonarPartida") {
 		console.log("Recibido jugador que abandona partida. Actualizo datos y canvas");
 		//Actualizo ciertos datos
+		//Para eliminar al jugador que abandona de organosJugadoresCli
+		for (var i = 0; i < jugadores.length; i++) {
+			if (datos_partida.jugadores.indexOf(jugadores[i]) == -1) {
+				delete organosJugadoresCli[jugadores[i]];
+			}
+		}
+		//Otros
 		jugadores = datos_partida.jugadores;
    		infoJugadores = datos_partida.infoJugadores;
-		representarMov(datos_partida.movJugador.tipoMov);
-		doneResizing();
+		representarMov(datos_partida.movJugador.tipoMov); //Escribo en el cuadro de movs
+		doneResizing(); //Recargo
 	}
 
 	//Evitamos replicas
