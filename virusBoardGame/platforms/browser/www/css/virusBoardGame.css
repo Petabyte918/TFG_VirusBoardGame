@@ -1057,7 +1057,9 @@ p.textoEnumInstrucciones {
 	float: right;
 }
 
-#listaTurnos {
+
+/** ListaTurnos y ListaEventos **/
+#listaTurnos, #listaEventos {
 	position: absolute;
 	border: solid firebrick 4px;
     box-shadow: inset 0px 0px 4px 4px #4d0000, 10px 10px 20px 5px rgba(0,0,0,0.75);
@@ -1077,7 +1079,7 @@ p.textoEnumInstrucciones {
 	height: 30em;
 }
 
-#tittleListaTurnos {
+#tittleListaTurnos, #tittleListaEventos {
 	text-align: left;
     font-size: larger;	
     margin: 0px;
@@ -1085,14 +1087,14 @@ p.textoEnumInstrucciones {
 	width: 100%;
 }
 
-#textoListaTurnos {
+#textoListaTurnos, #textoListaEventos {
 	float: left;
     margin-top: 2px;
     margin-bottom: 2px;
 	width: 100%;
 }
 
-#textoListaTurnos > p {
+#textoListaTurnos > #textoListaEventos {
 	margin: 0px;
 }
 

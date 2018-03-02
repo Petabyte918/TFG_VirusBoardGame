@@ -1607,6 +1607,7 @@ function reDimAyudaCartaEspecial(cartaEspecial) {
 
 function reDimListaTurnos() {
 	//console.log("reDimListaTurnos()");
+
 	//Aseguramos solo mostrar en partida
 	if (isEmpty(infoJugadores)) {
 		return;
@@ -1658,6 +1659,33 @@ function reDimListaTurnos() {
 	document.getElementById("textoListaTurnos").innerHTML = textListaTurnos;
 
 	$("#listaTurnos").css("visibility","visible");
+}
+
+function reDimListaEventos() {
+	//console.log("reDimListaEventos()");
+	
+	//Aseguramos solo mostrar en partida
+	if (isEmpty(infoJugadores)) {
+		return;
+	}
+
+	var posXStr = (Math.floor(DeckOfCards.descartesData.x + 10)).toString();
+	var posYStr = (Math.floor(windowHeight - DeckOfCards.descartesData.y)).toString();
+	var maxWidthStr = (Math.floor(windowWidth - DeckOfCards.descartesData.x - 20)).toString();
+	var maxHeightStr = (Math.floor(DeckOfCards.descartesData.height)).toString();
+
+	console.log("posXStr: "+ posXStr);
+	console.log("posYStr: "+posYStr);
+	console.log("widthMaxStr: "+ maxWidthStr);
+	console.log("heightMaxStr: "+maxHeightStr);
+
+	$("#listaEventos").css("left", posXStr);
+	$("#listaEventos").css("top", posYStr);
+	$("#listaEventos").css("max-width", maxWidthStr);
+	$("#listaEventos").css("max-height", maxHeightStr);
+
+
+	$("#listaEventos").css("visibility","visible");
 }
 
 function reDimReloadButton() {
@@ -1716,6 +1744,8 @@ function doneResizing() {
 	if (idPartida != "") {
 		reDimCanvas();
 	}
+
+	reDimListaEventos();
 }
 
 $(document).ready(function(){

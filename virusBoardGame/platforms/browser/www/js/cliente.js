@@ -151,6 +151,7 @@ function backTo_InitMenu() {
 	$("#instrucciones").css("display", "inline");
 	$("#pauseButton").css("visibility", "hidden");
 	$("#listaTurnos").css("visibility", "hidden");
+	$("#listaEventos").css("visibility","hidden");
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	if (logged == "true") {
@@ -972,6 +973,7 @@ socket.on('partidaAbandonadaOK', function(data) {
 
 	$("#pauseButton").css("visibility", "hidden");
 	$("#listaTurnos").css("visibility", "hidden");
+	$("#listaEventos").css("visibility","hidden");
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
@@ -1012,6 +1014,7 @@ socket.on('expulsadoPartida', function(data) {
 
 	$("#pauseButton").css("visibility", "hidden");
 	$("#listaTurnos").css("visibility", "hidden");
+	$("#listaEventos").css("visibility","hidden");
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
@@ -1067,6 +1070,7 @@ socket.on('terminarPartida', function(data){
 
 	$("#pauseButton").css("visibility", "hidden");
 	$("#listaTurnos").css("visibility", "hidden");
+	$("#listaEventos").css("visibility","hidden");
 	$("#reloadButton").css("visibility","hidden");
 	$("#exitButton").css("visibility","hidden");
 	$("#cuadroFinPartida").css("display", "block");
