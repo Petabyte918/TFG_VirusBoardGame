@@ -1669,10 +1669,11 @@ function reDimListaEventos() {
 		return;
 	}
 
-	var posXStr = (Math.floor(DeckOfCards.descartesData.x + 10)).toString();
-	var posYStr = (Math.floor(windowHeight - DeckOfCards.descartesData.y)).toString();
-	var maxWidthStr = (Math.floor(windowWidth - DeckOfCards.descartesData.x - 20)).toString();
-	var maxHeightStr = (Math.floor(DeckOfCards.descartesData.height)).toString();
+	var maxWidthStr = (windowWidth/4).toString() + "px";
+	var maxHeight = (windowHeight/4);
+	var maxHeightStr = maxHeight.toString() + "px";
+	var posXStr = (((windowWidth/3)) * 2 + 30).toString() + "px";
+	var posYStr = (windowHeight/2 - maxHeight/2 - 20).toString() + "px";
 
 	console.log("posXStr: "+ posXStr);
 	console.log("posYStr: "+posYStr);
@@ -1743,9 +1744,8 @@ function doneResizing() {
 
 	if (idPartida != "") {
 		reDimCanvas();
+		reDimListaEventos();
 	}
-
-	reDimListaEventos();
 }
 
 $(document).ready(function(){

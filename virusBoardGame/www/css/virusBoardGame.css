@@ -1062,14 +1062,7 @@ p.textoEnumInstrucciones {
 #listaTurnos, #listaEventos {
 	position: absolute;
 	border: solid firebrick 4px;
-    box-shadow: inset 0px 0px 4px 4px #4d0000, 10px 10px 20px 5px rgba(0,0,0,0.75);
     border-radius: 15px;
-
-    background: url(img/bloqNotas.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
-	padding: 7px;
-    font-size: 0.95em;
 
     font-family: 'Lora', serif;
 
@@ -1077,6 +1070,23 @@ p.textoEnumInstrucciones {
 
 	width: 30em;
 	height: 30em;
+
+	padding: 7px;
+    font-size: 0.95em;
+}
+
+#listaTurnos {
+    background: url(img/bloqNotas.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-shadow: inset 0px 0px 4px 4px #4d0000, 10px 10px 20px 5px rgba(0,0,0,0.75);
+}
+
+#listaEventos {
+    background: url(img/bloqNotas.jpg);
+    background-repeat: repeat;
+    background-size: 50% 150%;
+    box-shadow: inset 0px 0px 4px 4px #4d0000, 5px 6px 10px 0px rgba(0,0,0,0.75);
 }
 
 #tittleListaTurnos, #tittleListaEventos {
@@ -1094,7 +1104,11 @@ p.textoEnumInstrucciones {
 	width: 100%;
 }
 
-#textoListaTurnos > p, ##textoListaEventos > p {
+#textoListaEventos {
+	overflow-y: scroll;
+}
+
+#textoListaTurnos > p, #textoListaEventos > p {
 	margin: 0px;
 }
 

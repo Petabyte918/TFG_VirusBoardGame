@@ -313,7 +313,7 @@ Engine = new function() {
 			posJugadores = [1];
 			break;
 		case 2:
-			posJugadores = [1, 2];
+			posJugadores = [1, 5];
 			break;
 		case 3:
 			posJugadores = [1, 3, 5]; //o [1, 2, 6];
@@ -724,6 +724,44 @@ DeckOfCards = new function() {
 
 		descarte.onload = function(){
 			cxBG.drawImage(descarte, posX, posY, width, height);
+		}
+	}
+	this.getDescartesData = function(data) {
+		switch(data){
+		case "posX":
+			return this.descartesData.x;
+			break ;
+		case "posY":
+			return this.descartesData.y;
+			break
+		case "width":
+			return this.descartesData.width;
+			break;
+		case "height":
+			return this.descartesData.height;
+			break;
+		default:
+			return null;
+			break;
+		}
+	}
+	this.getDeckData = function(data) {
+		switch(data){
+		case "posX":
+			return this.deckData.x;
+			break ;
+		case "posY":
+			return this.deckData.y;
+			break
+		case "width":
+			return this.deckData.width;
+			break;
+		case "height":
+			return this.deckData.height;
+			break;
+		default:
+			return null;
+			break;
 		}
 	}
 	this.reDimDeckOfCards =  function() {
