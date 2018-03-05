@@ -53,11 +53,86 @@ infoJugadores[jugadores[i]] = {
 	turnoPerdida: 0
 }
 
+//TIPOS DE MOVIMIENTO
+-----abandonarPartida-----
 estadoPartidas[idPartida].movJugador = {
 	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
 	jugDestino: "",
-	texto: "El jugador "+estadoPartidas[idPartida].infoJugadores[idJugador].nombre+" ha abandonado la partida",
-	tipoMov: "abandonarPartida"
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha abandonado la partida</p>",
+	tipoMov: "abandonarPartida",
+	tipoOrgano: ""
+}
+-----turnoPerdido-----
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: "",
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha perdido el turno por agotar el tiempo</p>",
+	tipoMov: "turnoPerdido",
+	tipoOrgano: ""
+}
+-----Descarte-----
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: "",
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> se ha descartado de las siguientes cartas: "+tipoOrgano,
+	tipoMov: "descarte",
+	tipoOrgano: "carta1(,carta2(,carta3))"
+}
+-----Organo-----
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+"</p>",
+	tipoMov: "organo",
+	tipoOrgano: "corazon", "cerebro", "higado", "hueso", "comodin"
+}
+-----Virus-----
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+" en jugador "+jugDestino+"</p>",
+	tipoMov: "virus",
+	tipoOrgano: "corazon", "cerebro", "higado", "hueso", "comodin"
+}
+-----Medicina-----
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+" en jugador "+jugDestino+"</p>",
+	tipoMov: "medicina",
+	tipoOrgano: "corazon", "cerebro", "higado", "hueso", "comodin"
+}
+-----Cartas especiales-----
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha usado transplante con jugador "+jugDestino+" "+tipoOrgano+"</p>",
+	tipoMov: "transplante",
+	tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'"
+}
+
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha usado un ladron de órganos "+tipoOrgano+" a "+jugDestino+"</p>",
+	tipoMov: "ladronDeOrganos",
+	tipoOrgano: "robando '"+organo1+"'"
+}
+
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha usado un error medico cambiando su cuerpo por el de "+jugDestino+"</p>",
+	tipoMov: "errorMedico",
+	tipoOrgano: ""
+}
+
+estadoPartidas[idPartida].movJugador = {
+	jugOrigen: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	jugDestino: estadoPartidas[idPartida].infoJugadores[idJugador].nombre,
+	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha usado guante de latex obligando a descartarse a todos los jugadores</p>",
+	tipoMov: "guanteDeLatex",
+	tipoOrgano: ""
 }
 
 //Copia por valor y no por referencia ojo (su pm. 8 horas por)

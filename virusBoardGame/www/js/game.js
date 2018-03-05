@@ -295,13 +295,31 @@ function representarMov(movJugador) {
 function escribirEvento(movJugador) {
 	console.log("escribirEvento()");
 
-	var jugOrigen = movJugador.jugOrigen;
-	var jugDestino = movJugador.jugDestino;
+	//Si es el primer turno no hay eventos
+	if (movJugador.tipoMov == "empezarTurnos") {
+		return;
+	}
+
+	//Protegemos -- destino puede ser null o estar vacio
+	if (isEmpty(infoJugadores[movJugador.jugOrigen])) {
+		var jugOrigen = movJugador.jugOrigen;
+	} else {
+		var jugOrigen = infoJugadores[movJugador.jugOrigen].nombre;
+	}
+
+	//Protegemos -- destino puede ser null o estar vacio
+	if (isEmpty(infoJugadores[movJugador.jugDestino])) {
+		var jugDestino = movJugador.jugDestino;
+	} else {
+		var jugDestino = infoJugadores[movJugador.jugDestino].nombre;
+	}
+
+
 	var texto = movJugador.texto;
 	var tipoMov = movJugador.tipoMov;
 	var tipoOrgano = movJugador.tipoOrgano;
 
-	if (jugOrigen == usuario) {
+	if (movJugador.jugOrigen == usuario) {
 		jugOrigen = " TU MISMO";
 	}
 
@@ -309,41 +327,42 @@ function escribirEvento(movJugador) {
 
 	switch (tipoMov) {
 	case "tiempo_agotado":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha abandonado la partida</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha abandonado la partida.</p>";
 		break;
 	case "turnoPerdido":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha perdido el turno por agotar el tiempo</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha perdido el turno por agotar el tiempo.</p>";
 		break;
 	case "descarte":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> se ha descartado de las siguientes cartas: "+tipoOrgano;
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> se ha descartado de las siguientes cartas: "+tipoOrgano+".";
 		break;
 	case "organo":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+"</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+".</p>";
 		break;
 	case "virus":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+" en jugador "+jugDestino+"</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+" en jugador "+jugDestino+".</p>";
 		break;
 	case "medicina":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+" en jugador "+jugDestino+"</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+" en jugador "+jugDestino+".</p>";
 		break;
 	case "transplante":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado transplante con jugador "+jugDestino+" "+tipoOrgano+"</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha usado transplante con jugador "+jugDestino+" "+tipoOrgano+".</p>";
 		break;
 	case "ladronDeOrganos":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado un ladron de órganos "+tipoOrgano+" a "+jugDestino+"</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha usado un ladron de órganos "+tipoOrgano+" a "+jugDestino+".</p>";
 		break;
 	case "errorMedico":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado un error medico cambiando su cuerpo por el de "+jugDestino+"</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha usado un error medico cambiando su cuerpo por el de "+jugDestino+".</p>";
 		break;
 	case "guanteDeLatex":
-		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado guante de latex obligando a descartarse a todos los jugadores</p>";
+		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha usado guante de latex obligando a descartarse a todos los jugadores.</p>";
 		break;
 	default:
-		evento = "<p>Movimiento extraño</p>";
+		console.log("El movimiento extraño ha sido: "+tipoMov);
+		evento = "<p><b>"+numTurno+" -- </b>Movimiento extraño.</p>";
 		break;
 	}
 
-	$("#textoListaEventos").append(textListaTurnos);
+	$("#textoListaEventos").prepend(evento);
 }
 
 
@@ -964,6 +983,7 @@ function moveObjects(){
 					break;
 				}
 			}
+			evalClick(touch.x, touch.y);
 		}
 
 		cv.onmousemove = function(event) {
@@ -1038,8 +1058,60 @@ function actObjects() {
 	};
 }
 
+//Algunos son elementos html que van debajo del canvas
+function evalClick(touchX, touchY) {
+	//console.log("evalClick()");
+
+	//1.-Recuadro listaEventos
+	var elemListaEventos = document.getElementById("listaEventos");
+	var posListaEventos = elemListaEventos.getBoundingClientRect();
+
+	if ( (touchX > posListaEventos.left) && 
+		(touchX < posListaEventos.right) &&
+		(touchY > posListaEventos.top) &&
+		(touchY < posListaEventos.bottom) ) {
+		//console.log("click en lista Eventos");
+
+		var elemMaximizeListaEventos = document.getElementById("maximizeListaEventos");
+		var posMaximizeListaEventos = elemMaximizeListaEventos.getBoundingClientRect();
+		var display = $("#maximizeListaEventos").css("display");
+
+		if ( (touchX > posMaximizeListaEventos.left) && 
+			(touchX < posMaximizeListaEventos.right) &&
+			(touchY > posMaximizeListaEventos.top) &&
+			(touchY < posMaximizeListaEventos.bottom) &&
+			(display != "none") ) {
+			maximizeListaEventos();
+			return;
+		}
+
+		var elemMinimizeListaEventos = document.getElementById("minimizeListaEventos");
+		var posMinimizeListaEventos = elemMinimizeListaEventos.getBoundingClientRect();
+		var display = $("#minimizeListaEventos").css("display");
+
+		if ( (touchX > posMinimizeListaEventos.left) && 
+			(touchX < posMinimizeListaEventos.right) &&
+			(touchY > posMinimizeListaEventos.top) &&
+			(touchY < posMinimizeListaEventos.bottom) &&
+			(display != "none") ) {
+			minimizeListaEventos();
+			return;
+		}
+	}
+
+	//2.-Recuadro listaTurnos
+	var elemListaTurnos = document.getElementById("listaTurnos");
+	var posListaTurnos = elemListaTurnos.getBoundingClientRect();
+
+	if ( (touchX > posListaTurnos.left) && 
+		(touchX < posListaTurnos.right) &&
+		(touchY > posListaTurnos.top) &&
+		(touchY < posListaTurnos.bottom) ) {
+		//console.log("click en lista turnos");
+	}
+}
+
 //Devuelve el numero de la pos. donde ha habido colision, 0 si descarte o -1 si hay error
-//Ahora hacemos la colision
 function checkCollision() {
 	//Si no es mi turno aunque pueda mover los objetos no proceso nada y devuelvo los obj a su origen
 	if (turno != usuario){
@@ -1465,7 +1537,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			//Mov valido pero de momento no hacemos nada
 			console.log("Contagio");
 			movJugador = {
-				jugOrigen: ,
+				jugOrigen: "",
 				jugDestino: "",
 				texto: "",
 				tipoMov: "contagio",
@@ -1574,6 +1646,37 @@ function reDimRanquingList() {
 		//console.log("Bien");
 		$("#ranquingList").css("width", widthRanquingListStr);
 	}
+}
+
+function maximizeListaEventos() {
+	console.log("maximizeListaEventos()");
+
+	//Ocultamos-mostramos boton
+	$("#maximizeListaEventos").css("display", "none");
+	$("#minimizeListaEventos").css("display", "block");
+
+	var maxHeight = (windowHeight/4);
+	var maxHeightStr = maxHeight.toString() + "px";
+
+	$("#listaEventos").css("max-height", maxHeightStr);
+	$("#listaEventos").css("background-size", "100% 150%");
+}
+
+function minimizeListaEventos() {
+	console.log("minimizeListaEventos()");
+
+	//Ocultamos-mostramos boton
+	$("#maximizeListaEventos").css("display", "block");
+	$("#minimizeListaEventos").css("display", "none");
+
+	var elemTittleListaEventos = document.getElementById('tittleListaEventos');
+	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
+
+	var maxHeight = (posTittleListaEventos.height + 20);
+	var maxHeightStr = maxHeight.toString() + "px";
+
+	$("#listaEventos").css("max-height", maxHeightStr);
+	$("#listaEventos").css("background-size", "100% 450%");
 }
 
 function reDimContainer_instrucciones(pagina) {
@@ -1704,13 +1807,6 @@ function reDimListaTurnos() {
 	var posYStr = (Math.floor(yCountDown)).toString() + "px";
 	var maxWidthStr = (Math.floor(maxWidth)).toString() + "px";
 	var maxHeightStr = (Math.floor(maxHeight)).toString() + "px";
-
-	//console.log("xMax: "+xMax);
-	//console.log("xMin: "+xMin);
-	//console.log("posXStr: "+ posXStr);
-	//console.log("posYStr: "+posYStr);
-	//console.log("widthMaxStr: "+ maxWidthStr);
-	//console.log("heightMaxStr: "+maxHeightStr);
 	
 	$("#listaTurnos").css("left", posXStr);
 	$("#listaTurnos").css("top", posYStr);
@@ -1718,7 +1814,7 @@ function reDimListaTurnos() {
 	$("#listaTurnos").css("max-height", maxHeightStr);
 
 	var nombreJug = ""; 
-	var textListaTurnos = "";
+	var textoListaTurnos = "";
 	for (var i = 0; i < jugadores.length; i++) {
 		if (jugadores[i] == usuario) {
 			nombreJug = "<b>TÚ</b>";
@@ -1727,13 +1823,13 @@ function reDimListaTurnos() {
 		}
 		
 		if (jugadores[i] == turno) {
-			textListaTurnos += "<p class='textListaTurnosActual'><b>"+(i+1)+".- </b>"+nombreJug+"</br></p>";
+			textoListaTurnos += "<p class='textoListaTurnosActual'><b>"+(i+1)+".- </b>"+nombreJug+"</br></p>";
 		} else {
-			textListaTurnos += "<p><b>"+(i+1)+".- </b>"+nombreJug+"</br></p>";
+			textoListaTurnos += "<p><b>"+(i+1)+".- </b>"+nombreJug+"</br></p>";
 		}
 		
 	}
-	document.getElementById("textoListaTurnos").innerHTML = textListaTurnos;
+	document.getElementById("textoListaTurnos").innerHTML = textoListaTurnos;
 
 	$("#listaTurnos").css("visibility","visible");
 }
@@ -1746,16 +1842,11 @@ function reDimListaEventos() {
 		return;
 	}
 
-	var maxWidthStr = (windowWidth/4).toString() + "px";
+	var maxWidthStr = (windowWidth/4 + 30).toString() + "px";
 	var maxHeight = (windowHeight/4);
 	var maxHeightStr = maxHeight.toString() + "px";
-	var posXStr = (((windowWidth/3)) * 2 + 30).toString() + "px";
+	var posXStr = (((windowWidth/3)) * 2 + 10).toString() + "px";
 	var posYStr = (windowHeight/2 - maxHeight/2 - 20).toString() + "px";
-
-	console.log("posXStr: "+ posXStr);
-	console.log("posYStr: "+posYStr);
-	console.log("widthMaxStr: "+ maxWidthStr);
-	console.log("heightMaxStr: "+maxHeightStr);
 
 	$("#listaEventos").css("left", posXStr);
 	$("#listaEventos").css("top", posYStr);
@@ -1764,6 +1855,23 @@ function reDimListaEventos() {
 
 
 	$("#listaEventos").css("visibility","visible");
+
+	var elemTittleListaEventos = document.getElementById("tittleListaEventos");
+	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
+
+	var heightTittle = posTittleListaEventos.height;
+
+	var maxHeightText = (maxHeight - heightTittle - 8).toString() + "px";
+
+	$("#textoListaEventos").css("max-height", maxHeightText);
+
+	var heightMaxMinIcons = heightTittle.toString() + "px";
+	var widthMaxMinIcons = heightMaxMinIcons;	
+
+	$("#maximizeListaEventos").css("width", widthMaxMinIcons);
+	$("#maximizeListaEventos").css("height", heightMaxMinIcons);	
+	$("#minimizeListaEventos").css("width", widthMaxMinIcons);
+	$("#minimizeListaEventos").css("height", heightMaxMinIcons);	
 }
 
 function reDimReloadButton() {

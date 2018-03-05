@@ -1084,7 +1084,8 @@ p.textoEnumInstrucciones {
 
 #listaEventos {
     background: url(img/bloqNotas.jpg);
-    background-repeat: no-repeat;
+    background-position-y: 0px;
+    background-repeat: repeat;
     background-size: 50% 150%;
     box-shadow: inset 0px 0px 4px 4px #4d0000, 5px 6px 10px 0px rgba(0,0,0,0.75);
 }
@@ -1094,7 +1095,34 @@ p.textoEnumInstrucciones {
     font-size: larger;	
     margin: 0px;
     margin-bottom: 0.5em;
-	width: 100%;
+	float: left;
+}
+
+#maximizeListaEventos {
+	background: url(img/maximize.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    float: right;
+
+    margin: 2px;
+
+    display: none;
+}
+
+#minimizeListaEventos {
+	background: url(img/minimize.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    float: right;
+
+    margin: 2px;
+
+    display: block;
+}
+
+#maximizeListaEventos:active, #minimizeListaEventos:active {
+	top: 1px;
+	left: 1px;
 }
 
 #textoListaTurnos, #textoListaEventos {
@@ -1105,14 +1133,14 @@ p.textoEnumInstrucciones {
 }
 
 #textoListaEventos {
-	overflow-y: scroll;
+	overflow-y: hidden;
 }
 
 #textoListaTurnos > p, #textoListaEventos > p {
 	margin: 0px;
 }
 
-p.textListaTurnosActual {
+p.textoListaTurnosActual {
 	background-color: rgba(178, 34, 34, 0.4); /** firebrick **/
 }
 

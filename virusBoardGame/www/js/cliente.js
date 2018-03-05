@@ -800,7 +800,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		//Otros
 		jugadores = datos_partida.jugadores;
    		infoJugadores = datos_partida.infoJugadores;
-		representarMov(datos_partida.movJugador.tipoMov); //Escribo en el cuadro de movs
+		representarMov(datos_partida.movJugador); //Escribo en el cuadro de movs
 		doneResizing(); //Recargo
 	}
 
@@ -810,14 +810,12 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		return;
 	}
 	turno = datos_partida.turno;
+	movJugador = datos_partida.movJugador;
 
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
 	cerrarAyudaCartas();
 
-	//Representar movimiento (nuestro mov quedara representado en el sig mensaje
-	//enviado por el servidor)
-	//Pendiente
 	representarMov(movJugador);
 
 	//Guante de Latex
@@ -842,7 +840,8 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		jugOrigen: "",
 		jugDestino: "",
 		texto: "",
-		tipoMov: ""
+		tipoMov: "",
+		tipoOrgano: ""
 	};
 
 	idPartida = datos_partida.idPartida;

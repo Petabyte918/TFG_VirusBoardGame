@@ -8,11 +8,12 @@ var jugadores = [];
 var infoJugadores = {};
 var deckOfCards = [];
 var movJugador = {
-	jugOrigen: "",
-	jugDestino: "",
-	texto: "",
-	tipoMov: ""
-};
+		jugOrigen: "",
+		jugDestino: "",
+		texto: "",
+		tipoMov: "",
+		tipoOrgano: ""
+	};
 
 //Informacion exclusiva de cada cliente
 var posJugadores = []; //Posicion que ocupara cada jugador dependiendo del num de jugadores total
