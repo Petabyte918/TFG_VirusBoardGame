@@ -170,10 +170,11 @@ function renderCountDown(time, oldDate, first){
 			//Por si se nos ha pasado el tiempo en medio de un transplante
 			fin_transplante();
 			movJugador = {
-				jugOrigen: "",
+				jugOrigen: turno,
 				jugDestino: "",
 				texto: "",
-				tipoMov: "tiempo_agotado"
+				tipoMov: "tiempo_agotado",
+				tipoOrgano: ""
 			}
 		}
 	}, 250);
@@ -286,8 +287,65 @@ function nuevaCarta(numCarta){
 }
 
 function representarMov(movJugador) {
+	console.log("representarMov(movJugador)");
 
+	escribirEvento(movJugador);
 }
+
+function escribirEvento(movJugador) {
+	console.log("escribirEvento()");
+
+	var jugOrigen = movJugador.jugOrigen;
+	var jugDestino = movJugador.jugDestino;
+	var texto = movJugador.texto;
+	var tipoMov = movJugador.tipoMov;
+	var tipoOrgano = movJugador.tipoOrgano;
+
+	if (jugOrigen == usuario) {
+		jugOrigen = " TU MISMO";
+	}
+
+	var evento = "";
+
+	switch (tipoMov) {
+	case "tiempo_agotado":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha abandonado la partida</p>";
+		break;
+	case "turnoPerdido":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha perdido el turno por agotar el tiempo</p>";
+		break;
+	case "descarte":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> se ha descartado de las siguientes cartas: "+tipoOrgano;
+		break;
+	case "organo":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+"</p>";
+		break;
+	case "virus":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+" en jugador "+jugDestino+"</p>";
+		break;
+	case "medicina":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado "+tipoMov+" "+tipoOrgano+" en jugador "+jugDestino+"</p>";
+		break;
+	case "transplante":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado transplante con jugador "+jugDestino+" "+tipoOrgano+"</p>";
+		break;
+	case "ladronDeOrganos":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado un ladron de órganos "+tipoOrgano+" a "+jugDestino+"</p>";
+		break;
+	case "errorMedico":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado un error medico cambiando su cuerpo por el de "+jugDestino+"</p>";
+		break;
+	case "guanteDeLatex":
+		evento = "<p>El jugador <b>"+jugOrigen+"</b> ha usado guante de latex obligando a descartarse a todos los jugadores</p>";
+		break;
+	default:
+		evento = "<p>Movimiento extraño</p>";
+		break;
+	}
+
+	$("#textoListaEventos").append(textListaTurnos);
+}
+
 
 function checkCards() {
 	for (var i = 0; i < objetos.length; i++) {
@@ -1187,10 +1245,11 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 		if (organosJugadoresCli[jugDestino][organType] == ""){
 			organosJugadoresCli[jugDestino][organType] = "normal";
 			movJugador = {
-				jugOrigen: "",
-				jugDestino: "",
+				jugOrigen: usuario,
+				jugDestino: jugDestino,
 				texto: "",
-				tipoMov: "algo"
+				tipoMov: "organo",
+				tipoOrgano: organType
 			};
 		} else {
 			//console.log("manejadorMov() - Organo repetido");
@@ -1208,26 +1267,29 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
 				organosJugadoresCli[jugDestino][organoColision] = "normal";
 				movJugador = {
-					jugOrigen: "",
-					jugDestino: "",
+					jugOrigen: usuario,
+					jugDestino: jugDestino,
 					texto: "",
-					tipoMov: "algo"
+					tipoMov: "medicina",
+					tipoOrgano: organType
 				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
 				organosJugadoresCli[jugDestino][organoColision] = "vacunado";
 				movJugador = {
-					jugOrigen: "",
-					jugDestino: "",
+					jugOrigen: usuario,
+					jugDestino: jugDestino,
 					texto: "",
-					tipoMov: "algo"
+					tipoMov: "medicina",
+					tipoOrgano: organType
 				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
 				organosJugadoresCli[jugDestino][organoColision] = "inmunizado";
 				movJugador = {
-					jugOrigen: "",
-					jugDestino: "",
+					jugOrigen: usuario,
+					jugDestino: jugDestino,
 					texto: "",
-					tipoMov: "algo"
+					tipoMov: "medicina",
+					tipoOrgano: organType
 				};
 			} else {
 				//console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
@@ -1239,26 +1301,29 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
 				organosJugadoresCli[jugDestino][organoColision] = "";
 				movJugador = {
-					jugOrigen: "",
-					jugDestino: "",
+					jugOrigen: usuario,
+					jugDestino: jugDestino,
 					texto: "",
-					tipoMov: "algo"
+					tipoMov: "virus",
+					tipoOrgano: organType
 				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
 				organosJugadoresCli[jugDestino][organoColision] = "enfermo";
 				movJugador = {
-					jugOrigen: "",
-					jugDestino: "",
+					jugOrigen: usuario,
+					jugDestino: jugDestino,
 					texto: "",
-					tipoMov: "algo"
+					tipoMov: "virus",
+					tipoOrgano: organType
 				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
 				organosJugadoresCli[jugDestino][organoColision] = "normal";
 				movJugador = {
-					jugOrigen: "",
-					jugDestino: "",
+					jugOrigen: usuario,
+					jugDestino: jugDestino,
 					texto: "",
-					tipoMov: "algo"
+					tipoMov: "virus",
+					tipoOrgano: organType
 				};
 			} else {
 				//console.log("manejadorMov() - Virus. Organo inmunizado o no existe");
@@ -1288,19 +1353,21 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			organosJugadoresCli[usuario].organoComodin = auxOrganoComodin;
 
 			movJugador = {
-				jugOrigen: "",
-				jugDestino: "",
+				jugOrigen: usuario,
+				jugDestino: jugDestino,
 				texto: "",
-				tipoMov: "algo"
+				tipoMov: "errorMedico",
+				tipoOrgano: ""
 			};
 			break;
 		case "guanteDeLatex":
 			console.log("manejadorMov() - Guante de latex");
 			movJugador = {
-				jugOrigen: "",
-				jugDestino: "",
+				jugOrigen: usuario,
+				jugDestino: jugDestino,
 				texto: "",
-				tipoMov: "guanteDeLatex"
+				tipoMov: "guanteDeLatex",
+				tipoOrgano: ""
 			};
 			break;
 		case "transplante":
@@ -1339,10 +1406,11 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
 					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
 					movJugador = {
-						jugOrigen: "",
-						jugDestino: "",
+						jugOrigen: usuario,
+						jugDestino: jugDestino,
 						texto: "",
-						tipoMov: "algo"
+						tipoMov: "transplante",
+						tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'"
 					};
 					fin_transplante();
 				}
@@ -1358,10 +1426,11 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					organosJugadoresCli[jug1][organo1] = "";
 					organosJugadoresCli[jug2][organo2] = "";
 					movJugador = {
-						jugOrigen: "",
-						jugDestino: "",
+						jugOrigen: usuario,
+						jugDestino: jugDestino,
 						texto: "",
-						tipoMov: "algo"
+						tipoMov: "transplante",
+						tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'"
 					};
 					fin_transplante();
 				} else {
@@ -1383,10 +1452,11 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					organosJugadoresCli[usuario][organoColision] = estadoOrgano;
 					organosJugadoresCli[jugDestino][organoColision] = "";
 					movJugador = {
-						jugOrigen: "",
-						jugDestino: "",
+						jugOrigen: usuario,
+						jugDestino: jugDestino,
 						texto: "",
-						tipoMov: "algo"
+						tipoMov: "ladronDeOrganos",
+						tipoOrgano: "robando '"+organoColision+"'"
 					};
 				}
 			}
@@ -1395,10 +1465,11 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			//Mov valido pero de momento no hacemos nada
 			console.log("Contagio");
 			movJugador = {
-				jugOrigen: "",
+				jugOrigen: ,
 				jugDestino: "",
 				texto: "",
-				tipoMov: "algo"
+				tipoMov: "contagio",
+				tipoOrgano: ""
 			};
 			break;
 		default:
@@ -1417,13 +1488,18 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 function fin_descarte() {
 	finDescarte = true;
 	$("#descartes_boton").css("visibility","hidden");
+
+	var descripcionDescarte = "";
 	if (descartes[0] == true) {
+		descripcionDescarte =+ cartasUsuario[0].cardType+"-"+cartasUsuario[0].organType+",";
 		nuevaCarta(0);
 	}
 	if (descartes[1] == true) {
+		descripcionDescarte =+ cartasUsuario[1].cardType+"-"+cartasUsuario[1].organType+",";
 		nuevaCarta(1);
 	}
 	if (descartes[2] == true) {
+		descripcionDescarte =+ cartasUsuario[2].cardType+"-"+cartasUsuario[2].organType+",";
 		nuevaCarta(2);
 	}
 
@@ -1431,10 +1507,11 @@ function fin_descarte() {
 	descartes[1] = false;
 	descartes[2] = false;
 	movJugador = {
-		jugOrigen: "",
+		jugOrigen: usuario,
 		jugDestino: "",
 		texto: "",
-		tipoMov: "algo"
+		tipoMov: "descarte",
+		tipoOrgano: descripcionDescarte
 	};
 	actualizarCanvasAPO();
 }
