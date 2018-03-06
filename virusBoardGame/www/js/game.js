@@ -1084,6 +1084,7 @@ function evalClick(touchX, touchY) {
 			(display != "none") ) {
 			
 			localStorage.setItem("modeListaEventos", "maximize");
+			reDimListaEventos();
 			return;
 		}
 
@@ -1098,6 +1099,7 @@ function evalClick(touchX, touchY) {
 			(display != "none") ) {
 			
 			localStorage.setItem("modeListaEventos", "restore");
+			reDimListaEventos();
 			return;
 		}
 
@@ -1112,6 +1114,7 @@ function evalClick(touchX, touchY) {
 			(display != "none") ) {
 
 			localStorage.setItem("modeListaEventos", "minimize");
+			reDimListaEventos();
 			return;
 		}
 	}
@@ -1933,7 +1936,7 @@ function reDimListaEventos() {
 	$("#minimizeListaEventos").css("height", heightMaxMinIcons);
 
 	var modeListaEventos = localStorage.getItem('modeListaEventos');
-	switch (modeListaEventosMode) {
+	switch (modeListaEventos) {
 	case "maximize":
 		maximizeListaEventos();
 		break;
@@ -1942,6 +1945,7 @@ function reDimListaEventos() {
 		break;
 	case "minimize":
 		minimizeListaEventos();
+		break;
 	default:
 		maximizeListaEventos();
 		break;

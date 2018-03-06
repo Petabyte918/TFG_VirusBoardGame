@@ -1082,7 +1082,9 @@ function evalClick(touchX, touchY) {
 			(touchY > posMaximizeListaEventos.top) &&
 			(touchY < posMaximizeListaEventos.bottom) &&
 			(display != "none") ) {
-			maximizeListaEventos();
+			
+			localStorage.setItem("modeListaEventos", "maximize");
+			reDimListaEventos();
 			return;
 		}
 
@@ -1095,7 +1097,9 @@ function evalClick(touchX, touchY) {
 			(touchY > posReplaceListaEventos.top) &&
 			(touchY < posReplaceListaEventos.bottom) &&
 			(display != "none") ) {
-			restoreListaEventos();
+			
+			localStorage.setItem("modeListaEventos", "restore");
+			reDimListaEventos();
 			return;
 		}
 
@@ -1108,7 +1112,9 @@ function evalClick(touchX, touchY) {
 			(touchY > posReplaceListaEventos.top) &&
 			(touchY < posReplaceListaEventos.bottom) &&
 			(display != "none") ) {
-			minimizeListaEventos();
+
+			localStorage.setItem("modeListaEventos", "minimize");
+			reDimListaEventos();
 			return;
 		}
 	}
@@ -1665,8 +1671,6 @@ function reDimRanquingList() {
 function maximizeListaEventos() {
 	console.log("maximizeListaEventos()");
 
-	//Inicializamos
-	reDimListaEventos();
 	//Ocultamos-mostramos boton
 	$("#maximizeListaEventos").css("display", "none");
 	$("#restoreListaEventos").css("display", "block");
@@ -1682,8 +1686,6 @@ function maximizeListaEventos() {
 function restoreListaEventos() {
 	console.log("restoreListaEventos()");
 
-	//Inicializamos
-	reDimListaEventos();
 	//Ocultamos-mostramos boton
 	$("#maximizeListaEventos").css("display", "block");
 	$("#restoreListaEventos").css("display", "none");
@@ -1886,8 +1888,23 @@ function reDimListaEventos() {
 	var maxWidthStr = (windowWidth/4 + 30).toString() + "px";
 	var maxHeight = (windowHeight/4);
 	var maxHeightStr = maxHeight.toString() + "px";
-	var posXStr = (((windowWidth/3)) * 2 + 10).toString() + "px";
-	var posYStr = (windowHeight/2 - maxHeight/2 - 20).toString() + "px";
+
+	//Por si se ha movido listaEventos
+	var strgLeft = localStorage.getItem('strgLeft');
+	var strgTop = localStorage.getItem('strgTop');
+
+	if (isEmpty(strgLeft) || isEmpty(strgTop)) {
+		var posX = (windowWidth/3) * 2 + 10;
+		var posY = windowHeight/2 - maxHeight/2 - 20;
+		localStorage.setItem('strgLeft', posX);
+		localStorage.setItem('strgTop', posY);
+	} else {
+		var posX = strgLeft;
+		var posY = strgTop;
+	}
+
+	var posXStr = posX.toString() + "px";
+	var posYStr = posY.toString() + "px";
 
 	$("#listaEventos").css("left", posXStr);
 	$("#listaEventos").css("top", posYStr);
@@ -1916,7 +1933,23 @@ function reDimListaEventos() {
 	$("#restoreListaEventos").css("width", widthMaxMinIcons);
 	$("#restoreListaEventos").css("height", heightMaxMinIcons);
 	$("#minimizeListaEventos").css("width", widthMaxMinIcons);
-	$("#minimizeListaEventos").css("height", heightMaxMinIcons);	
+	$("#minimizeListaEventos").css("height", heightMaxMinIcons);
+
+	var modeListaEventos = localStorage.getItem('modeListaEventos');
+	switch (modeListaEventos) {
+	case "maximize":
+		maximizeListaEventos();
+		break;
+	case "restore":
+		restoreListaEventos();
+		break;
+	case "minimize":
+		minimizeListaEventos();
+		break;
+	default:
+		maximizeListaEventos();
+		break;
+	}
 }
 
 function reDimReloadButton() {
