@@ -324,6 +324,10 @@ function escribirEvento(movJugador) {
 		jugOrigen = " TU MISMO";
 	}
 
+	if (movJugador.jugDestino == usuario) {
+		jugOrigen = " TU MISMO";
+	}
+
 	var evento = "";
 
 	switch (tipoMov) {
@@ -1681,6 +1685,16 @@ function maximizeListaEventos() {
 
 	$("#listaEventos").css("max-height", maxHeightStr);
 	$("#listaEventos").css("background-size", "100% 150%");
+
+	//Para tener los eventos antiguos ocultos en el overflow
+	var elemTittleListaEventos = document.getElementById("tittleListaEventos");
+	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
+
+	var heightTittle = posTittleListaEventos.height;
+
+	var maxHeightText = (maxHeight - heightTittle - 8).toString() + "px";
+
+	$("#textoListaEventos").css("max-height", maxHeightText);
 }
 
 function restoreListaEventos() {
@@ -1699,6 +1713,10 @@ function restoreListaEventos() {
 
 	$("#listaEventos").css("max-height", maxHeightStr);
 	$("#listaEventos").css("background-size", "100% 450%");
+
+	//Para tener los eventos antiguos ocultos en el overflow
+	var maxHeightText = "0px";
+	$("#textoListaEventos").css("max-height", maxHeightText);
 }
 
 function minimizeListaEventos() {
@@ -1720,6 +1738,10 @@ function minimizeListaEventos() {
 	$("#listaEventos").css("max-width", maxWidthStr);
 	$("#listaEventos").css("max-height", maxHeightStr);
 	$("#listaEventos").css("background-size", "100% 450%");
+
+	//Para tener los eventos antiguos ocultos en el overflow
+	var maxHeightText = "0px";
+	$("#textoListaEventos").css("max-height", maxHeightText);
 }
 
 function reDimContainer_instrucciones(pagina) {
@@ -1913,16 +1935,6 @@ function reDimListaEventos() {
 
 	$("#listaEventos").css("visibility","visible");
 	$("#listaEventos").css("background-size", "100% 150%");
-
-	//Para tener los eventos antiguos ocultos en el overflow
-	var elemTittleListaEventos = document.getElementById("tittleListaEventos");
-	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
-
-	var heightTittle = posTittleListaEventos.height;
-
-	var maxHeightText = (maxHeight - heightTittle - 8).toString() + "px";
-
-	$("#textoListaEventos").css("max-height", maxHeightText);
 
 	//Altura y anchura de los iconos de maximize, minimize y restore
 	var heightMaxMinIcons = heightTittle.toString() + "px";
