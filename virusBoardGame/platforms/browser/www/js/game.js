@@ -324,6 +324,10 @@ function escribirEvento(movJugador) {
 		jugOrigen = " TU MISMO";
 	}
 
+	if (movJugador.jugDestino == usuario) {
+		jugOrigen = " TU MISMO";
+	}
+
 	var evento = "";
 
 	switch (tipoMov) {
@@ -1681,6 +1685,16 @@ function maximizeListaEventos() {
 
 	$("#listaEventos").css("max-height", maxHeightStr);
 	$("#listaEventos").css("background-size", "100% 150%");
+
+	//Para tener los eventos antiguos ocultos en el overflow
+	var elemTittleListaEventos = document.getElementById("tittleListaEventos");
+	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
+
+	var heightTittle = posTittleListaEventos.height;
+
+	var maxHeightText = (maxHeight - heightTittle - 8).toString() + "px";
+
+	$("#textoListaEventos").css("max-height", maxHeightText);
 }
 
 function restoreListaEventos() {
@@ -1699,6 +1713,10 @@ function restoreListaEventos() {
 
 	$("#listaEventos").css("max-height", maxHeightStr);
 	$("#listaEventos").css("background-size", "100% 450%");
+
+	//Para tener los eventos antiguos ocultos en el overflow
+	var maxHeightText = "0px";
+	$("#textoListaEventos").css("max-height", maxHeightText);
 }
 
 function minimizeListaEventos() {
@@ -1720,6 +1738,10 @@ function minimizeListaEventos() {
 	$("#listaEventos").css("max-width", maxWidthStr);
 	$("#listaEventos").css("max-height", maxHeightStr);
 	$("#listaEventos").css("background-size", "100% 450%");
+
+	//Para tener los eventos antiguos ocultos en el overflow
+	var maxHeightText = "0px";
+	$("#textoListaEventos").css("max-height", maxHeightText);
 }
 
 function reDimContainer_instrucciones(pagina) {
@@ -1889,7 +1911,35 @@ function reDimListaEventos() {
 	var maxHeight = (windowHeight/4);
 	var maxHeightStr = maxHeight.toString() + "px";
 
-	//Por si se ha movido listaEventos
+	//Si hay menos de 5 jugadores en juego, lo ponemos en el hueco de un jugador libre en pref 3, 4, 5, 2.
+	var arrPosPref = [3, 4, 5, 2];
+	var posPref = -1;
+	for (var i = 0; i < arrPosPref.length; i++) {
+		posPref = arrPosPref[i];
+		for (var u = 0; u < posJugadores.length; u++) {
+			if (posJugadores[u] == arrPosPref[i]) {
+				posPref = -1;
+				break;
+			}
+		}
+		if (posPref != -1) {
+			break;;
+		}
+	}
+
+	var posX = 0;
+	var posY = 0;
+	//Si no hay posicion preferida lo ponemos "donde siempre"
+	if (posPref == -1) {
+		posX = (windowWidth/3) * 2 + 10;
+		posY = windowHeight/2 - maxHeight/2 - 20;
+	} else {
+		posX = posOrganosJugadores[posPref].posCerebro[0] - 30;
+		posY = posOrganosJugadores[posPref].posCerebro[1];
+	}
+
+	/**
+	//Alt: Por si gestionamos movimiento de listaEventos
 	var strgLeft = localStorage.getItem('strgLeft');
 	var strgTop = localStorage.getItem('strgTop');
 
@@ -1902,6 +1952,7 @@ function reDimListaEventos() {
 		var posX = strgLeft;
 		var posY = strgTop;
 	}
+	**/
 
 	var posXStr = posX.toString() + "px";
 	var posYStr = posY.toString() + "px";
@@ -1913,16 +1964,6 @@ function reDimListaEventos() {
 
 	$("#listaEventos").css("visibility","visible");
 	$("#listaEventos").css("background-size", "100% 150%");
-
-	//Para tener los eventos antiguos ocultos en el overflow
-	var elemTittleListaEventos = document.getElementById("tittleListaEventos");
-	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
-
-	var heightTittle = posTittleListaEventos.height;
-
-	var maxHeightText = (maxHeight - heightTittle - 8).toString() + "px";
-
-	$("#textoListaEventos").css("max-height", maxHeightText);
 
 	//Altura y anchura de los iconos de maximize, minimize y restore
 	var heightMaxMinIcons = heightTittle.toString() + "px";
