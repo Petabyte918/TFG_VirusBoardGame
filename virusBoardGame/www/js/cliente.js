@@ -450,7 +450,7 @@ function form_createGame() {
 	//console.log("gameName: "+gameName);
 	//console.log("gameNumPlayers: "+gameNumPlayers);
 	 if (gameName == "") {
-	 	gameName = "Juego de: "+usuario.substr(0,6);
+	 	gameName = "Juego de "+usuario.substr(0,6);
 	 }
 
 	socket.emit('create_game', 

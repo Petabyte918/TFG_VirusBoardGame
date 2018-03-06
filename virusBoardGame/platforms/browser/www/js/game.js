@@ -541,7 +541,7 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	}
 
 	if (jugador.length > 8) {
-		jugador = "Jugador "+jugador.slice(0,8);
+		jugador = "Jugador " + infoJugadores[jugador].nombre;
 	}
 	if (pos == 1) {
 		jugador = "TÚ";
