@@ -18,6 +18,14 @@ infojugadores = {
 	turnoPerdida: 0
 }
 
+posCartasUsuario = {
+	width: int,
+	height: int,
+	posCarta1: {x,y},
+	posCarta2: {x,y},
+	posCarta3: {x,y}
+};
+
 movJugador = {
 	jugOrigen: "",
 	jugDestino: "",

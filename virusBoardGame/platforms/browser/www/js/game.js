@@ -45,10 +45,11 @@ function degToRad(degree) {
 
 function renderCountDown(time, oldDate, first){
 	//console.log("renderCountDown()");
-	//posCartasUsuario = {width, height, posCarta1 = {x,y}, posCarta2 = {x,y}, posCarta3 = {x,y}};
+
 	var radius = 30;
-	var xCountDown = posCartasUsuario.carta1.x - radius*2.2;
-	var yCountDown = posCartasUsuario.carta1.y + radius*2.2;
+	//Algo hardCoding. El 84 es la altura de pauseButton..claro, que tp se va a cambiar y estas hasta los huevos
+	var xCountDown = posOrganosJugadores[1].posCerebro[0] - 74;
+	var yCountDown = windowHeight - 84 - 30 - radius*3;
 
 	//Cada vez que cambiemos el tiempo del cronometro hay que ajustar el valor
 	//multiplicando el tiempo por (60/valorcronometro)
@@ -1060,7 +1061,7 @@ function actObjects() {
 
 //Algunos son elementos html que van debajo del canvas
 function evalClick(touchX, touchY) {
-	console.log("evalClick()");
+	//console.log("evalClick()");
 
 	//1.-Recuadro listaEventos
 	var elemListaEventos = document.getElementById("listaEventos");
@@ -1070,7 +1071,7 @@ function evalClick(touchX, touchY) {
 		(touchX < posListaEventos.right) &&
 		(touchY > posListaEventos.top) &&
 		(touchY < posListaEventos.bottom) ) {
-		console.log("click en lista Eventos");
+		//console.log("click en lista Eventos");
 
 		var elemMaximizeListaEventos = document.getElementById("maximizeListaEventos");
 		var posMaximizeListaEventos = elemMaximizeListaEventos.getBoundingClientRect();
@@ -1085,14 +1086,27 @@ function evalClick(touchX, touchY) {
 			return;
 		}
 
-		var elemMinimizeListaEventos = document.getElementById("minimizeListaEventos");
-		var posMinimizeListaEventos = elemMinimizeListaEventos.getBoundingClientRect();
+		var elemReplaceListaEventos = document.getElementById("restoreListaEventos");
+		var posReplaceListaEventos = elemReplaceListaEventos.getBoundingClientRect();
+		var display = $("#restoreListaEventos").css("display");
+
+		if ( (touchX > posReplaceListaEventos.left) && 
+			(touchX < posReplaceListaEventos.right) &&
+			(touchY > posReplaceListaEventos.top) &&
+			(touchY < posReplaceListaEventos.bottom) &&
+			(display != "none") ) {
+			restoreListaEventos();
+			return;
+		}
+
+		var elemReplaceListaEventos = document.getElementById("minimizeListaEventos");
+		var posReplaceListaEventos = elemReplaceListaEventos.getBoundingClientRect();
 		var display = $("#minimizeListaEventos").css("display");
 
-		if ( (touchX > posMinimizeListaEventos.left) && 
-			(touchX < posMinimizeListaEventos.right) &&
-			(touchY > posMinimizeListaEventos.top) &&
-			(touchY < posMinimizeListaEventos.bottom) &&
+		if ( (touchX > posReplaceListaEventos.left) && 
+			(touchX < posReplaceListaEventos.right) &&
+			(touchY > posReplaceListaEventos.top) &&
+			(touchY < posReplaceListaEventos.bottom) &&
 			(display != "none") ) {
 			minimizeListaEventos();
 			return;
@@ -1107,7 +1121,7 @@ function evalClick(touchX, touchY) {
 		(touchX < posListaTurnos.right) &&
 		(touchY > posListaTurnos.top) &&
 		(touchY < posListaTurnos.bottom) ) {
-		console.log("click en lista turnos");
+		//console.log("click en lista turnos");
 	}
 }
 
@@ -1651,8 +1665,11 @@ function reDimRanquingList() {
 function maximizeListaEventos() {
 	console.log("maximizeListaEventos()");
 
+	//Inicializamos
+	reDimListaEventos();
 	//Ocultamos-mostramos boton
 	$("#maximizeListaEventos").css("display", "none");
+	$("#restoreListaEventos").css("display", "block");
 	$("#minimizeListaEventos").css("display", "block");
 
 	var maxHeight = (windowHeight/4);
@@ -1662,12 +1679,15 @@ function maximizeListaEventos() {
 	$("#listaEventos").css("background-size", "100% 150%");
 }
 
-function minimizeListaEventos() {
-	console.log("minimizeListaEventos()");
+function restoreListaEventos() {
+	console.log("restoreListaEventos()");
 
+	//Inicializamos
+	reDimListaEventos();
 	//Ocultamos-mostramos boton
 	$("#maximizeListaEventos").css("display", "block");
-	$("#minimizeListaEventos").css("display", "none");
+	$("#restoreListaEventos").css("display", "none");
+	$("#minimizeListaEventos").css("display", "block");
 
 	var elemTittleListaEventos = document.getElementById('tittleListaEventos');
 	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
@@ -1675,6 +1695,27 @@ function minimizeListaEventos() {
 	var maxHeight = (posTittleListaEventos.height + 20);
 	var maxHeightStr = maxHeight.toString() + "px";
 
+	$("#listaEventos").css("max-height", maxHeightStr);
+	$("#listaEventos").css("background-size", "100% 450%");
+}
+
+function minimizeListaEventos() {
+	console.log("minimizeListaEventos()");
+
+	//Ocultamos-mostramos boton
+	$("#maximizeListaEventos").css("display", "block");
+	$("#restoreListaEventos").css("display", "block");
+	$("#minimizeListaEventos").css("display", "none");
+
+	var elemTittleListaEventos = document.getElementById('tittleListaEventos');
+	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
+
+	var maxWidth = (posTittleListaEventos.width + 60);
+	var maxWidthStr = maxWidth.toString() + "px";
+	var maxHeight = (posTittleListaEventos.height + 20);
+	var maxHeightStr = maxHeight.toString() + "px";
+
+	$("#listaEventos").css("max-width", maxWidthStr);
 	$("#listaEventos").css("max-height", maxHeightStr);
 	$("#listaEventos").css("background-size", "100% 450%");
 }
@@ -1800,7 +1841,7 @@ function reDimListaTurnos() {
 	
 	var xMax = xCountDown - radius*2 - 20;
 	var xMin = posOrganosJugadores[2].widthOrgano + posOrganosJugadores[2].posComodin[0] + 20;
-	var maxWidth = xMax - xMin;
+	var maxWidth = xMax - xMin - 40;
 	var maxHeight = windowHeight - yCountDown - 50;
 
 	var posXStr = (Math.floor(xMin)).toString() + "px";
@@ -1853,9 +1894,10 @@ function reDimListaEventos() {
 	$("#listaEventos").css("max-width", maxWidthStr);
 	$("#listaEventos").css("max-height", maxHeightStr);
 
-
 	$("#listaEventos").css("visibility","visible");
+	$("#listaEventos").css("background-size", "100% 150%");
 
+	//Para tener los eventos antiguos ocultos en el overflow
 	var elemTittleListaEventos = document.getElementById("tittleListaEventos");
 	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
 
@@ -1865,11 +1907,14 @@ function reDimListaEventos() {
 
 	$("#textoListaEventos").css("max-height", maxHeightText);
 
+	//Altura y anchura de los iconos de maximize, minimize y restore
 	var heightMaxMinIcons = heightTittle.toString() + "px";
 	var widthMaxMinIcons = heightMaxMinIcons;	
 
 	$("#maximizeListaEventos").css("width", widthMaxMinIcons);
 	$("#maximizeListaEventos").css("height", heightMaxMinIcons);	
+	$("#restoreListaEventos").css("width", widthMaxMinIcons);
+	$("#restoreListaEventos").css("height", heightMaxMinIcons);
 	$("#minimizeListaEventos").css("width", widthMaxMinIcons);
 	$("#minimizeListaEventos").css("height", heightMaxMinIcons);	
 }

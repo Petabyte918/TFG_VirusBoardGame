@@ -45,10 +45,11 @@ function degToRad(degree) {
 
 function renderCountDown(time, oldDate, first){
 	//console.log("renderCountDown()");
-	//posCartasUsuario = {width, height, posCarta1 = {x,y}, posCarta2 = {x,y}, posCarta3 = {x,y}};
+
 	var radius = 30;
-	var xCountDown = posCartasUsuario.carta1.x - radius*2.2;
-	var yCountDown = posCartasUsuario.carta1.y + radius*2.2;
+	//Algo hardCoding. El 84 es la altura de pauseButton..claro, que tp se va a cambiar y estas hasta los huevos
+	var xCountDown = posOrganosJugadores[1].posCerebro[0] - 74;
+	var yCountDown = windowHeight - 84 - 30 - radius*3;
 
 	//Cada vez que cambiemos el tiempo del cronometro hay que ajustar el valor
 	//multiplicando el tiempo por (60/valorcronometro)
@@ -1081,20 +1082,36 @@ function evalClick(touchX, touchY) {
 			(touchY > posMaximizeListaEventos.top) &&
 			(touchY < posMaximizeListaEventos.bottom) &&
 			(display != "none") ) {
-			maximizeListaEventos();
+			
+			localStorage.setItem("modeListaEventos", "maximize");
 			return;
 		}
 
-		var elemMinimizeListaEventos = document.getElementById("minimizeListaEventos");
-		var posMinimizeListaEventos = elemMinimizeListaEventos.getBoundingClientRect();
+		var elemReplaceListaEventos = document.getElementById("restoreListaEventos");
+		var posReplaceListaEventos = elemReplaceListaEventos.getBoundingClientRect();
+		var display = $("#restoreListaEventos").css("display");
+
+		if ( (touchX > posReplaceListaEventos.left) && 
+			(touchX < posReplaceListaEventos.right) &&
+			(touchY > posReplaceListaEventos.top) &&
+			(touchY < posReplaceListaEventos.bottom) &&
+			(display != "none") ) {
+			
+			localStorage.setItem("modeListaEventos", "restore");
+			return;
+		}
+
+		var elemReplaceListaEventos = document.getElementById("minimizeListaEventos");
+		var posReplaceListaEventos = elemReplaceListaEventos.getBoundingClientRect();
 		var display = $("#minimizeListaEventos").css("display");
 
-		if ( (touchX > posMinimizeListaEventos.left) && 
-			(touchX < posMinimizeListaEventos.right) &&
-			(touchY > posMinimizeListaEventos.top) &&
-			(touchY < posMinimizeListaEventos.bottom) &&
+		if ( (touchX > posReplaceListaEventos.left) && 
+			(touchX < posReplaceListaEventos.right) &&
+			(touchY > posReplaceListaEventos.top) &&
+			(touchY < posReplaceListaEventos.bottom) &&
 			(display != "none") ) {
-			minimizeListaEventos();
+
+			localStorage.setItem("modeListaEventos", "minimize");
 			return;
 		}
 	}
@@ -1653,6 +1670,7 @@ function maximizeListaEventos() {
 
 	//Ocultamos-mostramos boton
 	$("#maximizeListaEventos").css("display", "none");
+	$("#restoreListaEventos").css("display", "block");
 	$("#minimizeListaEventos").css("display", "block");
 
 	var maxHeight = (windowHeight/4);
@@ -1662,12 +1680,13 @@ function maximizeListaEventos() {
 	$("#listaEventos").css("background-size", "100% 150%");
 }
 
-function minimizeListaEventos() {
-	console.log("minimizeListaEventos()");
+function restoreListaEventos() {
+	console.log("restoreListaEventos()");
 
 	//Ocultamos-mostramos boton
 	$("#maximizeListaEventos").css("display", "block");
-	$("#minimizeListaEventos").css("display", "none");
+	$("#restoreListaEventos").css("display", "none");
+	$("#minimizeListaEventos").css("display", "block");
 
 	var elemTittleListaEventos = document.getElementById('tittleListaEventos');
 	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
@@ -1675,6 +1694,27 @@ function minimizeListaEventos() {
 	var maxHeight = (posTittleListaEventos.height + 20);
 	var maxHeightStr = maxHeight.toString() + "px";
 
+	$("#listaEventos").css("max-height", maxHeightStr);
+	$("#listaEventos").css("background-size", "100% 450%");
+}
+
+function minimizeListaEventos() {
+	console.log("minimizeListaEventos()");
+
+	//Ocultamos-mostramos boton
+	$("#maximizeListaEventos").css("display", "block");
+	$("#restoreListaEventos").css("display", "block");
+	$("#minimizeListaEventos").css("display", "none");
+
+	var elemTittleListaEventos = document.getElementById('tittleListaEventos');
+	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
+
+	var maxWidth = (posTittleListaEventos.width + 60);
+	var maxWidthStr = maxWidth.toString() + "px";
+	var maxHeight = (posTittleListaEventos.height + 20);
+	var maxHeightStr = maxHeight.toString() + "px";
+
+	$("#listaEventos").css("max-width", maxWidthStr);
 	$("#listaEventos").css("max-height", maxHeightStr);
 	$("#listaEventos").css("background-size", "100% 450%");
 }
@@ -1800,7 +1840,7 @@ function reDimListaTurnos() {
 	
 	var xMax = xCountDown - radius*2 - 20;
 	var xMin = posOrganosJugadores[2].widthOrgano + posOrganosJugadores[2].posComodin[0] + 20;
-	var maxWidth = xMax - xMin;
+	var maxWidth = xMax - xMin - 40;
 	var maxHeight = windowHeight - yCountDown - 50;
 
 	var posXStr = (Math.floor(xMin)).toString() + "px";
@@ -1845,17 +1885,33 @@ function reDimListaEventos() {
 	var maxWidthStr = (windowWidth/4 + 30).toString() + "px";
 	var maxHeight = (windowHeight/4);
 	var maxHeightStr = maxHeight.toString() + "px";
-	var posXStr = (((windowWidth/3)) * 2 + 10).toString() + "px";
-	var posYStr = (windowHeight/2 - maxHeight/2 - 20).toString() + "px";
+
+	//Por si se ha movido listaEventos
+	var strgLeft = localStorage.getItem('strgLeft');
+	var strgTop = localStorage.getItem('strgTop');
+
+	if (isEmpty(strgLeft) || isEmpty(strgTop)) {
+		var posX = (windowWidth/3) * 2 + 10;
+		var posY = windowHeight/2 - maxHeight/2 - 20;
+		localStorage.setItem('strgLeft', posX);
+		localStorage.setItem('strgTop', posY);
+	} else {
+		var posX = strgLeft;
+		var posY = strgTop;
+	}
+
+	var posXStr = posX.toString() + "px";
+	var posYStr = posY.toString() + "px";
 
 	$("#listaEventos").css("left", posXStr);
 	$("#listaEventos").css("top", posYStr);
 	$("#listaEventos").css("max-width", maxWidthStr);
 	$("#listaEventos").css("max-height", maxHeightStr);
 
-
 	$("#listaEventos").css("visibility","visible");
+	$("#listaEventos").css("background-size", "100% 150%");
 
+	//Para tener los eventos antiguos ocultos en el overflow
 	var elemTittleListaEventos = document.getElementById("tittleListaEventos");
 	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
 
@@ -1865,13 +1921,31 @@ function reDimListaEventos() {
 
 	$("#textoListaEventos").css("max-height", maxHeightText);
 
+	//Altura y anchura de los iconos de maximize, minimize y restore
 	var heightMaxMinIcons = heightTittle.toString() + "px";
 	var widthMaxMinIcons = heightMaxMinIcons;	
 
 	$("#maximizeListaEventos").css("width", widthMaxMinIcons);
 	$("#maximizeListaEventos").css("height", heightMaxMinIcons);	
+	$("#restoreListaEventos").css("width", widthMaxMinIcons);
+	$("#restoreListaEventos").css("height", heightMaxMinIcons);
 	$("#minimizeListaEventos").css("width", widthMaxMinIcons);
-	$("#minimizeListaEventos").css("height", heightMaxMinIcons);	
+	$("#minimizeListaEventos").css("height", heightMaxMinIcons);
+
+	var modeListaEventos = localStorage.getItem('modeListaEventos');
+	switch (modeListaEventosMode) {
+	case "maximize":
+		maximizeListaEventos();
+		break;
+	case "restore":
+		restoreListaEventos();
+		break;
+	case "minimize":
+		minimizeListaEventos();
+	default:
+		maximizeListaEventos();
+		break;
+	}
 }
 
 function reDimReloadButton() {
