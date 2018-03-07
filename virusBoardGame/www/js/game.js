@@ -175,7 +175,8 @@ function renderCountDown(time, oldDate, first){
 				jugDestino: "",
 				texto: "",
 				tipoMov: "tiempo_agotado",
-				tipoOrgano: ""
+				tipoOrgano: "",
+				descarteCompleto: []
 			}
 		}
 	}, 250);
@@ -289,6 +290,13 @@ function nuevaCarta(numCarta){
 
 function representarMov(movJugador) {
 	console.log("representarMov(movJugador)");
+
+	if (movJugador.tipoMov == "descarte") {
+		var descarteCompleto = movJugador.descarteCompleto;
+		for (var i = 0; i < descarteCompleto.length; i++) {
+			descartesHist.push(descarteCompleto[i]);
+		}
+	}
 
 	escribirEvento(movJugador);
 }
@@ -1345,7 +1353,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				jugDestino: jugDestino,
 				texto: "",
 				tipoMov: "organo",
-				tipoOrgano: organType
+				tipoOrgano: organType,
+				descarteCompleto: []
 			};
 		} else {
 			//console.log("manejadorMov() - Organo repetido");
@@ -1367,7 +1376,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					jugDestino: jugDestino,
 					texto: "",
 					tipoMov: "medicina",
-					tipoOrgano: organType
+					tipoOrgano: organType,
+					descarteCompleto: []
 				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
 				organosJugadoresCli[jugDestino][organoColision] = "vacunado";
@@ -1376,7 +1386,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					jugDestino: jugDestino,
 					texto: "",
 					tipoMov: "medicina",
-					tipoOrgano: organType
+					tipoOrgano: organType,
+					descarteCompleto: []
 				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
 				organosJugadoresCli[jugDestino][organoColision] = "inmunizado";
@@ -1385,7 +1396,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					jugDestino: jugDestino,
 					texto: "",
 					tipoMov: "medicina",
-					tipoOrgano: organType
+					tipoOrgano: organType,
+					descarteCompleto: []
 				};
 			} else {
 				//console.log("manejadorMov() - Medicina. Organo inmunizado o no existe");
@@ -1401,7 +1413,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					jugDestino: jugDestino,
 					texto: "",
 					tipoMov: "virus",
-					tipoOrgano: organType
+					tipoOrgano: organType,
+					descarteCompleto: []
 				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "normal") {
 				organosJugadoresCli[jugDestino][organoColision] = "enfermo";
@@ -1410,7 +1423,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					jugDestino: jugDestino,
 					texto: "",
 					tipoMov: "virus",
-					tipoOrgano: organType
+					tipoOrgano: organType,
+					descarteCompleto: []
 				};
 			} else if (organosJugadoresCli[jugDestino][organoColision] == "vacunado") {
 				organosJugadoresCli[jugDestino][organoColision] = "normal";
@@ -1419,7 +1433,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					jugDestino: jugDestino,
 					texto: "",
 					tipoMov: "virus",
-					tipoOrgano: organType
+					tipoOrgano: organType,
+					descarteCompleto: []
 				};
 			} else {
 				//console.log("manejadorMov() - Virus. Organo inmunizado o no existe");
@@ -1453,7 +1468,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				jugDestino: jugDestino,
 				texto: "",
 				tipoMov: "errorMedico",
-				tipoOrgano: ""
+				tipoOrgano: "",
+				descarteCompleto: []
 			};
 			break;
 		case "guanteDeLatex":
@@ -1463,7 +1479,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				jugDestino: jugDestino,
 				texto: "",
 				tipoMov: "guanteDeLatex",
-				tipoOrgano: ""
+				tipoOrgano: "",
+				descarteCompleto: []
 			};
 			break;
 		case "transplante":
@@ -1506,7 +1523,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 						jugDestino: jugDestino,
 						texto: "",
 						tipoMov: "transplante",
-						tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'"
+						tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'",
+						descarteCompleto: []
 					};
 					fin_transplante();
 				}
@@ -1526,7 +1544,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 						jugDestino: jugDestino,
 						texto: "",
 						tipoMov: "transplante",
-						tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'"
+						tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'",
+						descarteCompleto: []
 					};
 					fin_transplante();
 				} else {
@@ -1552,7 +1571,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 						jugDestino: jugDestino,
 						texto: "",
 						tipoMov: "ladronDeOrganos",
-						tipoOrgano: "robando '"+organoColision+"'"
+						tipoOrgano: "robando '"+organoColision+"'",
+						descarteCompleto: []
 					};
 				}
 			}
@@ -1565,7 +1585,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				jugDestino: "",
 				texto: "",
 				tipoMov: "contagio",
-				tipoOrgano: ""
+				tipoOrgano: "",
+				descarteCompleto: []
 			};
 			break;
 		default:
@@ -1584,18 +1605,22 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 function fin_descarte() {
 	finDescarte = true;
 	$("#descartes_boton").css("visibility","hidden");
+	var descarteCompleto = [];
 
 	var descripcionDescarte = "";
 	if (descartes[0] == true) {
-		descripcionDescarte =+ cartasUsuario[0].cardType+"-"+cartasUsuario[0].organType+",";
+		descripcionDescarte += cartasUsuario[0].cardType+"-"+cartasUsuario[0].organType+",";
+		descarteCompleto.push(cartasUsuario[0]);
 		nuevaCarta(0);
 	}
 	if (descartes[1] == true) {
-		descripcionDescarte =+ cartasUsuario[1].cardType+"-"+cartasUsuario[1].organType+",";
+		descripcionDescarte += cartasUsuario[1].cardType+"-"+cartasUsuario[1].organType+",";
+		descarteCompleto.push(cartasUsuario[1]);
 		nuevaCarta(1);
 	}
 	if (descartes[2] == true) {
-		descripcionDescarte =+ cartasUsuario[2].cardType+"-"+cartasUsuario[2].organType+",";
+		descripcionDescarte += cartasUsuario[2].cardType+"-"+cartasUsuario[2].organType;
+		descarteCompleto.push(cartasUsuario[2]);
 		nuevaCarta(2);
 	}
 
@@ -1607,7 +1632,8 @@ function fin_descarte() {
 		jugDestino: "",
 		texto: "",
 		tipoMov: "descarte",
-		tipoOrgano: descripcionDescarte
+		tipoOrgano: descripcionDescarte,
+		descarteCompleto: descarteCompleto
 	};
 	actualizarCanvasAPO();
 }

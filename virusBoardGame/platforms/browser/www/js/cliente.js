@@ -671,7 +671,6 @@ socket.on('prepararPartida', function(datos_iniciales){
 	moveObjects();
 
 	actualizarCanvasAPO();
-	//actualizarCanvasMID();
 })
 
 function esperarMovimiento(){
@@ -841,7 +840,8 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		jugDestino: "",
 		texto: "",
 		tipoMov: "",
-		tipoOrgano: ""
+		tipoOrgano: "",
+		descarteCompleto: []
 	};
 
 	idPartida = datos_partida.idPartida;

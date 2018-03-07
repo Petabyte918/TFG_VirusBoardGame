@@ -12,7 +12,8 @@ var movJugador = {
 		jugDestino: "",
 		texto: "",
 		tipoMov: "",
-		tipoOrgano: ""
+		tipoOrgano: "",
+		descarteCompleto: []
 	};
 
 //Informacion exclusiva de cada cliente
@@ -27,6 +28,7 @@ var jugPorPosicion = {}; //Dada una posicion te devuelve un jugador
 var posPorJugador = {}; //Dado un jugador te devuelve una posicion
 var finDescarte = true; //Indica si estoy en proceso de descarte
 var descartes = {0: false, 1: false, 2: false}; //
+var descartesHist = [];
 var transplante = {enProceso: false, organo1: {organo: "", numJug: -1}, organo2: {organo: "", numJug: -1}};
 
 function aleatorioRGBrange(inferior,superior) {
@@ -182,10 +184,6 @@ function getUsersSorted (optionRanquing, data) {
 	}
 
 	return sortedObj;
-}
-
-function gestionarMov(movJugador){
-
 }
 
 function abrirAyudaCartas (numCarta) {
@@ -638,7 +636,8 @@ Engine = new function() {
 			jugOrigen: "",
 			jugDestino: "",
 			texto: "",
-			tipoMov: ""
+			tipoMov: "",
+			descarteCompleto: []
 		};
 
 		//Informacion exclusiva de cada cliente
@@ -694,7 +693,18 @@ DeckOfCards = new function() {
 
 		//Los ajustes de tamanio finales son debidos a la diferencia de tamanio entre el mazo y la carta del reverso,
 		//por el efecto profundidad del mazo
-		this.descartesData = {x: posXDescartes, y: posYDescartes+5, width: width*0.91, height: height*0.91};
+		if (descartesHist.length == 0) {
+			var src = 'img/cardImagesLQ/reverseCardLQ.png';
+		} else {
+			var src = descartesHist[descartesHist.length - 1].picture;
+		}
+		this.descartesData = {
+							x: posXDescartes,
+							y: posYDescartes+5, 
+							width: width*0.91, 
+							height: height*0.91,
+							src: src
+							};
 	}
 	this.renderDeck = function() {
 		var deck = new Image();
@@ -709,14 +719,10 @@ DeckOfCards = new function() {
 			cxBG.drawImage(deck, posX, posY, width, height);
 		}
 	}
-	this.renderDescarte = function(src) {
+	this.renderDescarte = function() {
 		var descarte = new Image();
 
-		if (isEmpty(src)) {
-			descarte.src = 'img/cardImagesLQ/reverseCardLQ.png';
-		} else {
-			descarte.src = src;
-		}
+		descarte.src = this.descartesData.src;
 
 		var posX = this.descartesData.x;
 		var posY = this.descartesData.y;
