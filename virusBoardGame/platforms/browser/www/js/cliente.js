@@ -671,7 +671,7 @@ socket.on('prepararPartida', function(datos_iniciales){
 	moveObjects();
 
 	actualizarCanvasAPO();
-	actualizarCanvasMID();
+	//actualizarCanvasMID();
 })
 
 function esperarMovimiento(){

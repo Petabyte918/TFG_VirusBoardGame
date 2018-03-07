@@ -545,7 +545,11 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	}
 
 	if (jugador.length > 8) {
-		jugador = "Jugador " + infoJugadores[jugador].nombre;
+		console.log("jugador: "+jugador);
+		for (var i = 0; infoJugadores.length; i++) {
+			console.log("infoJugadores[i].nombre: "+infoJugadores[i].nombre);
+		}
+		jugador = "Jugador: " + infoJugadores[jugador].nombre;
 	}
 	if (pos == 1) {
 		jugador = "TÚ";
@@ -1966,7 +1970,10 @@ function reDimListaEventos() {
 	$("#listaEventos").css("background-size", "100% 150%");
 
 	//Altura y anchura de los iconos de maximize, minimize y restore
-	var heightMaxMinIcons = heightTittle.toString() + "px";
+	var elemTittleListaEventos = document.getElementById('tittleListaEventos');
+	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
+
+	var heightMaxMinIcons = posTittleListaEventos.height.toString() + "px";
 	var widthMaxMinIcons = heightMaxMinIcons;	
 
 	$("#maximizeListaEventos").css("width", widthMaxMinIcons);

@@ -380,7 +380,7 @@ function checkCards() {
 }
 
 //En el canvas mid estan los turnos y los organos de los jugadores
-function actualizarCanvasMID(){
+function actualizarCanvasMID() {
 	//console.log("actualizarCanvasMID()");
 	//Limpiamos el canvas antes de dibujar nada
 	cxMID.clearRect(0, 0, windowWidth, windowHeight);
@@ -545,7 +545,7 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	}
 
 	if (jugador.length > 8) {
-		jugador = "Jugador " + infoJugadores[jugador].nombre;
+		jugador = "Jugador: " + infoJugadores[jugador].nombre;
 	}
 	if (pos == 1) {
 		jugador = "TÚ";
@@ -1966,7 +1966,10 @@ function reDimListaEventos() {
 	$("#listaEventos").css("background-size", "100% 150%");
 
 	//Altura y anchura de los iconos de maximize, minimize y restore
-	var heightMaxMinIcons = heightTittle.toString() + "px";
+	var elemTittleListaEventos = document.getElementById('tittleListaEventos');
+	var posTittleListaEventos = elemTittleListaEventos.getBoundingClientRect();
+
+	var heightMaxMinIcons = posTittleListaEventos.height.toString() + "px";
 	var widthMaxMinIcons = heightMaxMinIcons;	
 
 	$("#maximizeListaEventos").css("width", widthMaxMinIcons);
