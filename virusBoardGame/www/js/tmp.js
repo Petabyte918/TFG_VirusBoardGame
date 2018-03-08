@@ -33,6 +33,12 @@ movJugador = {
 	tipoMov: ""
 };
 
+cartasUsuario[0,1,2] -> function card (cardType, organType, picture){
+	this.cardType = cardType;
+	this.organType = organType;
+	this.picture = picture;
+}
+
 -----SERVER-----
 partidas[idPartida] = {
 	idPartida: idPartida, 				-- str

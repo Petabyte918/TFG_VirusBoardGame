@@ -815,8 +815,6 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	clearTimeout(esperarMovSTO);
 	cerrarAyudaCartas();
 
-	representarMov(movJugador);
-
 	//Guante de Latex
 	//El jugador de la carta no se descarta
 	if ((movJugador.tipoMov == "guanteDeLatex") && (usuario != turno)) {
@@ -833,16 +831,6 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	if ((finDescarte == false) && (usuario == datos_partida.turno)) {
 		$("#descartes_boton").css("visibility","visible");
 	}
-
-	//Una vez representado el movimiento del jugador, borramos el mov
-	movJugador = {
-		jugOrigen: "",
-		jugDestino: "",
-		texto: "",
-		tipoMov: "",
-		tipoOrgano: "",
-		descarteCompleto: []
-	};
 
 	idPartida = datos_partida.idPartida;
 	jugadores = datos_partida.jugadores;
@@ -869,7 +857,18 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	}
 
 	checkCards();
-	doneResizing(); //Resetea todo
+
+	representarMov(movJugador);
+	//Una vez representado el movimiento del jugador, borramos el mov
+	movJugador = {
+		jugOrigen: "",
+		jugDestino: "",
+		texto: "",
+		tipoMov: "",
+		tipoOrgano: "",
+		descarteCompleto: [],
+		carta: []
+	};
 
 	//Conforman el hilo de ejecucion del turno del usuario
 	esperarMovimiento(); //->setTimeOut
