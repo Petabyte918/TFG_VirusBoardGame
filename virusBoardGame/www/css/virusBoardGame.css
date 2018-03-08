@@ -1073,6 +1073,12 @@ p.textoEnumInstrucciones {
 
 	padding: 7px;
     font-size: 0.95em;
+
+    -webkit-transition-property: width, height, max-width, max-height, background-size; /* Safari */
+    -webkit-transition-duration: 1s; /* Safari */
+    transition-property: width, height, max-width, max-height, background-size;
+    transition-duration: 1s;
+
 }
 
 #listaTurnos {
