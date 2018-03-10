@@ -866,8 +866,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		texto: "",
 		tipoMov: "",
 		tipoOrgano: "",
-		descarteCompleto: [],
-		carta: []
+		cartasUsadas: []
 	};
 
 	//Conforman el hilo de ejecucion del turno del usuario

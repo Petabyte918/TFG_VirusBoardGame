@@ -13,8 +13,7 @@ var movJugador = {
 		texto: "",
 		tipoMov: "",
 		tipoOrgano: "",
-		descarteCompleto: [],
-		carta: []
+		cartasUsadas: []
 	};
 
 //Informacion exclusiva de cada cliente
@@ -638,8 +637,7 @@ Engine = new function() {
 			jugDestino: "",
 			texto: "",
 			tipoMov: "",
-			descarteCompleto: [],
-			carta: []
+			cartasUsadas: []
 		};
 
 		//Informacion exclusiva de cada cliente

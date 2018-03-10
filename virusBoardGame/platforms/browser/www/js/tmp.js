@@ -26,6 +26,16 @@ posCartasUsuario = {
 	posCarta3: {x,y}
 };
 
+posPorJugador[jugador] = {
+	jugador: str,
+	posicion: int
+}
+
+jugPorPosicion[posicion]= {
+	jugador: str,
+	posicion: int
+}
+
 movJugador = {
 	jugOrigen: "",
 	jugDestino: "",
@@ -33,10 +43,30 @@ movJugador = {
 	tipoMov: ""
 };
 
+posPlayersHandCards = {
+	widthCarta: int,
+	heightCarta: int,
+	sepEntreCartas: int,
+	imgSrc: str,
+	1: null,
+	2: {
+		carta1: {
+			x: int,
+			y: int
+		},
+		carta2: obj,
+		carta3: obj,
+	},
+	3: obj,
+	4: obj,
+	5: obj,
+}
+
 cartasUsuario[0,1,2] -> function card (cardType, organType, picture){
 	this.cardType = cardType;
 	this.organType = organType;
 	this.picture = picture;
+
 }
 
 -----SERVER-----
@@ -74,7 +104,14 @@ estadoPartidas[idPartida].movJugador = {
 	jugDestino: "",
 	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha abandonado la partida</p>",
 	tipoMov: "abandonarPartida",
-	tipoOrgano: ""
+	tipoOrgano: "",
+	descarteCompleto: [],
+	carta: [{
+				cardType,
+				organType,
+				picture,
+				numCarta: añadido en fin descarte
+			},{},{}]
 }
 -----turnoPerdido-----
 estadoPartidas[idPartida].movJugador = {
