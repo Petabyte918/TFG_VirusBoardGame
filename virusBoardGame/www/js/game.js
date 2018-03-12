@@ -305,13 +305,21 @@ function representarMov(movJugador) {
 	//Si es descarte ponemos las cartas usadas en el mazo de descartes
 	if (movJugador.tipoMov == "descarte") {
 		var cartasUsadas = movJugador.cartasUsadas;
-		setTimeout(function(){
+		if (movJugador.jugOrigen == usuario) { //Si somos nosotros vemos el descarte inmediatamente
 			for (var i = 0; i < cartasUsadas.length; i++) {
 				descartesHist.push(cartasUsadas[i]);
 			}
 			DeckOfCards.initDeckOfCards();
 			DeckOfCards.renderDescarte();
-		}, 1500);
+		} else { //Si no, lo vemos tras la animacion
+			setTimeout(function(){
+				for (var i = 0; i < cartasUsadas.length; i++) {
+					descartesHist.push(cartasUsadas[i]);
+				}
+				DeckOfCards.initDeckOfCards();
+				DeckOfCards.renderDescarte();
+			}, 1500);
+		}
 	}
 
 	//Si es una carta jugada sobre un jugador, necesitamos informacion extra para saber donde moverla
@@ -364,7 +372,7 @@ function representarMov(movJugador) {
 			mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[i].picture, movJugador.cartasUsadas[i].numCarta,
 						posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
 		}
-		setTimeout('doneResizing()', 3000);		
+		setTimeout('actualizarCanvasAPO()', 3000);		
 	}
 }
 
@@ -458,7 +466,7 @@ function moverCartaJugada(tiempoTotal, tiempoRefresco, imgSrc,
 	img.onload = function() {
 
 		function renderFrame() {
-	 		cx.clearRect(posX - 2, posY - 2, width + 4, height + 4);
+	 		cx.clearRect(posX, posY, width, height);
 
 	 		posX = posX + movFrameX;
 	 		posY = posY + movFrameY;
@@ -1209,6 +1217,7 @@ function moveObjects(){
 			//	3Agregarlo o no a algun sitio
 			//4restablecer coordenadas iniciale
 			objetoActual = null;
+			evalUnClick(touch.x, touch.y);
 		}
 	}
 }
@@ -1243,7 +1252,7 @@ function actObjects() {
 function evalClick(touchX, touchY) {
 	//console.log("evalClick()");
 
-	//1.-Recuadro listaEventos
+	//1.- Recuadro listaEventos
 	var elemListaEventos = document.getElementById("listaEventos");
 	var posListaEventos = elemListaEventos.getBoundingClientRect();
 
@@ -1299,7 +1308,7 @@ function evalClick(touchX, touchY) {
 		}
 	}
 
-	//2.-Recuadro listaTurnos
+	//2.- Recuadro listaTurnos
 	var elemListaTurnos = document.getElementById("listaTurnos");
 	var posListaTurnos = elemListaTurnos.getBoundingClientRect();
 
@@ -1308,6 +1317,98 @@ function evalClick(touchX, touchY) {
 		(touchY > posListaTurnos.top) &&
 		(touchY < posListaTurnos.bottom) ) {
 		//console.log("click en lista turnos");
+	}
+
+	//3.- Mazo de descartes
+	var descartesDataPosX = DeckOfCards.getDescartesData("posX");
+	var descartesDataPosY = DeckOfCards.getDescartesData("posY"); 
+	var descartesDataWidth = DeckOfCards.getDescartesData("width");
+	var descartesDataHeight = DeckOfCards.getDescartesData("height");
+
+	if ( (touchX > descartesDataPosX) && 
+		(touchX < (descartesDataPosX + descartesDataWidth)) &&
+		(touchY > descartesDataPosY) &&
+		(touchY < (descartesDataPosY + descartesDataHeight)) ) {
+		console.log("Click en mazo descartes");
+		if (descartesHist.length != 0) {
+			mostrarDescartes();
+		}
+	}
+}
+
+function evalUnClick(touchX, touchY) {
+	console.log("evalUnclick()");
+
+	//1.- Limpio de cartas de descartes mostradas
+	var posXDescartes = DeckOfCards.getDescartesData("posX");
+	var posYDescartes = DeckOfCards.getDescartesData("posY"); 
+	var widthDescartes = DeckOfCards.getDescartesData("width");
+	var heightDescartes = DeckOfCards.getDescartesData("height");
+
+	cx.clearRect(posXDescartes, posYDescartes, widthDescartes*3, heightDescartes);
+}
+
+function mostrarDescartes() {
+	console.log("mostrarDescartes()");
+
+	var posXInicial = DeckOfCards.getDescartesData("posX");
+	var posYInicial = DeckOfCards.getDescartesData("posY"); 
+	var widthInicial = DeckOfCards.getDescartesData("width");
+	var heightInicial = DeckOfCards.getDescartesData("height");
+
+	var widthFinalMov = widthInicial*0.8;
+	var heightFinalMov = heightInicial*0.8;
+	var posXFinalMov = posXInicial + widthInicial*2 + widthInicial/3;
+	var posYFinalMov = posYInicial + (heightInicial - heightFinalMov)/2;
+
+
+	var descartesHistReverse = descartesHist.reverse();
+	if (!(isEmpty(descartesHistReverse[0]))) {
+		var imgSrc0 = descartesHistReverse[0].picture;
+		var img0 = new Image();
+		img0.src = imgSrc0;
+
+		img0.onload = function() {
+			var posXFinalMov0 = posXFinalMov - (widthInicial/3)*1;
+			moverCartaJugada(500, 20, imgSrc0, 
+		    	posXInicial, posYInicial, widthInicial, heightInicial, 
+		    	posXFinalMov0, posYFinalMov, widthFinalMov, heightFinalMov);
+			setTimeout(function() {
+				cx.drawImage(img0, posXFinalMov0, posYFinalMov, widthFinalMov, heightFinalMov);	 	
+			}, 510);
+		}
+	}
+
+	if (!(isEmpty(descartesHistReverse[1]))) {
+		var imgSrc1 = descartesHistReverse[1].picture;
+		var img1 = new Image();
+		img1.src = imgSrc1;
+
+		img1.onload = function() {
+			var posXFinalMov1 = posXFinalMov - (widthInicial/3)*2;
+			moverCartaJugada(500, 20, imgSrc1, 
+		    	posXInicial, posYInicial, widthInicial, heightInicial, 
+		    	posXFinalMov1, posYFinalMov, widthFinalMov, heightFinalMov);
+			setTimeout(function(){
+				cx.drawImage(img1, posXFinalMov1, posYFinalMov, widthFinalMov, heightFinalMov);	 	
+			}, 515);
+		}
+	}
+
+	if (!(isEmpty(descartesHistReverse[2]))) {
+		var imgSrc2= descartesHistReverse[2].picture;
+		var img2 = new Image();
+		img2.src = imgSrc2;
+
+		img2.onload = function() {
+			var posXFinalMov2 = posXFinalMov - (widthInicial/3)*3;
+			moverCartaJugada(500, 20, imgSrc2, 
+		    	posXInicial, posYInicial, widthInicial, heightInicial, 
+		    	posXFinalMov2, posYFinalMov, widthFinalMov, heightFinalMov);
+			setTimeout(function(){
+				cx.drawImage(img2, posXFinalMov2, posYFinalMov, widthFinalMov, heightFinalMov);	 	
+			}, 520);
+		}
 	}
 }
 

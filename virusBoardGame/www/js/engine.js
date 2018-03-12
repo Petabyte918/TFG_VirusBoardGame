@@ -729,8 +729,17 @@ DeckOfCards = new function() {
 		var width = this.descartesData.width;
 		var height = this.descartesData.height;
 
-		descarte.onload = function(){
+		var verDescarte = new Image();
+		//verDescarte.src = 'img/cardImagesLQ/verDescartes.png';
+		verDescarte.src = 'img/cardImagesLQ/eyeDescartes.png';
+
+		descarte.onload = function() {
 			cxBG.drawImage(descarte, posX, posY, width, height);
+			if (descartesHist.length != 0) {
+				verDescarte.onload = function() {
+					cxBG.drawImage(verDescarte, posX + width - 5 - width/3, posY + 5, width/3, width*(352/480)/3);
+				}
+			}
 		}
 	}
 	this.getDescartesData = function(data) {
