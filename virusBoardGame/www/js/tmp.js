@@ -36,13 +36,6 @@ jugPorPosicion[posicion]= {
 	posicion: int
 }
 
-movJugador = {
-	jugOrigen: "",
-	jugDestino: "",
-	texto: "",
-	tipoMov: ""
-};
-
 posPlayersHandCards = {
 	widthCarta: int,
 	heightCarta: int,
@@ -105,7 +98,6 @@ estadoPartidas[idPartida].movJugador = {
 	texto: "<p>El jugador <b>"+jugOrigen+"</b> ha abandonado la partida</p>",
 	tipoMov: "abandonarPartida",
 	tipoOrgano: "",
-	descarteCompleto: [],
 	carta: [{
 				cardType,
 				organType,

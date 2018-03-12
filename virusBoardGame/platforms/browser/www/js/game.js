@@ -298,12 +298,60 @@ function representarMov(movJugador) {
 		return;
 	}
 
+
+	//Escribimos el evento en la lista de eventos
+	escribirEvento(movJugador);
+
 	//Si es descarte ponemos las cartas usadas en el mazo de descartes
 	if (movJugador.tipoMov == "descarte") {
 		var cartasUsadas = movJugador.cartasUsadas;
-		for (var i = 0; i < cartasUsadas.length; i++) {
-			descartesHist.push(cartasUsadas[i]);
+		setTimeout(function(){
+			for (var i = 0; i < cartasUsadas.length; i++) {
+				descartesHist.push(cartasUsadas[i]);
+			}
+			DeckOfCards.initDeckOfCards();
+			DeckOfCards.renderDescarte();
+		}, 1500);
+	}
+
+	//Si es una carta jugada sobre un jugador, necesitamos informacion extra para saber donde moverla
+	var tipoOrgano = "";
+	switch (movJugador.tipoMov) {
+	case "organo":
+	case "virus":
+	case "medicina":
+		switch (movJugador.tipoOrgano) {
+		case "corazon":
+			tipoOrgano = "posCorazon";
+			break;
+		case "cerebro":
+			tipoOrgano = "posCerebro";
+			break;
+		case "higado":
+			tipoOrgano = "posHigado";
+			break;
+		case "hueso":
+			tipoOrgano = "posHueso";
+			break;
+		case "comodin":
+			tipoOrgano = "posComodin";
+			break;
+		default:
+			console.log("ERROR: representarMov()->switch(movJugador.tipoOrgano)");
+			break;
 		}
+		var posJug = posPorJugador[movJugador.jugDestino].posicion;
+		var posXFinalMov = posOrganosJugadores[posJug][tipoOrgano][0];
+		var posYFinalMov = posOrganosJugadores[posJug][tipoOrgano][1];
+		var widthFinalMov = posOrganosJugadores[posJug].widthOrgano;
+		var heightFinalMov = posOrganosJugadores[posJug].heightOrgano;
+		break;
+	case "descarte":
+		var posXFinalMov = DeckOfCards.getDescartesData("posX");
+		var posYFinalMov = DeckOfCards.getDescartesData("posY");
+		var widthFinalMov = DeckOfCards.getDescartesData("width");
+		var heightFinalMov = DeckOfCards.getDescartesData("height");
+		break;
 	}
 
 	//Mostramos la carta jugada y un pequeño delay para dar tiempo a verla
@@ -313,17 +361,15 @@ function representarMov(movJugador) {
 		doneResizing();
 		var cartasUsadas = movJugador.cartasUsadas;
 		for (var i = 0; i < cartasUsadas.length; i++) {
-			mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[i].picture, 
-										movJugador.cartasUsadas[i].numCarta);
+			mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[i].picture, movJugador.cartasUsadas[i].numCarta,
+						posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
 		}
-		setTimeout('doneResizing()', 4000);		
+		setTimeout('doneResizing()', 3000);		
 	}
-
-	//Escribimos el evento en la lista de eventos
-	escribirEvento(movJugador);
 }
 
-function mostrarCartaJugada(tiempoTotal, tiempoRefresco, jugador, imgSrc, numCarta) {
+function mostrarCartaJugada(tiempoTotal, tiempoRefresco, jugador, imgSrc, numCarta, 
+							posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov) {
 	console.log("mostrarCartaJugada()");
 
 	var carta = "carta"+(numCarta+1);
@@ -339,23 +385,23 @@ function mostrarCartaJugada(tiempoTotal, tiempoRefresco, jugador, imgSrc, numCar
 			var posJug = posPorJugador[jugador].posicion;
 
 			var posXInicial = posPlayersHandCards[posJug][carta].x;
-			var posXFinal = posPlayersHandCards[posJug][carta].x + posPlayersHandCards.widthCarta;
+			var posXFinalGiro = posPlayersHandCards[posJug][carta].x + posPlayersHandCards.widthCarta;
 			var posYInicial = posPlayersHandCards[posJug][carta].y;
-			var posYFinal = posPlayersHandCards[posJug][carta].y + posPlayersHandCards.heightCarta;
+			var posYFinalGiro = posPlayersHandCards[posJug][carta].y + posPlayersHandCards.heightCarta;
 			var widthInicial = posPlayersHandCards.widthCarta;
 			var heightInicial = posPlayersHandCards.heightCarta;
 
-			var movFrame = (posXFinal - posXInicial) / frames;
+			var movFrame = (posXFinalGiro - posXInicial) / frames;
 
 			var posX = posXInicial;
 			var posY = posYInicial;
 			var width = widthInicial;
 			var height = heightInicial;
 
-			console.log("posXInicial, posXFinal, posYInicial, posYFinal, widthInicial, heightInicial: "+
-				posXInicial+", "+posXFinal+", "+posYInicial+", "+posYFinal+", "+widthInicial+", "+heightInicial);
+			//console.log("posXInicial, posXFinal, posYInicial, posYFinal, widthInicial, heightInicial: "+
+				//posXInicial+", "+posXFinal+", "+posYInicial+", "+posYFinal+", "+widthInicial+", "+heightInicial);
 
-			//Renderiza la primera mitad
+			//Renderiza la primera mitad del giro
 			function renderFrameReverse() {
 				cxAPO.clearRect(posXInicial, posYInicial, widthInicial, heightInicial);
 				
@@ -364,12 +410,12 @@ function mostrarCartaJugada(tiempoTotal, tiempoRefresco, jugador, imgSrc, numCar
 
 				cxAPO.drawImage(img1, posX, posY, width, height);
 
-				if (posX >= (posXFinal - movFrame*(frames/2 +1))) {
+				if (posX >= (posXFinalGiro - movFrame*(frames/2 +1))) {
 			     	clearInterval(idInterval);
 			     	idInterval = setInterval(renderFrameCard, tiempoRefresco);
 			    } 
 			}
-			//Renderiza la segunda mitad
+			//Renderiza la segunda mitad del giro
 			function renderFrameCard() {
 				cxAPO.clearRect(posXInicial, posYInicial, widthInicial, heightInicial);
 				
@@ -378,12 +424,56 @@ function mostrarCartaJugada(tiempoTotal, tiempoRefresco, jugador, imgSrc, numCar
 
 				cxAPO.drawImage(img2, posX, posY, width, height);
 
-				if (posX >= (posXFinal - movFrame)) {
+				if (posX >= (posXFinalGiro - movFrame)) {
 			     	clearInterval(idInterval);
+			     	moverCartaJugada(500, 20, imgSrc, 
+			     					posXInicial, posYInicial, widthInicial, heightInicial, 
+			     					posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
 			    } 
 			}
 			var idInterval = setInterval(renderFrameReverse, tiempoRefresco);
 		}
+	}
+}
+
+function moverCartaJugada(tiempoTotal, tiempoRefresco, imgSrc,
+	posXInicial, posYInicial, widthInicial, heightInicial, 
+	posXFinal, posYFinal, widthFinal, heightFinal) {
+
+	console.log("moverCartaJugada()");
+
+	var framesTotal = (tiempoTotal / tiempoRefresco);
+	var movFrameX = (posXFinal - posXInicial) / framesTotal;
+	var movFrameY = (posYFinal - posYInicial) / framesTotal;
+	var incrWidth = (widthFinal - widthInicial) / framesTotal;
+	var incrHeight = (heightFinal - heightInicial) / framesTotal;
+
+	var posX = posXInicial;
+	var posY = posYInicial;
+	var width = widthInicial;
+	var height = heightInicial;
+
+	var img = new Image();
+	img.src = imgSrc;
+	img.onload = function() {
+
+		function renderFrame() {
+	 		cx.clearRect(posX - 2, posY - 2, width + 4, height + 4);
+
+	 		posX = posX + movFrameX;
+	 		posY = posY + movFrameY;
+	 		width = width + incrWidth;
+	 		height = height + incrHeight;
+
+	 		if ((posXInicial <= posXFinal) && ((posX + movFrameX) >= posXFinal) ) {
+	 			clearInterval(idInterval);
+	 		} else if ((posXInicial > posXFinal) && ((posX + movFrameX) < posXFinal) ) {
+	 			clearInterval(idInterval);
+	 		} else {
+	 			cx.drawImage(img, posX, posY, width, height);	 					
+	 		}
+	 	}
+	 	var idInterval = setInterval(renderFrame, tiempoRefresco);
 	}
 }
 
