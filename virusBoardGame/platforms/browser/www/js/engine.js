@@ -97,7 +97,7 @@ function prepararOrganosJugadoresCli(){
 			corazon: "",
 			higado: "",
 			hueso: "",
-			organoComodin: ""
+			comodin: ""
 		};
 	}
 }

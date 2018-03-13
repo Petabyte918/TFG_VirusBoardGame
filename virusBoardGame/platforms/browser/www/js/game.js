@@ -627,8 +627,8 @@ function actualizarCanvasMID() {
 					posOrgano.posJug = pos;
 					posOrgano.src = 'img/cardImagesLQ/organos/orgaHueso.png';					
 					break;
-				case "organoComodin":
-					posOrgano.tipo = "organoComodin";
+				case "comodin":
+					posOrgano.tipo = "comodin";
 					posOrgano.x = posOrganosJugadores[pos].posComodin[0];
 					posOrgano.y = posOrganosJugadores[pos].posComodin[1];
 					posOrgano.posJug = pos;
@@ -1317,6 +1317,7 @@ function evalClick(touchX, touchY) {
 		(touchY > posListaTurnos.top) &&
 		(touchY < posListaTurnos.bottom) ) {
 		//console.log("click en lista turnos");
+		return;
 	}
 
 	//3.- Mazo de descartes
@@ -1332,20 +1333,42 @@ function evalClick(touchX, touchY) {
 		console.log("Click en mazo descartes");
 		if (descartesHist.length != 0) {
 			mostrarDescartes();
+			return;
 		}
+	}
+
+	//4.- okButtonTransplante
+	var elemOkButtonTransplante = document.getElementById("okButtonTransplante");
+	var posOkButtonTransplante = elemOkButtonTransplante.getBoundingClientRect();
+	if ( (touchX > posOkButtonTransplante.left) && 
+		(touchX < posOkButtonTransplante.right) &&
+		(touchY > posOkButtonTransplante.top) &&
+		(touchY < posOkButtonTransplante.bottom) ) {
+		//console.log("click en okButtonTransplante");
+		$("#okButtonTransplante").css("top", "3.7em");
+		$("#okButtonTransplante").css("left", "0.2em");
+		setTimeout(function(){
+			$("#okButtonTransplante").css("top", "3.5em");
+			$("#okButtonTransplante").css("left", "0em");
+			evalTransplante();
+		},100);
+		return;
 	}
 }
 
 function evalUnClick(touchX, touchY) {
 	console.log("evalUnclick()");
 
-	//1.- Limpio de cartas de descartes mostradas
+	//1.- Limpio las cartas de descartes mostradas
 	var posXDescartes = DeckOfCards.getDescartesData("posX");
 	var posYDescartes = DeckOfCards.getDescartesData("posY"); 
 	var widthDescartes = DeckOfCards.getDescartesData("width");
 	var heightDescartes = DeckOfCards.getDescartesData("height");
 
 	cx.clearRect(posXDescartes, posYDescartes, widthDescartes*3, heightDescartes);
+
+	//2.- Cierro los cuadros de ayuda en partida
+	//cerrarAyudaCartas();
 }
 
 function mostrarDescartes() {
@@ -1559,7 +1582,7 @@ function checkCardColision(colision) {
 		organoColision = "higado";
 	}
 
-	//Colision organoComodin
+	//Colision comodin
 	posX = posOrganosJugadores[colision].posComodin[0];
 	posY = posOrganosJugadores[colision].posComodin[1];
 
@@ -1567,7 +1590,7 @@ function checkCardColision(colision) {
 		(touch.pageX < (posX + widthOrgano + 5)) &&
 		(touch.pageY > (posY - 5)) &&
 		(touch.pageY < (posY + heightOrgano + 5)) ) {
-		organoColision = "organoComodin";
+		organoColision = "comodin";
 	}
 
 	//console.log("Colision concreta en organo: "+organoColision);
@@ -1634,7 +1657,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	//O si donde la he soltado es el organo comodin tambien evaluo
 	//organType-> tipo del organo de la carta que he jugado
 	//organoColision-> tipo del organo del organo destino
-	if ((organType == organoColision) || (organType == "comodin") || (organoColision == "organoComodin")) {
+	if ((organType == organoColision) || (organType == "comodin") || (organoColision == "comodin")) {
 		if (cardType == "medicina") {
 			//Estado organos: vacio, normal, enfermo, vacunado, inmunizado
 			if (organosJugadoresCli[jugDestino][organoColision] == "enfermo") {
@@ -1731,17 +1754,17 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			var auxCorazon = organosJugadoresCli[jugDestino].corazon;
 			var auxHigado = organosJugadoresCli[jugDestino].higado;
 			var auxHueso = organosJugadoresCli[jugDestino].hueso;
-			var auxOrganoComodin = organosJugadoresCli[jugDestino].organoComodin;
+			var auxOrganoComodin = organosJugadoresCli[jugDestino].comodin;
 			organosJugadoresCli[jugDestino].cerebro = organosJugadoresCli[usuario].cerebro;
 			organosJugadoresCli[jugDestino].corazon = organosJugadoresCli[usuario].corazon;
 			organosJugadoresCli[jugDestino].higado = organosJugadoresCli[usuario].higado;
 			organosJugadoresCli[jugDestino].hueso = organosJugadoresCli[usuario].hueso;
-			organosJugadoresCli[jugDestino].organoComodin = organosJugadoresCli[usuario].organoComodin;
+			organosJugadoresCli[jugDestino].comodin = organosJugadoresCli[usuario].comodin;
 			organosJugadoresCli[usuario].cerebro = auxCerebro;
 			organosJugadoresCli[usuario].corazon = auxCorazon;
 			organosJugadoresCli[usuario].higado = auxHigado;
 			organosJugadoresCli[usuario].hueso = auxHueso;
-			organosJugadoresCli[usuario].organoComodin = auxOrganoComodin;
+			organosJugadoresCli[usuario].comodin = auxOrganoComodin;
 
 			var cartasUsadas = [];
 			cartasUsadas.push(cartasUsuario[numCarta]);
@@ -1892,6 +1915,10 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	} else {
 		//console.log("Movimiento no valido");
 	}
+}
+
+function evalTransplante() {
+	console.log("evalTransplante()");
 }
 
 function fin_descarte() {
@@ -2106,40 +2133,17 @@ function reDimContainer_instrucciones(pagina) {
 	if (posContainer_instrucciones.top < (posRegister.bottom + 5)) {
 		var newWidth = (Math.floor(windowWidth - posBotonInstrucciones.right - 50)).toString() + "px";
 		$("#"+pagina).css("width", newWidth);
-
-		/** En el caso de necesitar un segundo ajuste..pero meh
-		var elemContainer_instrucciones = document.getElementById(pagina);
-		var posContainer_instrucciones = elemContainer_instrucciones.getBoundingClientRect();
-		if (posContainer_instrucciones.top < (posRegister.bottom + 5)) {
-			var newWidth
-			var heightContainer_instrucciones = (Math.floor(posBotonInstrucciones.top - posRegister.bottom - 10)).toString() + "px"; 
-			$("#container_instrucciones1").css("max-height", heightContainer_instrucciones);
-			$("#container_instrucciones2").css("max-height", heightContainer_instrucciones);
-			$("#container_instrucciones3").css("max-height", heightContainer_instrucciones);
-			$("#container_instrucciones4").css("max-height", heightContainer_instrucciones);
-			$("#container_instrucciones5").css("max-height", heightContainer_instrucciones);
-		}**/
 	}
 }
 
 function reDimAyudaCartaEspecial(cartaEspecial) {
 	console.log("reDimAyudaCartaEspecial()");
 
-	/**
-	posOrganosJugadores[1] = {
-		widthOrgano: widthOrgano,
-		heightOrgano:heightOrgano,
-		posCerebro: posCerebro,
-		posCorazon: posCorazon,
-		posHueso: posHueso,
-		posHigado: posHigado,
-		posComodin: posComodin
-	};**/
-	var marginIzqDcha = 40;
+	var marginIzqDcha = 30;
 	var marginBottom = 15;
 	var posXNum = Math.floor(posOrganosJugadores[1].widthOrgano + posOrganosJugadores[1].posComodin[0] + marginIzqDcha);
 	var posX = (Math.floor(posOrganosJugadores[1].widthOrgano + posOrganosJugadores[1].posComodin[0] + marginIzqDcha)).toString() + "px";
-	var width = (Math.floor(windowWidth - posXNum - marginIzqDcha - 10)).toString() + "px";
+	var width = (Math.floor(windowWidth - posXNum - marginIzqDcha)).toString() + "px";
 
 	var height = "auto";
 

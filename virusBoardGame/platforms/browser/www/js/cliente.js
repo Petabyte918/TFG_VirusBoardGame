@@ -765,9 +765,9 @@ function checkPartidaTerminada(){
 			
 			totalOrganosCompletos++;
 		}
-		if ((organosJugadoresCli[jugador].organoComodin == "normal") ||
-			(organosJugadoresCli[jugador].organoComodin == "vacunado") ||
-			(organosJugadoresCli[jugador].organoComodin == "inmunizado")) {
+		if ((organosJugadoresCli[jugador].comodin == "normal") ||
+			(organosJugadoresCli[jugador].comodin == "vacunado") ||
+			(organosJugadoresCli[jugador].comodin == "inmunizado")) {
 			
 			totalOrganosCompletos++;
 		}
@@ -844,7 +844,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 			organosJugadoresCli[jugador].corazon = datos_partida.organosJugadoresCli[jugador].corazon;
 			organosJugadoresCli[jugador].higado = datos_partida.organosJugadoresCli[jugador].higado
 			organosJugadoresCli[jugador].hueso = datos_partida.organosJugadoresCli[jugador].hueso;
-			organosJugadoresCli[jugador].organoComodin = datos_partida.organosJugadoresCli[jugador].organoComodin;
+			organosJugadoresCli[jugador].comodin = datos_partida.organosJugadoresCli[jugador].comodin;
 		}
 		//Lo dejo como aviso a navegantes. Lo de abajo es caca
 		//organosJugadoresCli = datos_partida.organosJugadoresCli;
@@ -1029,7 +1029,7 @@ socket.on('terminarPartida', function(data){
 			organosJugadoresCli[jugador].corazon = data.organosJugadoresCli[jugador].corazon;
 			organosJugadoresCli[jugador].higado = data.organosJugadoresCli[jugador].higado
 			organosJugadoresCli[jugador].hueso = data.organosJugadoresCli[jugador].hueso;
-			organosJugadoresCli[jugador].organoComodin = data.organosJugadoresCli[jugador].organoComodin;
+			organosJugadoresCli[jugador].comodin = data.organosJugadoresCli[jugador].comodin;
 		}
 	}
 	cerrarAyudaCartas();

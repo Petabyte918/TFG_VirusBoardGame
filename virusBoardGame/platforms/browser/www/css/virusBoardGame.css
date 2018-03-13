@@ -786,11 +786,35 @@ input:checked + .slider:before {
 	clear: both;
 }
 
-.cartaIzq {
-    float: left;
-    width: 50%;
-    text-align: -webkit-center;
-}	
+#ayudaTransplanteParteInf {
+	float: left;
+	width: 100%;
+	text-align: center;
+}
+
+.cartaIzq, .cartaDcha, #okButtonTransplante {
+    text-align: center;
+    display: inline-block;
+}
+
+#okButtonTransplante {
+	z-index: 500;
+    height: 45px;
+    width: 45px;
+
+	background-repeat: no-repeat;
+    background-color: rgb(154, 205, 50);
+	background-image: url(img/icono-ok2.png);
+	background-size: cover;
+
+    border: solid DarkOliveGreen 2px;
+    box-shadow: inset 0px 0px 4px 4px #202a0a, 4px 5px 7px 0px rgba(0,0,0,0.75);
+    border-radius: 30px;
+    position: relative;
+    top: 3.5em;
+    margin-left: 10px;
+    margin-right: 10px;
+}
 
 .tituloCartaIzq, .tituloCartaDcha {
 	text-align: center;
@@ -809,10 +833,8 @@ input:checked + .slider:before {
     background-size: cover;
 }
 
-.cartaDcha {
-    float: right;
-    width: 50%;
-    text-align: -webkit-center;
+.imagenCartaDcha {
+	float: right;
 }
 
 #iconoOrgano, #iconoVirus, #iconoMedicina, #iconoTratamiento {
