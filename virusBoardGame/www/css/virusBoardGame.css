@@ -792,7 +792,7 @@ input:checked + .slider:before {
 	text-align: center;
 }
 
-.cartaIzq, .cartaDcha, #okButtonTransplante {
+#cartaIzq, #cartaDcha, #okButtonTransplante {
     text-align: center;
     display: inline-block;
 }

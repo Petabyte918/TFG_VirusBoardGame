@@ -915,8 +915,6 @@ function renderOrganosTransplante() {
 	//Redimensionamos en relacion al tamaño de la carta
 	var heightCard = ($(".imagenCartaIzq").css("height")).replace("px","");;
 	var widthCard = (heightCard * (1013/1536)) + "px";
-	//console.log("heightCard: "+heightCard);
-	//console.log("widthCard: "+widthCard);
 
 	$(".imagenCartaIzq").css("width", widthCard);
 	$(".imagenCartaDcha").css("width", widthCard);
@@ -935,6 +933,9 @@ function renderOrganosTransplante() {
 		case "cerebro":
 			$(".imagenCartaIzq").css("background-image", "url('img/cardImagesLQ/organos/orgaCerebro.png')");
 			break;
+		case "comodin":
+			$(".imagenCartaIzq").css("background-image", "url('img/cardImagesLQ/organos/orgaComodin.png')");
+			break;			
 		default:
 			$(".imagenCartaIzq").css("background-image", "");
 			break;
@@ -952,6 +953,9 @@ function renderOrganosTransplante() {
 		case "cerebro":
 			$(".imagenCartaDcha").css("background-image", "url('img/cardImagesLQ/organos/orgaCerebro.png')");
 			break;
+		case "comodin":
+			$(".imagenCartaDcha").css("background-image", "url('img/cardImagesLQ/organos/orgaComodin.png')");
+			break;	
 		default:
 			$(".imagenCartaDcha").css("background-image", "");
 			break;
@@ -1355,7 +1359,26 @@ function evalClick(touchX, touchY) {
 		return;
 	}
 
-	if (transplanteenproceso)
+	//5.- eliminar organo escogido de transplante
+	if (transplante.enProceso == true) {
+		var elemCartaIzq = document.getElementById("cartaIzq");
+		var posCartaIzq = elemCartaIzq.getBoundingClientRect();
+		if ( (touchX > posCartaIzq.left) && 
+			(touchX < posCartaIzq.right) &&
+			(touchY > posCartaIzq.top) &&
+			(touchY < posCartaIzq.bottom) ) {
+			removeOrgano1Transplante();
+		}
+
+		var elemCartaDcha = document.getElementById("cartaDcha");
+		var posCartaDcha = elemCartaDcha.getBoundingClientRect();
+		if ( (touchX > posCartaDcha.left) && 
+			(touchX < posCartaDcha.right) &&
+			(touchY > posCartaDcha.top) &&
+			(touchY < posCartaDcha.bottom) ) {
+			removeOrgano2Transplante();
+		}
+	}
 }
 
 function evalUnClick(touchX, touchY) {
@@ -1794,79 +1817,30 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 			break;
 		case "transplante":
 			console.log("manejadorMov() - Transplante");
-			//Guardo el intercambio
 			if (transplante.organo1.numJug == -1) {
-				transplante.organo1.organo = organoColision;
-				transplante.organo1.numJug = jugDestino;
-				console.log("El organo para el cambio 1 es: "+organoColision);
-
-				transplante.enProceso = true;
+				//No pueden intercambiarse organos del mismo jugador
+				if (transplante.organo1 != jugDestino) {
+					//No pueden cambiarse organos inmunizados
+					if (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") {
+						transplante.organo1.organo = organoColision;
+						transplante.organo1.numJug = jugDestino;
+						console.log("El organo para el cambio 1 es: "+organoColision);
+						transplante.enProceso = true;
+					}
+				}
 			} else if (transplante.organo2.numJug == -1) {
-				transplante.organo2.organo = organoColision;
-				transplante.organo2.numJug = jugDestino;
-				console.log("El organo para el cambio 2 es: "+organoColision);
-				transplante.enProceso = true;
+				//No pueden intercambiarse organos del mismo jugador
+				if (transplante.organo1 != jugDestino) {
+					//No pueden cambiarse organos inmunizados
+					if (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") {
+						transplante.organo2.organo = organoColision;
+						transplante.organo2.numJug = jugDestino;
+						console.log("El organo para el cambio 2 es: "+organoColision);
+						transplante.enProceso = true;
+					}
+				}
 			}
 			renderOrganosTransplante();
-			//Evaluo si la jugada esta completa
-			if (((transplante.organo1.organo != "") && (transplante.organo1.numJug != -1)) &&
-				((transplante.organo2.organo != "") && (transplante.organo2.numJug != -1))) {
-
-				var jug1 = transplante.organo1.numJug;
-				var jug2 = transplante.organo2.numJug;
-				var organo1 = transplante.organo1.organo;
-				var organo2 = transplante.organo2.organo;
-				var estadoOrgano1 = organosJugadoresCli[jug1][organo1];
-				var estadoOrgano2 = organosJugadoresCli[jug2][organo2];
-
-				//Dos condiciones para que sea legal
-				//1: que el tipo de organos sea el mismo (y distintos de "")
-				if (organo1 == organo2) {
-					console.log("Transplante organos iguales");
-					console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
-					console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
-					organosJugadoresCli[jug1][organo1] = estadoOrgano2;
-					organosJugadoresCli[jug2][organo2] = estadoOrgano1;
-					var cartasUsadas = [];
-					cartasUsadas.push(cartasUsuario[numCarta]);
-					movJugador = {
-						jugOrigen: usuario,
-						jugDestino: jugDestino,
-						texto: "",
-						tipoMov: "transplante",
-						tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'",
-						cartasUsadas: cartasUsadas
-					};
-					fin_transplante();
-				}
-				//2: si no que los organos, para el cambio esten vacios
-				else if ((organosJugadoresCli[jug1][organo2] == "")
-					&& (organosJugadoresCli[jug2][organo1] == "")) {
-
-					console.log("Transplante organos no iguales");
-					console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
-					console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
-					organosJugadoresCli[jug1][organo2] = estadoOrgano2;
-					organosJugadoresCli[jug2][organo1] = estadoOrgano1;
-					organosJugadoresCli[jug1][organo1] = "";
-					organosJugadoresCli[jug2][organo2] = "";
-					var cartasUsadas = [];
-					cartasUsadas.push(cartasUsuario[numCarta]);
-					movJugador = {
-						jugOrigen: usuario,
-						jugDestino: jugDestino,
-						texto: "",
-						tipoMov: "transplante",
-						tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'",
-						cartasUsadas: cartasUsadas
-					};
-					fin_transplante();
-				} else {
-					console.log("El transplante no ha sido posible");
-					console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
-					console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
-				}
-			}
 			break;
 		case "ladronDeOrganos":
 			console.log("manejadorMov() - Ladron de organos");
@@ -1921,6 +1895,66 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 
 function evalTransplante() {
 	console.log("evalTransplante()");
+
+	//Evaluo si la jugada esta completa
+	if (((transplante.organo1.organo != "") && (transplante.organo1.numJug != -1)) &&
+		((transplante.organo2.organo != "") && (transplante.organo2.numJug != -1))) {
+
+		var jug1 = transplante.organo1.numJug;
+		var jug2 = transplante.organo2.numJug;
+		var organo1 = transplante.organo1.organo;
+		var organo2 = transplante.organo2.organo;
+		var estadoOrgano1 = organosJugadoresCli[jug1][organo1];
+		var estadoOrgano2 = organosJugadoresCli[jug2][organo2];
+
+		//Dos condiciones para que sea legal
+		//1: que el tipo de organos sea el mismo (y distintos de "")
+		if (organo1 == organo2) {
+			console.log("Transplante organos iguales");
+			console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
+			console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
+			organosJugadoresCli[jug1][organo1] = estadoOrgano2;
+			organosJugadoresCli[jug2][organo2] = estadoOrgano1;
+			var cartasUsadas = [];
+			cartasUsadas.push(cartasUsuario[numCarta]);
+			movJugador = {
+				jugOrigen: usuario,
+				jugDestino: jugDestino,
+				texto: "",
+				tipoMov: "transplante",
+				tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'",
+				cartasUsadas: cartasUsadas
+			};
+			fin_transplante();
+		}
+		//2: si no que los organos, para el cambio esten vacios
+		else if ((organosJugadoresCli[jug1][organo2] == "")
+			&& (organosJugadoresCli[jug2][organo1] == "")) {
+
+			console.log("Transplante organos no iguales");
+			console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
+			console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
+			organosJugadoresCli[jug1][organo2] = estadoOrgano2;
+			organosJugadoresCli[jug2][organo1] = estadoOrgano1;
+			organosJugadoresCli[jug1][organo1] = "";
+			organosJugadoresCli[jug2][organo2] = "";
+			var cartasUsadas = [];
+			cartasUsadas.push(cartasUsuario[numCarta]);
+			movJugador = {
+				jugOrigen: usuario,
+				jugDestino: jugDestino,
+				texto: "",
+				tipoMov: "transplante",
+				tipoOrgano: "y ha cambiado '"+organo1+"'' por '"+organo2+"'",
+				cartasUsadas: cartasUsadas
+			};
+			fin_transplante();
+		} else {
+			console.log("El transplante no ha sido posible");
+			console.log("Organo 1: "+organo1+", estado 1: "+estadoOrgano1);
+			console.log("Organo 2: "+organo2+", estado 2: "+estadoOrgano2);
+		}
+	}
 }
 
 function fin_descarte() {

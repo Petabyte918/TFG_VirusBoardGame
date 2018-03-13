@@ -792,13 +792,12 @@ input:checked + .slider:before {
 	text-align: center;
 }
 
-.cartaIzq, .cartaDcha, #okButtonTransplante {
+#cartaIzq, #cartaDcha, #okButtonTransplante {
     text-align: center;
     display: inline-block;
 }
 
 #okButtonTransplante {
-	z-index: 500;
     height: 45px;
     width: 45px;
 
