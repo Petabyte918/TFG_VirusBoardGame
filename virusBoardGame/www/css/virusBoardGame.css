@@ -786,6 +786,15 @@ input:checked + .slider:before {
 	clear: both;
 }
 
+#correcionTransplante {
+	font-size: 0.9em;
+	text-align: center;
+	clear: both;
+
+	color: red;
+	font-weight: bold;
+}
+
 #ayudaTransplanteParteInf {
 	float: left;
 	width: 100%;
