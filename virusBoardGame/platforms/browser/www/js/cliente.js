@@ -679,19 +679,6 @@ function esperarMovimiento(){
 			//console.log("Esperando movimiento");
 			esperarMovimiento();
 		} else {
-			if (movJugador.tipoMov == "tiempo_agotado") {
-				var newDatos_partida = {
-					idPartida: idPartida,
-					jugadores: jugadores,
-					infoJugadores: infoJugadores,
-					turno: turno,
-					numTurno : numTurno,
-					deckOfCardsPartida: deckOfCards,
-					organosJugadoresCli: organosJugadoresCli,
-					movJugador: movJugador
-				};
-				socket.emit('tiempo_agotado', newDatos_partida);
-			} 
 			if (turno == usuario) {
 				//Comprobamos si hay ganador
 				var ganador = checkPartidaTerminada();
@@ -703,7 +690,6 @@ function esperarMovimiento(){
 						ganador: infoJugadores[ganador].nombre,
 						organosJugadoresCli: organosJugadoresCli
 					}
-					console.log("esperarMovimiento(): "+idPartida);
 					socket.emit('terminarPartida', data);
 				} else {
 					//Si no hay ganador seguimos con el juego
@@ -728,9 +714,9 @@ function esperarMovimiento(){
 function comunicarTiempoAgotado () {
 	datos = {
 		idPartida: idPartida,
-		infoJugadores: infoJugadores,
 		numTurno: numTurno,
-		turno: turno
+		turno: turno,
+		infoJugadores: infoJugadores
 	}
 	//console.log("Avisamos al servidor que puede haber un jugador inactivo");
 	socket.emit('tiempo_agotado', datos);
@@ -805,7 +791,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 	//Evitamos replicas
 	if (turno == datos_partida.turno) {
-		//console.log("Mensajes retrasados de pierde turno");
+		//console.log("Mensajes retrasados");
 		return;
 	}
 	turno = datos_partida.turno;

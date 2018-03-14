@@ -167,17 +167,12 @@ function renderCountDown(time, oldDate, first){
 			//Y nos chivamos al servidor
 			comunicarTiempoAgotado();
 			//Por si se nos ha pasado el tiempo en medio de un descarte
+			descartes[0] = false;
+			descartes[1] = false;
+			descartes[2] = false;
 			fin_descarte();
 			//Por si se nos ha pasado el tiempo en medio de un transplante
 			fin_transplante();
-			movJugador = {
-				jugOrigen: turno,
-				jugDestino: "",
-				texto: "",
-				tipoMov: "tiempo_agotado",
-				tipoOrgano: "",
-				cartasUsadas: []
-			}
 		}
 	}, 250);
 }

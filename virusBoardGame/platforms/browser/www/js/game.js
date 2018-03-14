@@ -167,17 +167,12 @@ function renderCountDown(time, oldDate, first){
 			//Y nos chivamos al servidor
 			comunicarTiempoAgotado();
 			//Por si se nos ha pasado el tiempo en medio de un descarte
+			descartes[0] = false;
+			descartes[1] = false;
+			descartes[2] = false;
 			fin_descarte();
 			//Por si se nos ha pasado el tiempo en medio de un transplante
 			fin_transplante();
-			movJugador = {
-				jugOrigen: turno,
-				jugDestino: "",
-				texto: "",
-				tipoMov: "tiempo_agotado",
-				tipoOrgano: "",
-				cartasUsadas: []
-			}
 		}
 	}, 250);
 }
@@ -1928,9 +1923,9 @@ function evalTransplante() {
 		var jugadaCorrecta = false;
 		//Condicion para que sea legal: Que los jugadores no posean ya el organo a cambiar
 		if (organo1 == organo2) {
-			jugadaCorrecta = true;			
-		} else if ( (organosJugadoresCli[jug1][organo2] != organo1) && 
-				(organosJugadoresCli[jug2][organo1] != organo2) ) {
+			jugadaCorrecta = true;
+		} else if ( (organosJugadoresCli[jug1][organo2] == "") && 
+				(organosJugadoresCli[jug2][organo1] == "") ) {
 			jugadaCorrecta = true;
 		} else { //Vemos que ha ido mal
 			if (organosJugadoresCli[jug1][organo2] == organo1) {
