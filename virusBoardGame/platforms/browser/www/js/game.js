@@ -1839,6 +1839,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 						console.log("El organo para el cambio 1 es: "+organoColision);
 						transplante.enProceso = true;
 					}
+				} else {
+					document.getElementById("correcionTransplante").innerHTML = "No puedes cambiarte órganos contigo mismo.";
 				}
 			} else if (transplante.organo2.numJug == -1) {
 				//No pueden intercambiarse organos del mismo jugador
@@ -1850,6 +1852,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 						console.log("El organo para el cambio 2 es: "+organoColision);
 						transplante.enProceso = true;
 					}
+				} else {
+					document.getElementById("correcionTransplante").innerHTML = "No puedes cambiarte órganos contigo mismo.";
 				}
 			}
 			renderOrganosTransplante();

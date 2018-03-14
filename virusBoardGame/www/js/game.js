@@ -1928,9 +1928,9 @@ function evalTransplante() {
 		var jugadaCorrecta = false;
 		//Condicion para que sea legal: Que los jugadores no posean ya el organo a cambiar
 		if (organo1 == organo2) {
-			jugadaCorrecta = true;			
-		} else if ( (organosJugadoresCli[jug1][organo2] != organo1) && 
-				(organosJugadoresCli[jug2][organo1] != organo2) ) {
+			jugadaCorrecta = true;
+		} else if ( (organosJugadoresCli[jug1][organo2] == "") && 
+				(organosJugadoresCli[jug2][organo1] == "") ) {
 			jugadaCorrecta = true;
 		} else { //Vemos que ha ido mal
 			if (organosJugadoresCli[jug1][organo2] == organo1) {
