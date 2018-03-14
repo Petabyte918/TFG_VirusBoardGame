@@ -518,10 +518,13 @@ function escribirEvento(movJugador) {
 	var evento = "";
 
 	switch (tipoMov) {
-	case "tiempo_agotado":
+	case "expulsion":
+		evento = "<p><b>"+numTurno+" -- </b>Se ha expulsado al jugador <b>"+jugOrigen+"</b> por perder el turno demasiadas veces.</p>";
+		break;
+	case "abandonarPartida":
 		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha abandonado la partida.</p>";
 		break;
-	case "turnoPerdido":
+	case "tiempo_agotado":
 		evento = "<p><b>"+numTurno+" -- </b>El jugador <b>"+jugOrigen+"</b> ha perdido el turno por agotar el tiempo.</p>";
 		break;
 	case "descarte":
