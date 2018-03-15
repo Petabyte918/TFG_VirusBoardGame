@@ -799,6 +799,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 	clearTimeout(countDownSTO);
 	clearTimeout(esperarMovSTO);
+
 	cerrarAyudaCartas();
 
 	//Guante de Latex
@@ -823,6 +824,10 @@ socket.on('siguienteTurnoCli', function(datos_partida){
     infoJugadores = datos_partida.infoJugadores;
 	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
+
+	//Actualizo antes de procesar mov, pues hasta despues animacion no se resetea todo
+	renderCountDown(30, new Date(),"first"); //->setTimeOut
+
 
 	if (!(isEmpty(datos_partida.organosJugadoresCli))) {
 		for (var jugador in datos_partida.organosJugadoresCli){
@@ -855,9 +860,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 		cartasUsadas: []
 	};
 
-	//Conforman el hilo de ejecucion del turno del usuario
 	esperarMovimiento(); //->setTimeOut
-	renderCountDown(30, new Date(),"first"); //->setTimeOut
 });
 
 function pauseGame(){

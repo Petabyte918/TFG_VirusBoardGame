@@ -84,6 +84,11 @@ function extend(first, second) {
     return first;
 };
 
+//Convierte la primera letra de un String en mayusculas
+function mayusPrimera(string){
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 //
 function prepararOrganosJugadoresCli(){
 	var posicion = null;
@@ -187,7 +192,7 @@ function getUsersSorted (optionRanquing, data) {
 }
 
 function abrirAyudaCartas (numCarta) {
-	console.log("abrirAyudaCartas()");	
+	//console.log("abrirAyudaCartas()");	
 	//Antes de abrir nuevas cerramos las ya abiertas
 	cerrarAyudaCartas();
 
@@ -232,7 +237,7 @@ function abrirAyudaCartas (numCarta) {
 }
 
 function cerrarAyudaCartas() {
-	console.log("cerrarAyudaCartas()");
+	//console.log("cerrarAyudaCartas()");
 	$("#ayudaErrorMedico").css("visibility", "hidden");
 	$("#ayudaGuanteDeLatex").css("visibility", "hidden");
 

@@ -59,7 +59,14 @@ cartasUsuario[0,1,2] -> function card (cardType, organType, picture){
 	this.cardType = cardType;
 	this.organType = organType;
 	this.picture = picture;
+}
 
+//Creamos carta especial1
+var cartaEspecial1 = {
+	cardType: "cartaEspecial",
+	organType: organo1,
+	picture: 'img/cardImagesLQ/organos/orga'+organo1.toLowerCase()+'.png'
+	jugPropietario: jug1
 }
 
 -----SERVER-----
@@ -192,4 +199,3 @@ for (var jugador in estadoPartidas[idPartida].infoJugadores) {
 for (var i = 0; i < partidas[idPartida].gamePlayers.length; i++) {
 	console.log("partidas[idPartida].gamePlayers[i]]6: "+partidas[idPartida].gamePlayers[i]);
 }
-

@@ -293,7 +293,6 @@ function representarMov(movJugador) {
 		return;
 	}
 
-
 	//Escribimos el evento en la lista de eventos
 	escribirEvento(movJugador);
 
@@ -317,32 +316,14 @@ function representarMov(movJugador) {
 		}
 	}
 
-	//Si es una carta jugada sobre un jugador, necesitamos informacion extra para saber donde moverla
+	//Movimiento de cartas simples
 	var tipoOrgano = "";
 	switch (movJugador.tipoMov) {
 	case "organo":
 	case "virus":
 	case "medicina":
-		switch (movJugador.tipoOrgano) {
-		case "corazon":
-			tipoOrgano = "posCorazon";
-			break;
-		case "cerebro":
-			tipoOrgano = "posCerebro";
-			break;
-		case "higado":
-			tipoOrgano = "posHigado";
-			break;
-		case "hueso":
-			tipoOrgano = "posHueso";
-			break;
-		case "comodin":
-			tipoOrgano = "posComodin";
-			break;
-		default:
-			console.log("ERROR: representarMov()->switch(movJugador.tipoOrgano)");
-			break;
-		}
+		tipoOrgano = "pos"+mayusPrimera(movJugador.tipoOrgano);
+
 		var posJug = posPorJugador[movJugador.jugDestino].posicion;
 		var posXFinalMov = posOrganosJugadores[posJug][tipoOrgano][0];
 		var posYFinalMov = posOrganosJugadores[posJug][tipoOrgano][1];
@@ -356,23 +337,65 @@ function representarMov(movJugador) {
 		var heightFinalMov = DeckOfCards.getDescartesData("height");
 		break;
 	}
+	//Solo redibujo todo tras las animaciones. Antes, unicamente  limpia la pantalla del countDown y la lista de turnos
+	reDimListaTurnos();
+	if ( (movJugador.tipoMov == "organo") || (movJugador.tipoMov == "virus") || (movJugador.tipoMov == "medicina") || (movJugador.tipoMov == "descarte") ) {
+		//Mostramos la carta jugada y un pequeño delay para dar tiempo a verla
+		if (movJugador.jugOrigen != usuario) {
+			var cartasUsadas = movJugador.cartasUsadas;
+			for (var i = 0; i < cartasUsadas.length; i++) {
+				mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[i].picture, movJugador.cartasUsadas[i].numCarta);			
+				var posJug = posPorJugador[movJugador.jugOrigen].posicion;
+				var carta = "carta"+(movJugador.cartasUsadas[i].numCarta+1);
 
-	//Mostramos la carta jugada y un pequeño delay para dar tiempo a verla
-	if (movJugador.jugOrigen == usuario) {
-		doneResizing();
-	} else {
-		doneResizing();
-		var cartasUsadas = movJugador.cartasUsadas;
-		for (var i = 0; i < cartasUsadas.length; i++) {
-			mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[i].picture, movJugador.cartasUsadas[i].numCarta,
-						posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
+				var posXInicial = posPlayersHandCards[posJug][carta].x;
+				var posYInicial = posPlayersHandCards[posJug][carta].y;
+				var widthInicial = posPlayersHandCards.widthCarta;
+				var heightInicial = posPlayersHandCards.heightCarta;
+				setTimeout(moverCartaJugada, 1000, 500, 20, movJugador.cartasUsadas[i].picture, posXInicial, posYInicial, widthInicial, heightInicial, posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
+			}
+			setTimeout('doneResizing()', 1510);
+		} else {
+			doneResizing(); //Si es tu turno actualizamos e inmediatamente
 		}
-		setTimeout('actualizarCanvasAPO()', 3000);		
+	}
+
+	//Movimiento de cartas menos simples
+	if (movJugador.tipoMov == "ladronDeOrganos") {
+		if (movJugador.jugOrigen != usuario) {
+			mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[0].picture, movJugador.cartasUsadas[0].numCarta);			
+			var posJug = posPorJugador[movJugador.jugOrigen].posicion;
+			var posJugDest = posPorJugador[movJugador.cartasUsadas[1].jugPropietario].posicion;
+			var tipoOrgano = "pos"+mayusPrimera(movJugador.cartasUsadas[1].organType);
+			var carta = "carta"+(movJugador.cartasUsadas[0].numCarta+1); //Carta de la mano para mostrar
+
+			var posXInicial = posPlayersHandCards[posJug][carta].x;
+			var posYInicial = posPlayersHandCards[posJug][carta].y;
+			var widthInicial = posPlayersHandCards.widthCarta;
+			var heightInicial = posPlayersHandCards.heightCarta;
+
+			//Movemos el ladron de organos al organo
+			var posXFinalMov = posOrganosJugadores[posJugDest][tipoOrgano][0];
+			var posYFinalMov = posOrganosJugadores[posJugDest][tipoOrgano][1];
+			var widthFinalMov = posOrganosJugadores[posJugDest].widthOrgano;
+			var heightFinalMov = posOrganosJugadores[posJugDest].heightOrgano;
+			setTimeout(moverCartaJugada, 1000, 1000, 20, movJugador.cartasUsadas[0].picture, posXInicial, posYInicial, widthInicial, heightInicial, posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
+			
+			//Movemos el organo hasta los organos del usuario
+			var posXFinalMov1 = posOrganosJugadores[posJug][tipoOrgano][0];
+			var posYFinalMov1 = posOrganosJugadores[posJug][tipoOrgano][1];
+			var widthFinalMov1 = posOrganosJugadores[posJug].widthOrgano;
+			var heightFinalMov1 = posOrganosJugadores[posJug].heightOrgano;
+			setTimeout(moverCartaJugada, 2000, 1000, 20, movJugador.cartasUsadas[1].picture, posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
+			
+			setTimeout('doneResizing()', 3020);
+		} else {
+			doneResizing(); //Si es tu turno actualizamos e inmediatamente
+		}
 	}
 }
 
-function mostrarCartaJugada(tiempoTotal, tiempoRefresco, jugador, imgSrc, numCarta, 
-							posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov) {
+function mostrarCartaJugada(tiempoTotal, tiempoRefresco, jugador, imgSrc, numCarta) {
 	console.log("mostrarCartaJugada()");
 
 	var carta = "carta"+(numCarta+1);
@@ -429,9 +452,6 @@ function mostrarCartaJugada(tiempoTotal, tiempoRefresco, jugador, imgSrc, numCar
 
 				if (posX >= (posXFinalGiro - movFrame)) {
 			     	clearInterval(idInterval);
-			     	moverCartaJugada(500, 20, imgSrc, 
-			     					posXInicial, posYInicial, widthInicial, heightInicial, 
-			     					posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
 			    } 
 			}
 			var idInterval = setInterval(renderFrameReverse, tiempoRefresco);
@@ -1392,7 +1412,7 @@ function evalClick(touchX, touchY) {
 }
 
 function evalUnClick(touchX, touchY) {
-	console.log("evalUnclick()");
+	//console.log("evalUnclick()");
 
 	//1.- Limpio las cartas de descartes mostradas
 	var posXDescartes = DeckOfCards.getDescartesData("posX");
@@ -1869,9 +1889,17 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 					organosJugadoresCli[jugDestino][organoColision] = "";
 					var cartasUsadas = [];
 					cartasUsadas.push(cartasUsuario[numCarta]);
+					//Creamos carta especial
+					var cartaEspecial = {
+						cardType: "cartaEspecial",
+						organType: organoColision,
+						picture: 'img/cardImagesLQ/organos/orga'+mayusPrimera(organoColision)+'.png',
+						jugPropietario: jugDestino
+					}
+					cartasUsadas.push(cartaEspecial);
 					movJugador = {
 						jugOrigen: usuario,
-						jugDestino: jugDestino,
+						jugDestino: "",
 						texto: "",
 						tipoMov: "ladronDeOrganos",
 						tipoOrgano: "robando '"+organoColision+"'",
@@ -1953,8 +1981,26 @@ function evalTransplante() {
 				if (cartasUsuario[i].organType == "transplante") {
 					numCarta = i;
 				}
-			}
+			} 
 			cartasUsadas.push(cartasUsuario[numCarta]);
+
+			//Creamos carta especial1
+			var cartaEspecial1 = {
+				cardType: "cartaEspecial",
+				organType: organo1,
+				picture: 'img/cardImagesLQ/organos/orga'+mayusPrimera(organo1)+'.png',
+				jugPropietario: jug1
+			}
+			cartasUsadas.push(cartaEspecial1);
+			//Creamos carta especial 2
+			var cartaEspecial2 = {
+				cardType: "cartaEspecial",
+				organType: organo2,
+				picture: 'img/cardImagesLQ/organos/orga'+mayusPrimera(organo2)+'.png',
+				jugPropietario: jug2
+			}
+			cartasUsadas.push(cartaEspecial2);
+
 			movJugador = {
 				jugOrigen: usuario,
 				jugDestino: "",
