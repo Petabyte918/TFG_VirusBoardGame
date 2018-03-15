@@ -1851,7 +1851,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				//No pueden intercambiarse organos del mismo jugador
 				if (transplante.organo2.numJug != jugDestino) {
 					//No pueden cambiarse organos inmunizados
-					if (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") {
+					if ( (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") && (organosJugadoresCli[jugDestino][organoColision] != "") ) {
 						transplante.organo1.organo = organoColision;
 						transplante.organo1.numJug = jugDestino;
 						console.log("El organo para el cambio 1 es: "+organoColision);
@@ -1864,7 +1864,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				//No pueden intercambiarse organos del mismo jugador
 				if (transplante.organo1.numJug != jugDestino) {
 					//No pueden cambiarse organos inmunizados
-					if (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") {
+					if ( (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") && (organosJugadoresCli[jugDestino][organoColision] != "") ) {
 						transplante.organo2.organo = organoColision;
 						transplante.organo2.numJug = jugDestino;
 						console.log("El organo para el cambio 2 es: "+organoColision);
