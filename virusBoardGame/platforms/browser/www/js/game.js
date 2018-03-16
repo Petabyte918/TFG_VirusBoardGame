@@ -355,7 +355,6 @@ function representarMov(movJugador) {
 				setTimeout(moverCartaJugada, 1000, 500, 20, movJugador.cartasUsadas[i].picture, posXInicial, posYInicial, widthInicial, heightInicial, posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
 			}
 			setTimeout('doneResizing()', 1510);
-			//setTimeout('actualizarCanvasAPO()', 2010);
 		} else {
 			doneResizing(); //Si es tu turno actualizamos e inmediatamente
 		}
@@ -389,8 +388,45 @@ function representarMov(movJugador) {
 			var heightFinalMov1 = posOrganosJugadores[posJug].heightOrgano;
 			setTimeout(moverCartaJugada, 2000, 1000, 20, movJugador.cartasUsadas[1].picture, posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
 			
-			setTimeout('doneResizing()', 3020);		
-			//setTimeout('actualizarCanvasAPO()', 3010);
+			setTimeout('doneResizing()', 3020);
+		} else {
+			doneResizing(); //Si es tu turno actualizamos e inmediatamente
+		}
+	}
+
+	if (movJugador.tipoMov == "transplante") {
+		if (movJugador.jugOrigen != usuario) {
+			mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[0].picture, movJugador.cartasUsadas[0].numCarta);			
+			var posJug = posPorJugador[movJugador.jugOrigen].posicion;
+			var posJugDest1 = posPorJugador[movJugador.cartasUsadas[1].jugPropietario].posicion;
+			var posJugDest2 = posPorJugador[movJugador.cartasUsadas[2].jugPropietario].posicion;
+			var tipoOrgano = "pos"+mayusPrimera(movJugador.cartasUsadas[1].organType);
+			var carta = "carta"+(movJugador.cartasUsadas[0].numCarta+1); //Carta de la mano para mostrar
+
+			var posXInicial = posPlayersHandCards[posJug][carta].x;
+			var posYInicial = posPlayersHandCards[posJug][carta].y;
+			var widthInicial = posPlayersHandCards.widthCarta;
+			var heightInicial = posPlayersHandCards.heightCarta;
+
+			//Movemos el transplante al organo1
+			var posXFinalMov1 = posOrganosJugadores[posJugDest1][tipoOrgano][0];
+			var posYFinalMov1 = posOrganosJugadores[posJugDest1][tipoOrgano][1];
+			var widthFinalMov1 = posOrganosJugadores[posJugDest1].widthOrgano;
+			var heightFinalMov1 = posOrganosJugadores[posJugDest1].heightOrgano;
+			setTimeout(moverCartaJugada, 1000, 1000, 20, movJugador.cartasUsadas[0].picture, posXInicial, posYInicial, widthInicial, heightInicial, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
+			//Movemos el organo 1 hasta los organos del usuario 2
+			var posXFinalMov2 = posOrganosJugadores[posJugDest2][tipoOrgano][0];
+			var posYFinalMov2 = posOrganosJugadores[posJugDest2][tipoOrgano][1];
+			var widthFinalMov2 = posOrganosJugadores[posJugDest2].widthOrgano;
+			var heightFinalMov2 = posOrganosJugadores[posJugDest2].heightOrgano;
+			setTimeout(moverCartaJugada, 2000, 1000, 20, movJugador.cartasUsadas[1].picture, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2);
+			
+			//Movemos el transplante al organo2
+			setTimeout(moverCartaJugada, 1000, 1000, 20, movJugador.cartasUsadas[0].picture, posXInicial, posYInicial, widthInicial, heightInicial, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2);
+			//Movemos el organo 2 hasta los organos del usuario 1
+			setTimeout(moverCartaJugada, 2000, 1000, 20, movJugador.cartasUsadas[1].picture, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
+			
+			setTimeout('doneResizing()', 3020);
 		} else {
 			doneResizing(); //Si es tu turno actualizamos e inmediatamente
 		}
@@ -1853,7 +1889,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				//No pueden intercambiarse organos del mismo jugador
 				if (transplante.organo2.numJug != jugDestino) {
 					//No pueden cambiarse organos inmunizados
-					if (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") {
+					if ( (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") && (organosJugadoresCli[jugDestino][organoColision] != "") ) {
 						transplante.organo1.organo = organoColision;
 						transplante.organo1.numJug = jugDestino;
 						console.log("El organo para el cambio 1 es: "+organoColision);
@@ -1866,7 +1902,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 				//No pueden intercambiarse organos del mismo jugador
 				if (transplante.organo1.numJug != jugDestino) {
 					//No pueden cambiarse organos inmunizados
-					if (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") {
+					if ( (organosJugadoresCli[jugDestino][organoColision] != "inmunizado") && (organosJugadoresCli[jugDestino][organoColision] != "") ) {
 						transplante.organo2.organo = organoColision;
 						transplante.organo2.numJug = jugDestino;
 						console.log("El organo para el cambio 2 es: "+organoColision);
