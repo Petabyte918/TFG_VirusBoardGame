@@ -553,8 +553,6 @@ function checkCards() {
 //En el canvas mid estan los turnos y los organos de los jugadores
 function actualizarCanvasMID() {
 	//console.log("actualizarCanvasMID()");
-	//Limpiamos el canvas antes de dibujar nada
-	cxMID.clearRect(0, 0, windowWidth, windowHeight);
 	var estadoOrgano, pos;
 	var posOrgano = {};
 	//Puedo recorrer los jugadores desde el array de jugadores o desde los indices de organosJugadoresCli
@@ -568,12 +566,10 @@ function actualizarCanvasMID() {
 			if (elem == "jugador") {
 				//No me hace falta porque con jugador es como voy recorriendo el array
 				//jug = organosJugadoresCli[jugador].jugador;
-				//console.log("Jugador: "+jug);
 				continue;
 			} else if (elem == "posicion") {
 				//No me hace falta porque en el objeto no hay orden y tengo que saber la pos antes
 				//pos = organosJugadoresCli[jugador].posicion;
-				//console.log("Posicion jugador: "+pos);
 				continue;
 			} else {
 				//elem = corazon, cerebro etc..				
@@ -707,18 +703,26 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	if (jugador.length > 8) {
 		jugador = "Jugador: " + infoJugadores[jugador].nombre;
 	}
+
 	if (pos == 1) {
 		jugador = "TÚ";
+		//Limpiamos zona particular del canvas
+		cxMID.clearRect(posX, posY, posOrganosJugadores[pos].posComodin[0] + posOrganosJugadores[pos].widthOrgano - posOrganosJugadores[pos].posCerebro, 25);
+		//Texto
 		cxMID.fillStyle = '#003321';
 		cxMID.fillText(jugador, posX, posY);
 	} else if (pos == 2) {
 		cxMID.save();
 		cxMID.translate(posX, posY);
 		cxMID.rotate(Math.PI/2);
+		//Limpiamos zona particular del canvas
+		cxMID.clearRect(0, 0, posOrganosJugadores[pos].posComodin[0] + posOrganosJugadores[pos].heightOrgano - posOrganosJugadores[pos].posCerebro, 25);
+		//Texto
 		cxMID.fillText(jugador, 0, 0);
-		cxMID.restore();
-		
+		cxMID.restore();		
 	} else {
+		//Limpiamos zona particular del canvas
+		cxMID.clearRect(0, 0, posOrganosJugadores[pos].posComodin[0] + posOrganosJugadores[pos].heightOrgano - posOrganosJugadores[pos].posCerebro, 25);
 		cxMID.fillText(jugador, posX, posY);
 	}
 }
@@ -736,16 +740,20 @@ function renderOrgano(posOrgano, estadoOrgano) {
 	//Marco negro en fondo blanco
 	cxMID.shadowBlur = 0;
 	if (estadoOrgano == ""){
-		cxMID.fillStyle = 'black';
-		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
-		cxMID.fillStyle = '#D3D3D3';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+
 		var img1 = new Image();
 		img1.src = src;
 		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
 		if (posJug == 2) {
 			img1.onload = function(){
-				//console.log("objetos[0] :"+objetos[0]);
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'black';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				cxMID.fillStyle = '#D3D3D3';
+				cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+				//Imagen
 				cxMID.save();
 				cxMID.globalAlpha = 0.4;
 				cxMID.translate(x, y);
@@ -756,27 +764,34 @@ function renderOrgano(posOrgano, estadoOrgano) {
 			}
 		} else {
 			img1.onload = function(){
-				//cxMID.save();
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'black';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				cxMID.fillStyle = '#D3D3D3';
+				cxMID.fillRect(x, y, widthOrgano, heightOrgano);
+				//Imagen
 				cxMID.globalAlpha = 0.4;
 				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
 				cxMID.globalAlpha = 1;
-				//cxMID.restore();
 			}
 		}
 	}
 
 	//Marco negro (en fondo blanco) y encima la imagen->como va la imagen encima no es necesario el fondo blanco
 	if(estadoOrgano == "normal"){
-		cxMID.fillStyle = 'black';
-		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
-		/**cxMID.fillStyle = 'white';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
 		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
 		if (posJug == 2) {
 			img1.onload = function(){
-				//console.log("objetos[0] :"+objetos[0]);
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'black';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Imagen
 				cxMID.save();
 				cxMID.translate(x, y);
 				cxMID.translate(widthOrgano, 0);
@@ -786,6 +801,12 @@ function renderOrgano(posOrgano, estadoOrgano) {
 			}
 		} else {
 			img1.onload = function(){
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'black';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Imagen
 				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
 			}
 		}
@@ -793,16 +814,17 @@ function renderOrgano(posOrgano, estadoOrgano) {
 
 	//Marco rojo en fondo blanco y encima la imagen
 	if (estadoOrgano == "enfermo"){
-		cxMID.fillStyle = 'red';
-		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
-		/**cxMID.fillStyle = 'white';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
 		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
 		if (posJug == 2) {
 			img1.onload = function(){
-				//console.log("objetos[0] :"+objetos[0]);
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'red';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Imagen
 				cxMID.save();
 				cxMID.translate(x, y);
 				cxMID.translate(widthOrgano, 0);
@@ -812,6 +834,12 @@ function renderOrgano(posOrgano, estadoOrgano) {
 			}
 		} else {
 			img1.onload = function(){
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'red';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Imagen
 				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
 			}
 		}
@@ -819,16 +847,17 @@ function renderOrgano(posOrgano, estadoOrgano) {
 
 	//Marco azul en fondo blanco y encima la imagen
 	if (estadoOrgano == "vacunado"){
-		cxMID.fillStyle = 'blue';
-		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
-		/**cxMID.fillStyle = 'white';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
 		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
 		if (posJug == 2) {
 			img1.onload = function(){
-				//console.log("objetos[0] :"+objetos[0]);
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'blue';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Imagen
 				cxMID.save();
 				cxMID.translate(x, y);
 				cxMID.translate(widthOrgano, 0);
@@ -838,6 +867,12 @@ function renderOrgano(posOrgano, estadoOrgano) {
 			}
 		} else {
 			img1.onload = function(){
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'blue';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Imagen
 				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
 			}
 		}
@@ -845,41 +880,46 @@ function renderOrgano(posOrgano, estadoOrgano) {
 
 	//Marco azul en fondo blanco, imagen y encima cuadrado azul semitransparente
 	if (estadoOrgano == "inmunizado"){
-		cxMID.fillStyle = 'blue';
-		cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
-		/**cxMID.fillStyle = 'white';
-		cxMID.fillRect(x, y, widthOrgano, heightOrgano);**/
 		var img1 = new Image();
 		img1.src = src;
 		//Si dibujamos en pos 2 tenemos que rotar el canvas para dibujar la imagen girada
 		if (posJug == 2) {
 			img1.onload = function(){
-				//console.log("objetos[0] :"+objetos[0]);
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'blue';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Imagen
 				cxMID.save();
 				cxMID.translate(x, y);
 				cxMID.translate(widthOrgano, 0);
 				cxMID.rotate(Math.PI/2);
 				cxMID.drawImage(img1, 0, 0, heightOrgano, widthOrgano); //Ojo que invertimos dimensiones
 				cxMID.restore();
-			}
-			var img2 = new Image();
-			img2.src = "img/cardImagesLQ/cadenas.png";
-			img2.onload = function(){
-				cxMID.save();
-				cxMID.translate(x, y);
-				cxMID.translate(widthOrgano, 0);
-				cxMID.rotate(Math.PI/2);
-				cxMID.drawImage(img2, -5, -5, heightOrgano+10, widthOrgano+10);
-				cxMID.restore();
+				var img2 = new Image();
+				img2.src = "img/cardImagesLQ/cadenas.png";
+				img2.onload = function(){
+					cxMID.save();
+					cxMID.translate(x, y);
+					cxMID.translate(widthOrgano, 0);
+					cxMID.rotate(Math.PI/2);
+					cxMID.drawImage(img2, -5, -5, heightOrgano+10, widthOrgano+10);
+					cxMID.restore();
+				}
 			}
 		} else {
 			img1.onload = function(){
-				//console.log("objetos[0] :"+objetos[0]);
+				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Marco
+				cxMID.fillStyle = 'blue';
+				cxMID.fillRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
+				//Imagen
 				cxMID.drawImage(img1, x, y, widthOrgano, heightOrgano);
 				var img2 = new Image();
 				img2.src = "img/cardImagesLQ/cadenas.png";
 				img2.onload = function(){
-					//console.log("objetos[0] :"+objetos[0]);
 					cxMID.drawImage(img2, x-5, y-5, widthOrgano+10, heightOrgano+10);
 				}
 			}
@@ -1203,7 +1243,9 @@ function moveObjects(){
 			if (objetoActual != null){
 				checkCollision();
 				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
-				reDimCanvas();
+				actualizarCanvasMID();//No queremos resetear todo
+				actualizarCanvasAPO();//No queremos resetear todo
+				actualizarCanvasFrontal();//No queremos resetear todo
 			}
 			//	2Eliminar o no objeto
 			//	3Agregarlo o no a algun sitio
