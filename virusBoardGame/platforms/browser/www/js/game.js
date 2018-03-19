@@ -707,7 +707,7 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 	if (pos == 1) {
 		jugador = "TÚ";
 		//Limpiamos zona particular del canvas
-		cxMID.clearRect(posX, posY, posOrganosJugadores[pos].posComodin[0] + posOrganosJugadores[pos].widthOrgano - posOrganosJugadores[pos].posCerebro, 25);
+		cxMID.clearRect(posX, posY - 25, posOrganosJugadores[pos].posComodin[0] + widthOrgano - posOrganosJugadores[pos].posCerebro[0], 25);
 		//Texto
 		cxMID.fillStyle = '#003321';
 		cxMID.fillText(jugador, posX, posY);
@@ -716,13 +716,13 @@ function renderUsername(pos, jugador, widthOrgano, heightOrgano) {
 		cxMID.translate(posX, posY);
 		cxMID.rotate(Math.PI/2);
 		//Limpiamos zona particular del canvas
-		cxMID.clearRect(0, 0, posOrganosJugadores[pos].posComodin[0] + posOrganosJugadores[pos].heightOrgano - posOrganosJugadores[pos].posCerebro, 25);
+		cxMID.clearRect(0, - 25, posOrganosJugadores[pos].posComodin[1] + heightOrgano - posOrganosJugadores[pos].posCerebro[1], 25);
 		//Texto
 		cxMID.fillText(jugador, 0, 0);
 		cxMID.restore();		
 	} else {
 		//Limpiamos zona particular del canvas
-		cxMID.clearRect(0, 0, posOrganosJugadores[pos].posComodin[0] + posOrganosJugadores[pos].heightOrgano - posOrganosJugadores[pos].posCerebro, 25);
+		cxMID.clearRect(posX, posY - 25, posOrganosJugadores[pos].posComodin[0] + widthOrgano - posOrganosJugadores[pos].posCerebro[0], 25);
 		cxMID.fillText(jugador, posX, posY);
 	}
 }
@@ -747,6 +747,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		if (posJug == 2) {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'black';
@@ -765,6 +766,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		} else {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'black';
@@ -787,6 +789,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		if (posJug == 2) {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'black';
@@ -802,6 +805,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		} else {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'black';
@@ -820,6 +824,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		if (posJug == 2) {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'red';
@@ -835,6 +840,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		} else {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'red';
@@ -853,6 +859,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		if (posJug == 2) {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'blue';
@@ -868,6 +875,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		} else {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'blue';
@@ -886,6 +894,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		if (posJug == 2) {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'blue';
@@ -911,6 +920,7 @@ function renderOrgano(posOrgano, estadoOrgano) {
 		} else {
 			img1.onload = function(){
 				//Limpiamos zona concreta de canvas antes de dibujar nada
+				cxMID.shadowBlur = 0;
 				cxMID.clearRect(x-5, y-5, widthOrgano+10, heightOrgano+10);
 				//Marco
 				cxMID.fillStyle = 'blue';

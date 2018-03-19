@@ -381,7 +381,7 @@ Engine = new function() {
 		posComodin = [20, windowHeight / 2 + heightOrgano * 1.5 + 15 * 2];
 		posOrganosJugadores[2] = {
 			widthOrgano: widthOrgano,
-			heightOrgano:heightOrgano,
+			heightOrgano: heightOrgano,
 			posCerebro: posCerebro,
 			posCorazon: posCorazon,
 			posHueso: posHueso,
