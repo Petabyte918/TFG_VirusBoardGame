@@ -791,3 +791,30 @@ DeckOfCards = new function() {
 		this.renderDescarte();
 	}
 }
+
+CountDown = new function() {
+	this.radius = 30;
+	this.x = 0;
+	this.y = 0;
+
+	this.reDimCountDown = function() {
+		this.radius = 30;
+		this.x = windowWidth/3;
+		this.y = windowHeight/2;
+	}
+	this.getPosX = function() {
+		return this.x;
+	}
+	this.getPosY = function() {
+		return this.y;
+	}
+	this.getRadius = function() {
+		return this.radius;
+	}
+	this.getPosYtextoTurno = function() {
+		return this.y - 50;
+	}
+	this.getHeightTextoTurno = function() {
+		return 25;
+	}
+}

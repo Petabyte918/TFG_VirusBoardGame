@@ -97,6 +97,13 @@ infoJugadores[jugadores[i]] = {
 	turnoPerdida: 0
 }
 
+playersSrv[socket.id] = {
+	nombre: socket.id.slice(0,8),
+	fecha_primeraConexion: date,
+	fecha_ultimaPartida: date,
+	socketid: socket.id
+};
+
 //TIPOS DE MOVIMIENTO
 -----abandonarPartida-----
 estadoPartidas[idPartida].movJugador = {

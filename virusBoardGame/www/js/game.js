@@ -46,10 +46,13 @@ function degToRad(degree) {
 function renderCountDown(time, oldDate, first){
 	//console.log("renderCountDown()");
 
-	var radius = 30;
+	var radius = CountDown.getRadius();;
 	//Algo hardCoding. El 84 es la altura de pauseButton..claro, que tp se va a cambiar y estas hasta los huevos
-	var xCountDown = posOrganosJugadores[1].posCerebro[0] - 74;
-	var yCountDown = windowHeight - 84 - 30 - radius*3;
+	var xCountDown = CountDown.getPosX();
+	var yCountDown = CountDown.getPosY();
+
+	var posYtextoTurno = CountDown.getPosYtextoTurno();
+	var heightTextoTurno = CountDown.getHeightTextoTurno();
 
 	//Cada vez que cambiemos el tiempo del cronometro hay que ajustar el valor
 	//multiplicando el tiempo por (60/valorcronometro)
@@ -69,7 +72,7 @@ function renderCountDown(time, oldDate, first){
 	}
 
 	//Limpiamos zona particular del canvas + (pxLinea + pxDifuminado)*2
-	cxMID.clearRect(xCountDown-10-radius, yCountDown-10-radius +25, radius*2+20, radius*2+20);
+	cxMID.clearRect(xCountDown-15, yCountDown - 15, radius*2+30, radius*2+30);
 
 	//Fondo
 	cxMID.beginPath();
@@ -83,7 +86,7 @@ function renderCountDown(time, oldDate, first){
 	gradient.addColorStop(0, '#09303a');
 	gradient.addColorStop(1, 'black');
 	cxMID.fillStyle = gradient;
-	cxMID.arc(xCountDown,yCountDown + 25,radius, 0, degToRad(360),false);
+	cxMID.arc(xCountDown,yCountDown,radius, 0, degToRad(360),false);
 	cxMID.fill();
 	cxMID.stroke();
 
@@ -95,7 +98,7 @@ function renderCountDown(time, oldDate, first){
 	cxMID.shadowBlur = 2;
 	cxMID.shadowColor = '#28d1fa';
 
-	cxMID.arc(xCountDown,yCountDown + 25,radius, degToRad(270), degToRad(((time*6)*ajuste)-90),false);
+	cxMID.arc(xCountDown,yCountDown,radius, degToRad(270), degToRad(((time*6)*ajuste)-90),false);
 	cxMID.stroke();
 
 	//CountDown
@@ -103,43 +106,24 @@ function renderCountDown(time, oldDate, first){
 	cxMID.font = "20px Arial Bold";
 	cxMID.fillStyle = '#28d1fa';
 	if (seconds < 10){
-		cxMID.fillText(seconds, xCountDown - 5, yCountDown + 8 + 25);
+		cxMID.fillText(seconds, xCountDown - 5, yCountDown + 8);
 	} else {
-		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8 + 25);
+		cxMID.fillText(seconds, xCountDown - 10, yCountDown + 8);
 	}
 
 	//Evitamos redibujar texto en cada ciclo del crono (Eliminamos difuminado, color raro...etc)
 	if ((first == "first") || (reDimCanvasON == true)) {
 		reDimCanvasON = false;
 		
+		//Limpiamos zona particular del canvas
+		cxMID.clearRect(xCountDown - radius - 30, posYtextoTurno, radius * 2 + 60, 15);
+
 		//Numero de turno
 		cxMID.font = "900 25px Arial";
 		cxMID.fillStyle = 'black';
 		cxMID.shadowBlur = 1;
 		cxMID.shadowColor = 'white';
-		cxMID.fillText("Turno "+numTurno, xCountDown - 1.5*radius, yCountDown - 25);
-
-		//Indicamos turno con texto de nombre usuario
-		//Texto independiente al que se maneja como nombre de usuario en el servidor
-		//en este caso es el mismo, peor podria ser otro
-		/**var turnoJug = turno;
-		var pos  = posPorJugador[turno].posicion;
-		cxMID.shadowColor = "YellowGreen";
-		cxMID.shadowBlur = 0;
-		cxMID.font = "900 20px Arial";
-		cxMID.fillStyle = 'FireBrick';
-
-		if (turnoJug.length > 8 ){
-			turnoJug = "Turno de "+turnoJug.slice(0,8);
-		}
-		if (pos == 1) {
-			turnoJug = "TÚ turno";
-			cxMID.fillStyle = '#003321';
-			cxMID.shadowColor = 'red';
-			cxMID.fillText(turnoJug, xCountDown - 2*radius, yCountDown - 20);
-		} else {
-			cxMID.fillText(turnoJug, xCountDown - 2*radius - 25*2, yCountDown - 20);
-		}**/
+		cxMID.fillText("Turno "+numTurno, xCountDown - 1.5*radius, posYtextoTurno);
 
 		//Vemos si avisamos que nos hemos saltado el turno alguna vez
 		if (infoJugadores[usuario].turnosPerdidos > 0) {
@@ -176,67 +160,6 @@ function renderCountDown(time, oldDate, first){
 		}
 	}, 250);
 }
-
-//En desuso
-/**function indicarTurno(turno) {
-	console.log("indicarTurno(turno)");
-	var numJugadores = jugadores.length;
-	var index = jugadores.indexOf(turno);
-	var posX, posY, widthJug, heightJug = 0;
-
-	//Tengo el jugador veo que pos ocupa
-	var posJug = posPorJugador[turno].posicion;
-
-	//Limpiamos el canvas
-	cxMID.clearRect(0, 0, windowWidth, windowHeight);
-
-	//Dejamos 20px de margen por cada lado
-	posX = posOrganosJugadores[posJug].posCerebro[0]-5-20;
-	posY = posOrganosJugadores[posJug].posCerebro[1]-5-20;
-	//5px del marco del turno y 20px hasta borde de la pantalla
-	widthJug = (posOrganosJugadores[posJug].posComodin[0] - posOrganosJugadores[posJug].posCerebro[0]+posOrganosJugadores[posJug].widthOrgano)+5*2+20*2;
-	heightJug =  (posOrganosJugadores[posJug].posComodin[1] - posOrganosJugadores[posJug].posCerebro[1]+posOrganosJugadores[posJug].heightOrgano)+5*2+20*2;
-		
-	switch (posJug){
-	//Posicion 1
-	case 1:
-		posY = posY-5;
-		break;
-	//Posicion 2
-	case 2:
-		posX = posX+5;
-		break;
-	//Posicion 3
-	case 3:
-		posY = posY+5;
-		break;
-	//Posicion 4
-	case 4:
-		posY = posY+5;
-		break;
-	//Posicion 5
-	case 5:
-		posY = posY+5;
-		break;
-	//Posicion 6
-	case 6:
-		posX = posX-5;
-		break;
-	default:
-		console.log("Error grave representando los turnos de los jugadores");
-	}
-
-	//Creamos un marco para indica el turno de cada jugador
-	var gradient = cxMID.createRadialGradient(90,63,30,90,63,90);
-	gradient.addColorStop(0, '#FFD700');
-	gradient.addColorStop(1, '#DAA520');
-
-	cxMID.fillStyle = gradient;
-	cxMID.fillRect(posX, posY, widthJug, heightJug);
-
-	//Creamos el marco de 20 px de grosor
-	cxMID.clearRect(posX + 5, posY + 5, widthJug - 10, heightJug - 10);
-}**/
 
 function asignarJugadoresAPosiciones(){
 	var fin = false;
@@ -694,10 +617,7 @@ function actualizarCanvasMID() {
 					console.log("Fallo en actualizarCanvasMID switch elem-opcion extraña ha aparecido");
 					break;
 				}
-
-				//estadoOrgano = "", "normal" etc...
 				estadoOrgano = organosJugadoresCli[jugador][elem];
-
 				renderOrgano(posOrgano, estadoOrgano);
 			}
 		}
@@ -2492,6 +2412,8 @@ function doneResizing() {
 	console.log("doneResizing()");
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight;
+
+	CountDown.reDimCountDown();
 
 	first = true;
 	

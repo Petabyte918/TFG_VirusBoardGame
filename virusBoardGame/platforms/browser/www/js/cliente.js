@@ -825,10 +825,6 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	numTurno = datos_partida.numTurno;
 	deckOfCards = datos_partida.deckOfCardsPartida;
 
-	//Actualizo antes de procesar mov, pues hasta despues animacion no se resetea todo
-	renderCountDown(30, new Date(),"first"); //->setTimeOut
-
-
 	if (!(isEmpty(datos_partida.organosJugadoresCli))) {
 		for (var jugador in datos_partida.organosJugadoresCli){
 			organosJugadoresCli[jugador].cerebro = datos_partida.organosJugadoresCli[jugador].cerebro;
@@ -850,6 +846,10 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 	checkCards();
 
 	representarMov(movJugador);
+
+	//Actualizo despues de procesar mov, pues hasta despues animacion no se resetea todo
+	renderCountDown(30, new Date(),"first"); //->setTimeOut
+
 	//Una vez representado el movimiento del jugador, borramos el mov
 	movJugador = {
 		jugOrigen: "",
