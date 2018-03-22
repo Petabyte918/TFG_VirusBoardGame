@@ -1039,22 +1039,24 @@ function removeOrgano2Transplante(){
 //2. Detectar la colision en el canvas de las cartas pero dibujar unicamente la que se mueve en otro sola -> HECHO
 //3. Tener las imagenes siempre cargadas. ->Las vamos dejando cargadas segun aparecen de momento -> HECHO Y SOLUCIONADO
 //4. Posibilidad de dibujar siempre pero borrar solo cada cierta diferencia de pixeles -> Lag, DESCARTADA
+//5. ClearRect siempre dentro de onload pues si no entre el borrado y el dibujo de la imagen se crea un parpadeo -> HECHO
 
 function actualizarCanvasFrontal() {
-	cx.clearRect(0, 0, windowWidth, windowHeight);
 	if (objetoActual != null) {
 		if (imgOnload[objetoActual.src] == null) {
 
 			imgOnload[objetoActual.src] = new Image();
 			imgOnload[objetoActual.src].src = objetoActual.src;
 			imgOnload[objetoActual.src].onload = function(){
-				//console.log("objetos[0] :"+objetos[0]);
+				cx.clearRect(0, 0, windowWidth, windowHeight);
 				cx.drawImage(imgOnload[objetoActual.src], objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
 			}
 		} else {
+			cx.clearRect(0, 0, windowWidth, windowHeight);
 			cx.drawImage(imgOnload[objetoActual.src], objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
 		}
 	} else {
+		cx.clearRect(0, 0, windowWidth, windowHeight);
 		//console.log("Objeto actual es NULL");
 		//objetoActual[objetoActual.src] == null; //Dejamos imagenes cargadas
 	}
@@ -1210,8 +1212,6 @@ function moveObjects(){
 				  && (objetos[i].height + objetos[i].y > touch.pageY)) {
 
 					objetoActual = objetos[i];
-					//Carta moviendose dejamos de dibujarla en la mano
-					actualizarCanvasAPO();
 					//Chequeamos cartas para divs de ayuda
 					var numCarta = objetoActual.numCarta;
 					abrirAyudaCartas(numCarta);
