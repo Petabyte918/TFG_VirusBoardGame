@@ -200,11 +200,27 @@ function asignarPosicionesAJugadores(){
 }
 
 function nuevaCarta(numCarta){
-	var newCard = takeCard();
 	//console.log("Nueva carta: "+newCard.toString());
-	cartasUsuario[numCarta] = newCard;
-	cartasUsuario[numCarta].numCarta = numCarta;
-	objetos[numCarta].src = newCard.picture;
+	var newCard = takeCard();
+
+	var imgSrc = 'img/cardImagesLQ/reverseCardLQ.png'
+	var posXInitMov = DeckOfCards.getDeckData("posX");
+	var posYInitMov = DeckOfCards.getDeckData("posY");
+	var widthInitMov = DeckOfCards.getDeckData("width");
+	var heightInitMov = DeckOfCards.getDeckData("height");
+
+	var posXFinalMov = posCartasUsuario["carta"+(numCarta+1)].x;
+	var posYFinalMov = posCartasUsuario["carta"+(numCarta+1)].y;
+	var widthFinalMov = posCartasUsuario.width;
+	var heightFinalMov = posCartasUsuario.height;
+
+	moverCartaJugada(500, 20, imgSrc, posXInitMov, posYInitMov, widthInitMov, heightInitMov, posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
+
+	setTimeout(function() {
+		cartasUsuario[numCarta] = newCard;
+		cartasUsuario[numCarta].numCarta = numCarta;
+		objetos[numCarta].src = newCard.picture;
+	}, 1010);
 }
 
 function representarMov(movJugador) {
@@ -646,11 +662,11 @@ function renderPlayerBackCards(pos) {
 				cxAPO.translate(posX, posY);
 				cxAPO.translate(width + 10, 0);
 				cxAPO.rotate(Math.PI/2);
+				cxAPO.clearRect(0, 0, width, height);
 				cxAPO.drawImage(img, 0, 0, width, height); //Ojo que invertimos dimensiones
 				cxAPO.restore();
 			} else {
-				//console.log("posX: "+posX);
-				//console.log("posY: "+posY);
+				cxAPO.clearRect(posX, posY, width, height);
 				cxAPO.drawImage(img, posX, posY, width, height);
 			}
 		}
@@ -1046,16 +1062,13 @@ function actualizarCanvasFrontal() {
 
 function actualizarCanvasAPO(){
 	//console.log("actualizarCanvasAPO()");
-	cxAPO.clearRect(0, 0, windowWidth, windowHeight);
 	var img1 = new Image();
 	if ((objetos[0].src != "") && (descartes[0] == false)){
 		//Tratamos de evitar parpadeos moviendo cartas
-		if (objetos[0] == objetoActual) {
-			//console.log("Objeto 1 es el objeto actual");
-		} else {
+		if (objetos[0] != objetoActual) {
 			img1.src = objetos[0].src;
 			img1.onload = function(){
-				//console.log("objetos[0].y :"+objetos[0].y);
+				cxAPO.clearRect(objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
 				cxAPO.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
 			}
 		}
@@ -1063,12 +1076,10 @@ function actualizarCanvasAPO(){
 	var img2 = new Image();
 	if ((objetos[1].src != "") && (descartes[1] == false)){
 		//Tratamos de evitar parpadeos moviendo cartas
-		if (objetos[1] == objetoActual) {
-			//console.log("Objeto 2 es el objeto actual");
-		} else {
+		if (objetos[1] != objetoActual) {
 			img2.src = objetos[1].src;
 			img2.onload = function(){
-				//console.log("objetos[1] :"+objetos[1]);
+				cxAPO.clearRect(objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
 				cxAPO.drawImage(img2, objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
 			}
 		}
@@ -1076,12 +1087,10 @@ function actualizarCanvasAPO(){
 	var img3 = new Image();
 	if ((objetos[2].src != "") && (descartes[2] == false)){
 		//Tratamos de evitar parpadeos moviendo cartas
-		if (objetos[2] == objetoActual) {
-			//console.log("Objeto 3 es el objeto actual");
-		} else {
+		if (objetos[2] != objetoActual) {
 			img3.src = objetos[2].src;
 			img3.onload = function(){
-				//console.log("objetos[2] :"+objetos[2]);
+				cxAPO.clearRect(objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
 				cxAPO.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
 			}
 		}
@@ -1201,6 +1210,8 @@ function moveObjects(){
 				  && (objetos[i].height + objetos[i].y > touch.pageY)) {
 
 					objetoActual = objetos[i];
+					//Carta moviendose dejamos de dibujarla en la mano
+					actualizarCanvasAPO();
 					//Chequeamos cartas para divs de ayuda
 					var numCarta = objetoActual.numCarta;
 					abrirAyudaCartas(numCarta);
