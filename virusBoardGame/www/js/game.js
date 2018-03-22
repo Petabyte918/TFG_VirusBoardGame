@@ -116,7 +116,7 @@ function renderCountDown(time, oldDate, first){
 		reDimCanvasON = false;
 		
 		//Limpiamos zona particular del canvas
-		cxMID.clearRect(xCountDown - radius - 30, posYtextoTurno, radius * 2 + 60, 15);
+		cxMID.clearRect(xCountDown - radius - 13 - 30, posYtextoTurno - 20, radius * 2 + 26 + 60, 20);
 
 		//Numero de turno
 		cxMID.font = "900 25px Arial";
