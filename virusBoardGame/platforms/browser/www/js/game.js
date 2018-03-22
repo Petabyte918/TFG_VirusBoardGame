@@ -72,7 +72,7 @@ function renderCountDown(time, oldDate, first){
 	}
 
 	//Limpiamos zona particular del canvas + (pxLinea + pxDifuminado)*2
-	cxMID.clearRect(xCountDown-15, yCountDown - 15, radius*2+30, radius*2+30);
+	cxMID.clearRect(xCountDown - radius - 13, yCountDown - radius - 13, radius*2 + 26, radius*2 + 26);
 
 	//Fondo
 	cxMID.beginPath();
