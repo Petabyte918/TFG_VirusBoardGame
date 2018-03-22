@@ -220,7 +220,8 @@ function nuevaCarta(numCarta){
 		cartasUsuario[numCarta] = newCard;
 		cartasUsuario[numCarta].numCarta = numCarta;
 		objetos[numCarta].src = newCard.picture;
-	}, 1010);
+		actualizarCanvasAPO();
+	}, 610);
 }
 
 function representarMov(movJugador) {
@@ -1039,7 +1040,7 @@ function removeOrgano2Transplante(){
 //2. Detectar la colision en el canvas de las cartas pero dibujar unicamente la que se mueve en otro sola -> HECHO
 //3. Tener las imagenes siempre cargadas. ->Las vamos dejando cargadas segun aparecen de momento -> HECHO Y SOLUCIONADO
 //4. Posibilidad de dibujar siempre pero borrar solo cada cierta diferencia de pixeles -> Lag, DESCARTADA
-//5. ClearRect solo el espacio ocupado antes y siempre dentro de onload, y si se pone transparencia se crea efecto cola!!! ->
+//5. ClearRect siempre dentro de onload pues si no entre el borrado y el dibujo de la imagen se crea un parpadeo -> HECHO
 
 function actualizarCanvasFrontal() {
 	if (objetoActual != null) {
@@ -1052,12 +1053,8 @@ function actualizarCanvasFrontal() {
 				cx.drawImage(imgOnload[objetoActual.src], objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
 			}
 		} else {
-			imgOnload[objetoActual.src] = new Image();
-			imgOnload[objetoActual.src].src = objetoActual.src;
-			imgOnload[objetoActual.src].onload = function(){
-				cx.clearRect(0, 0, windowWidth, windowHeight);
-				cx.drawImage(imgOnload[objetoActual.src], objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
-			}
+			cx.clearRect(0, 0, windowWidth, windowHeight);
+			cx.drawImage(imgOnload[objetoActual.src], objetoActual.x, objetoActual.y, objetoActual.width, objetoActual.height);
 		}
 	} else {
 		cx.clearRect(0, 0, windowWidth, windowHeight);

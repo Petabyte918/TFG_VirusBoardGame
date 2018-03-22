@@ -220,7 +220,8 @@ function nuevaCarta(numCarta){
 		cartasUsuario[numCarta] = newCard;
 		cartasUsuario[numCarta].numCarta = numCarta;
 		objetos[numCarta].src = newCard.picture;
-	}, 1010);
+		actualizarCanvasAPO();
+	}, 610);
 }
 
 function representarMov(movJugador) {
