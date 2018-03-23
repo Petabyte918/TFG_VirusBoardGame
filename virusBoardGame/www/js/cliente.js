@@ -80,6 +80,9 @@ function configInicial() {
 	if (optionRanquing == undefined) {
 		localStorage.setItem('optionRanquing', 'wins');
 	}
+
+	//Set loading - centrado y tamaño
+	reDimLoading();
 }
 //Comprobamos si hemos abandonado una partida en curso
 //checkMatchRunning();
@@ -231,7 +234,11 @@ function button_settings () {
 
 /** Interaccion con el servidor de los botones iniciales **/
 function form_login() {
-	//console.log("form_login()")
+	//console.log("form_login()");
+
+	//Motramos la animacion de loading
+	$("#container_loading").css("visibility","visible");
+	
 	var loginName = document.form_login_user.loginName.value;
 	var loginPass = document.form_login_user.loginPass.value;
 	//Guardamos usuario y contraseña
@@ -261,6 +268,9 @@ socket.on('login_user-OK', function(message) {
 
 	localStorage.setItem("logged", "true");
 	logged = "true";
+
+	//Ocultamos el loading
+	$("#container_loading").css("visibility","hidden");
 });
 
 socket.on('login_user-KO', function(message) {
@@ -274,10 +284,17 @@ socket.on('login_user-KO', function(message) {
 	document.getElementById("userNameContainer").innerHTML = ""
 	document.form_login_user.loginName.value = "";
 	document.form_login_user.loginPass.value = "";
+
+	//Ocultamos el loading
+	$("#container_loading").css("visibility","hidden");
 });
 
 function form_register() {
 	//console.log("form_register()");
+
+	//Mostramos la animacion de loading
+	$("#container_loading").css("visibility","visible");
+
 	var registerName = document.form_register_user.registerName.value;
 	var registerPass1 = document.form_register_user.registerPass1.value;
 	var registerPass2 = document.form_register_user.registerPass2.value;
@@ -309,6 +326,9 @@ socket.on('register_user-OK', function(message) {
 	$("#registerForm").css("display", "none");
 	$("#loginForm").css("display", "block");
 
+	//Ocultamos el loading
+	$("#container_loading").css("visibility","hidden");
+
 	//Autologin tras registrarnos correctamente
 	form_login();
 });
@@ -319,6 +339,9 @@ socket.on('register_user-KO', function(message) {
 	//Quitar ya que si por mala conexion llegan peticiones retrasadas, el campo queda vacio.
 	//Por register_user-OK ya se gestionado todo
 	//document.form_register_user.registerName.value = "";
+
+	//Ocultamos el loading
+	$("#container_loading").css("visibility","hidden");
 });
 
 function mostrarInstrucciones(pagina) {

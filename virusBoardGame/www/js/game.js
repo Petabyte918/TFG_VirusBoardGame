@@ -1522,7 +1522,7 @@ function checkCollision() {
 	}
 
 	//Ojo con poner 3 y 5 antes de 2 y 6 respectivamente porque ayudan a excluir a estas ultimas pues los organos se colocan
-	//con respecto a a windowsHeight, anchura de organos y margenes
+	//con respecto a a windowHeight, anchura de organos y margenes
 	var colision = -1;
 	//Si la colision es en la zona donde dejamos las cartas, la contamos como -1
 	//posCartasUsuario = [widthCarta, heightCarta, posCarta1, posCarta2, posCarta3];
@@ -2079,6 +2079,20 @@ function fin_transplante() {
 	transplante.organo2.organo = "";
 	transplante.organo2.numJug = -1;
 	renderOrganosTransplante();
+}
+
+function reDimLoading() {
+
+	var elemLoading = document.getElementById('loading');
+	var posLoading = elemLoading.getBoundingClientRect();
+
+	var width = posLoading.width;
+	var height = (width).toString() + "px";
+
+	var top = (windowHeight/2 - (width/2)).toString() + "px";
+
+	$("#loading").css("height", height);
+	$("#loading").css("top", top);
 }
 
 function reDimPartidaRapida() {
