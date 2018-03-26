@@ -238,7 +238,7 @@ function form_login() {
 
 	//Motramos la animacion de loading
 	$("#container_loading").css("visibility","visible");
-	
+
 	var loginName = document.form_login_user.loginName.value;
 	var loginPass = document.form_login_user.loginPass.value;
 	//Guardamos usuario y contraseña
@@ -694,6 +694,9 @@ socket.on('prepararPartida', function(datos_iniciales){
 	moveObjects();
 
 	actualizarCanvasAPO();
+
+	reDimReloadButton(); //Solo para hacerlos visibles
+	reDimExitButton(); //Solo para hacerlos visibles
 })
 
 function esperarMovimiento(){

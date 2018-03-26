@@ -2468,7 +2468,7 @@ function reDimExitButton() {
 	$("#exitButton").css("visibility","visible");
 }
 
-function reDimCanvas() {
+function reDimCanvas(option) {
 	//No tiene porque ir con doneResizing()
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight;
@@ -2477,7 +2477,10 @@ function reDimCanvas() {
 	reDimCanvasON = true; 
 
 	//Parte de preparar partida
-	Engine.initCanvas();
+	if (option == "resizing") {
+		Engine.initCanvas();
+	}
+
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
 	Engine.initPosPlayersHandCards();
@@ -2485,7 +2488,9 @@ function reDimCanvas() {
 	Engine.initFinDescartesButton();
 	Engine.initPauseButton();
 
-	actualizarCanvasBG();
+	if (option == "resizing") {
+		actualizarCanvasBG();
+	}
 
 	actObjects();
 	actualizarCanvasAPO();
@@ -2495,21 +2500,19 @@ function reDimCanvas() {
 	reDimCanvasON = true;
 }
 
-function doneResizing() {
+function doneResizing(option) {
 	console.log("doneResizing()");
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight;
-
-	CountDown.reDimCountDown();
-
-	first = true;
-	
 	reDimPartidaRapida();
 	reDimRanquingList();
 	reDimContainer_instrucciones();
 
 	if (idPartida != "") {
-		reDimCanvas();
+		CountDown.reDimCountDown();
+		first = true;
+
+		reDimCanvas(option);
 		reDimListaEventos();
 		reDimListaTurnos();
 		reDimReloadButton(); //Solo para hacerlos visibles
@@ -2529,7 +2532,7 @@ $(document).ready(function(){
 		//Para no llamar a doneResizing() un millon de veces
 		$(window).resize(function() {
 		    clearTimeout(idDoneResizing);
-		    idDoneResizing = setTimeout(doneResizing, 50);	 
+		    idDoneResizing = setTimeout(doneResizing, 50, "resizing");	 
 		});
 	}
 })
