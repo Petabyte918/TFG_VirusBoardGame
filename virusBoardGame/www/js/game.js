@@ -1074,6 +1074,8 @@ function actualizarCanvasAPO(){
 				cxAPO.clearRect(objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
 				cxAPO.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
 			}
+		} else { //Si es el objeto actual no lo dibujamos en la mano
+			cxAPO.clearRect(objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
 		}
 	}
 	var img2 = new Image();
@@ -1085,6 +1087,8 @@ function actualizarCanvasAPO(){
 				cxAPO.clearRect(objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
 				cxAPO.drawImage(img2, objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
 			}
+		} else { //Si es el objeto actual no lo dibujamos en la mano
+			cxAPO.clearRect(objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
 		}
 	}
 	var img3 = new Image();
@@ -1096,6 +1100,8 @@ function actualizarCanvasAPO(){
 				cxAPO.clearRect(objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
 				cxAPO.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
 			}
+		} else { //Si es el objeto actual no lo dibujamos en la mano
+			cxAPO.clearRect(objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
 		}
 	}
 
@@ -1217,9 +1223,12 @@ function moveObjects(){
 					var numCarta = objetoActual.numCarta;
 					abrirAyudaCartas(numCarta);
 
-					//console.log("Objeto "+i+" TOCADO");
 					inicioY = touch.pageY - objetos[i].y;
 					inicioX = touch.pageX - objetos[i].x;
+
+					actualizarCanvasAPO(); //Si hay objeto actual borro carta de la mano
+					actualizarCanvasFrontal(); //Pero la dibujo en el canvas frontal (si solo click y no muevo => carta no desaparece)
+
 					//Optimizar renderizado
 					posInitObjX = objetoActual.x;
 					posInitObjY = objetoActual.y;
@@ -1265,9 +1274,9 @@ function moveObjects(){
 			if (objetoActual != null){
 				checkCollision();
 				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
-				actualizarCanvasMID();//No queremos resetear todo
-				actualizarCanvasAPO();//No queremos resetear todo
-				actualizarCanvasFrontal();//No queremos resetear todo
+				actualizarCanvasMID(); //Redibujamos organos
+				actualizarCanvasAPO(); //Dibujamos cartas de la mano
+				actualizarCanvasFrontal(); //Refrescamos en canvas frontal
 			}
 			//	2Eliminar o no objeto
 			//	3Agregarlo o no a algun sitio
