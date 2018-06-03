@@ -2314,6 +2314,17 @@ function reDimAyudaCartaEspecial(cartaEspecial) {
 
 function reDimListaTurnos() {
 	//console.log("reDimListaTurnos()");
+	//Si el check en ajustes esta desmarcado omitimos
+	var mostrarListaTurnos = localStorage.getItem('mostrarListaTurnos');
+	console.log("mostrarListaTurnos: "+mostrarListaTurnos);
+	if (mostrarListaTurnos == "false") {
+		$("#listaTurnos").css("visibility","hidden");
+		return;
+	} else if (mostrarListaTurnos == "true") {
+		//Proseguimos
+	} else {
+		console.log("Reportar error reDimListaTurnos()");
+	}
 
 	//Aseguramos solo mostrar en partida
 	if (isEmpty(infoJugadores)) {
@@ -2367,6 +2378,15 @@ function reDimListaTurnos() {
 
 function reDimListaEventos() {
 	//console.log("reDimListaEventos()");
+	var mostrarListaEventos = localStorage.getItem('mostrarListaEventos');
+	if (mostrarListaEventos == "false") {
+		$("#listaEventos").css("visibility","hidden");
+		return;
+	} else if (mostrarListaEventos == "true") {
+		//Proseguimos
+	} else {
+		console.log("Reportar error reDimListaEventos()");
+	}
 	
 	//Aseguramos solo mostrar en partida
 	if (isEmpty(infoJugadores)) {
