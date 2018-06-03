@@ -8,10 +8,10 @@ var ayudaDebil;
 var logged = "false";
 var gamePaused = "false";
 /** Establecimiento de la conexion con el servidor **/
-var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
+//var socket = io.connect('https://nodejs-server-virusgame.herokuapp.com/');
 
 //Local
-//var socket = io.connect('http://localhost:8090');
+var socket = io.connect('http://localhost:8090');
 socket.on('Connection OK', function (data) {
    	//console.log("Cliente conectado. Player_id: "+data.player_id);
    	usuario = data.player_id;
@@ -679,8 +679,8 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	Engine.initPosPlayersHandCards();
 	Engine.initPosCartasUsuario();
+	Engine.initPosPlayersHandCards();
 	Engine.initFinDescartesButton();
 	Engine.initPauseButton();
 
@@ -908,6 +908,7 @@ socket.on('pauseGame', function(datos_partida) {
 	gamePaused = "true";
 	//Cambiamos color
 	$("#pauseButton").css("background-color","red");
+	$("#pauseButton").css("background-image","url(css/img/pauseButton.png)");
 	clearTimeout(countDownSTO); //->setTimeOut
 	clearTimeout(esperarMovSTO); //->setTimeOut
 });
@@ -917,6 +918,7 @@ socket.on('contineGame', function(datos_partida) {
 	gamePaused = "false";
 	//Cambiamos color
 	$("#pauseButton").css("background-color","green");
+	$("#pauseButton").css("background-image","url(css/img/continueButton.png)");
 	esperarMovimiento(); //->setTimeOut
 	renderCountDown(30, new Date()); //->setTimeOut
 });

@@ -506,11 +506,11 @@ function escribirEvento(movJugador) {
 	var tipoOrgano = movJugador.tipoOrgano;
 
 	if (movJugador.jugOrigen == usuario) {
-		jugOrigen = " TU MISMO";
+		jugOrigen = " "+infoJugadores[jugadores[i]].nombre;
 	}
 
 	if (movJugador.jugDestino == usuario) {
-		jugOrigen = " TU MISMO";
+		jugOrigen = " "+infoJugadores[jugadores[i]].nombre;
 	}
 
 	var evento = "";
@@ -1211,6 +1211,8 @@ function moveObjects(){
 		console.log('Esto es un navegador de ordenador');
 		cv.onmousedown = function(event) {
 			touch = event;
+			//Antes de abrir nuevas ayudas cerramos las ya abiertas
+			cerrarAyudaCartas();
 			//console.log("Onmousedown");
 			for (var i = 0; i < objetos.length; i++) {
 				if (objetos[i].x < touch.pageX
@@ -2317,15 +2319,19 @@ function reDimListaTurnos() {
 	if (isEmpty(infoJugadores)) {
 		return;
 	}
+	
+	//PauseButton
+	var elemPauseButton = document.getElementById("pauseButton");
+	var posPauseButton = elemPauseButton.getBoundingClientRect();
+	var leftPauseButton = posOrganosJugadores[1].posCerebro[0] - posPauseButton.width - 20;
 
-	//redimensionamos en relacion al cronometro
+	//Cronometro
 	var radius = 30;
 	var xCountDown = posCartasUsuario.carta1.x - radius*2.2;
 	var yCountDown = posCartasUsuario.carta1.y + radius*2.2;
 	
-	var xMax = xCountDown - radius*2 - 20;
 	var xMin = posOrganosJugadores[2].widthOrgano + posOrganosJugadores[2].posComodin[0] + 20;
-	var maxWidth = xMax - xMin - 40;
+	var maxWidth = leftPauseButton - xMin - 40;
 	var maxHeight = windowHeight - yCountDown - 50;
 
 	var posXStr = (Math.floor(xMin)).toString() + "px";
@@ -2342,7 +2348,7 @@ function reDimListaTurnos() {
 	var textoListaTurnos = "";
 	for (var i = 0; i < jugadores.length; i++) {
 		if (jugadores[i] == usuario) {
-			nombreJug = "<b>TÚ</b>";
+			nombreJug = "<a class='usuarioListaEventos'>"+infoJugadores[jugadores[i]].nombre+" (TÚ)</a>";
 		} else {
 			nombreJug = infoJugadores[jugadores[i]].nombre;
 		}
@@ -2483,8 +2489,8 @@ function reDimCanvas(option) {
 
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	Engine.initPosPlayersHandCards();
 	Engine.initPosCartasUsuario();
+	Engine.initPosPlayersHandCards();
 	Engine.initFinDescartesButton();
 	Engine.initPauseButton();
 

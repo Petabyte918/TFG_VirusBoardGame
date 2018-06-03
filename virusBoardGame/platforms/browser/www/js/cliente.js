@@ -679,8 +679,8 @@ socket.on('prepararPartida', function(datos_iniciales){
 	Engine.initCanvas();
 	Engine.initJugadores();
 	Engine.initPosOrganosJugadores();
-	Engine.initPosPlayersHandCards();
 	Engine.initPosCartasUsuario();
+	Engine.initPosPlayersHandCards();
 	Engine.initFinDescartesButton();
 	Engine.initPauseButton();
 
@@ -908,6 +908,7 @@ socket.on('pauseGame', function(datos_partida) {
 	gamePaused = "true";
 	//Cambiamos color
 	$("#pauseButton").css("background-color","red");
+	$("#pauseButton").css("background-image","url(css/img/pauseButton.png)");
 	clearTimeout(countDownSTO); //->setTimeOut
 	clearTimeout(esperarMovSTO); //->setTimeOut
 });
@@ -917,6 +918,7 @@ socket.on('contineGame', function(datos_partida) {
 	gamePaused = "false";
 	//Cambiamos color
 	$("#pauseButton").css("background-color","green");
+	$("#pauseButton").css("background-image","url(css/img/continueButton.png)");
 	esperarMovimiento(); //->setTimeOut
 	renderCountDown(30, new Date()); //->setTimeOut
 });
