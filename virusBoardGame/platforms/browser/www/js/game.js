@@ -1707,6 +1707,7 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	//Descarte
 	if (posDestino == 0) {
 		finDescarte = false;
+		cerrarAyudaCartas(); //Cerramos primero las ayudas ya abiertas o se quedaran abiertas
 		abrirAyudaCartas("ayudaDescartes");
 		descartes[numCarta] = true;
 		actualizarCanvasAPO();
