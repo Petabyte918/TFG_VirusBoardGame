@@ -305,13 +305,6 @@ function representarMov(movJugador) {
 		var posJug = posPorJugador[movJugador.jugOrigen].posicion;
 		var posJugDest = posPorJugador[movJugador.cartasUsadas[1].jugPropietario].posicion;
 		var tipoOrgano = "pos"+mayusPrimera(movJugador.cartasUsadas[1].organType);
-		var carta = "carta"+(movJugador.cartasUsadas[0].numCarta+1); //Carta de la mano para mostrar
-
-		var posXInicial = posPlayersHandCards[posJug][carta].x;
-		var posYInicial = posPlayersHandCards[posJug][carta].y;
-		var widthInicial = posPlayersHandCards.widthCarta;
-		var heightInicial = posPlayersHandCards.heightCarta;
-
 
 		var posXFinalMov = posOrganosJugadores[posJugDest][tipoOrgano][0];
 		var posYFinalMov = posOrganosJugadores[posJugDest][tipoOrgano][1];
@@ -325,6 +318,12 @@ function representarMov(movJugador) {
 		
 		if (movJugador.jugOrigen != usuario) {
 			mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[0].picture, movJugador.cartasUsadas[0].numCarta);			
+			var carta = "carta"+(movJugador.cartasUsadas[0].numCarta+1); //Carta de la mano para mostrar
+
+			var posXInicial = posPlayersHandCards[posJug][carta].x;
+			var posYInicial = posPlayersHandCards[posJug][carta].y;
+			var widthInicial = posPlayersHandCards.widthCarta;
+			var heightInicial = posPlayersHandCards.heightCarta;
 
 			//Movemos el ladron de organos al organo
 			setTimeout(moverCartaJugada, 1000, 1000, 20, movJugador.cartasUsadas[0].picture, posXInicial, posYInicial, widthInicial, heightInicial, posXFinalMov, posYFinalMov, widthFinalMov, heightFinalMov);
@@ -345,12 +344,6 @@ function representarMov(movJugador) {
 		var posJugDest1 = posPorJugador[movJugador.cartasUsadas[1].jugPropietario].posicion;
 		var posJugDest2 = posPorJugador[movJugador.cartasUsadas[2].jugPropietario].posicion;
 		var tipoOrgano = "pos"+mayusPrimera(movJugador.cartasUsadas[1].organType);
-		var carta = "carta"+(movJugador.cartasUsadas[0].numCarta+1); //Carta de la mano para mostrar
-
-		var posXInicial = posPlayersHandCards[posJug][carta].x;
-		var posYInicial = posPlayersHandCards[posJug][carta].y;
-		var widthInicial = posPlayersHandCards.widthCarta;
-		var heightInicial = posPlayersHandCards.heightCarta;
 
 		var posXFinalMov1 = posOrganosJugadores[posJugDest1][tipoOrgano][0];
 		var posYFinalMov1 = posOrganosJugadores[posJugDest1][tipoOrgano][1];
@@ -361,9 +354,18 @@ function representarMov(movJugador) {
 		var posYFinalMov2 = posOrganosJugadores[posJugDest2][tipoOrgano][1];
 		var widthFinalMov2 = posOrganosJugadores[posJugDest2].widthOrgano;
 		var heightFinalMov2 = posOrganosJugadores[posJugDest2].heightOrgano;
+		for (var g = 0; g < movJugador.cartasUsadas.length; g++) {
+			console.log("g: "+g+" - carta: "+movJugador.cartasUsadas[g].picture);
+		}
 
 		if (movJugador.jugOrigen != usuario) {
 			mostrarCartaJugada(1000, 50, movJugador.jugOrigen, movJugador.cartasUsadas[0].picture, movJugador.cartasUsadas[0].numCarta);			
+			var carta = "carta"+(movJugador.cartasUsadas[0].numCarta+1); //Carta de la mano para mostrar
+
+			var posXInicial = posPlayersHandCards[posJug][carta].x;
+			var posYInicial = posPlayersHandCards[posJug][carta].y;
+			var widthInicial = posPlayersHandCards.widthCarta;
+			var heightInicial = posPlayersHandCards.heightCarta;
 
 			//Movemos el transplante al organo1
 			setTimeout(moverCartaJugada, 1000, 1000, 20, movJugador.cartasUsadas[0].picture, posXInicial, posYInicial, widthInicial, heightInicial, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
@@ -372,7 +374,7 @@ function representarMov(movJugador) {
 			//Movemos el transplante al organo2
 			setTimeout(moverCartaJugada, 1000, 1000, 20, movJugador.cartasUsadas[0].picture, posXInicial, posYInicial, widthInicial, heightInicial, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2);
 			//Movemos el organo 2 hasta los organos del usuario 1
-			setTimeout(moverCartaJugada, 2000, 1000, 20, movJugador.cartasUsadas[1].picture, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
+			setTimeout(moverCartaJugada, 2000, 1000, 20, movJugador.cartasUsadas[2].picture, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
 			//Redibujamos
 			setTimeout('doneResizing()', 3020);
 		} else {
@@ -380,7 +382,7 @@ function representarMov(movJugador) {
 			//Movemos el organo 1 hasta los organos del usuario 2
 			setTimeout(moverCartaJugada, 0, 2000, 20, movJugador.cartasUsadas[1].picture, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2);
 			//Movemos el organo 2 hasta los organos del usuario 1
-			setTimeout(moverCartaJugada, 0, 2000, 20, movJugador.cartasUsadas[1].picture, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
+			setTimeout(moverCartaJugada, 0, 2000, 20, movJugador.cartasUsadas[2].picture, posXFinalMov2, posYFinalMov2, widthFinalMov2, heightFinalMov2, posXFinalMov1, posYFinalMov1, widthFinalMov1, heightFinalMov1);
 			//Redibujamos
 			setTimeout('doneResizing()', 2020);
 		}
@@ -1727,8 +1729,8 @@ function manejadorMov(posDestino, organoColision, numCarta) {
 	var cardType = cartasUsuario[numCarta].cardType;
 	var organType = cartasUsuario[numCarta].organType;
 
-	//Si es un organo y la pos es la mia, evaluo si no lo tengo
-	if ((cardType == "organo") && (posDestino == 1)) {
+	//Si es un organo, si la posicion es la mia, y si coincide con el tipo de organo, evaluo si no lo tengo
+	if ((cardType == "organo") && (posDestino == 1) && (organType == organoColision)) {
 		if (organosJugadoresCli[jugDestino][organType] == ""){
 			organosJugadoresCli[jugDestino][organType] = "normal";
 			var cartasUsadas = [];
