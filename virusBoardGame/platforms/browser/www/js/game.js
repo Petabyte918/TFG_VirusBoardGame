@@ -1074,42 +1074,54 @@ function actualizarCanvasFrontal() {
 function actualizarCanvasAPO(){
 	//console.log("actualizarCanvasAPO()");
 	var img1 = new Image();
-	if ((objetos[0].src != "") && (descartes[0] == false)){
-		//Tratamos de evitar parpadeos moviendo cartas
-		if (objetos[0] != objetoActual) {
-			img1.src = objetos[0].src;
-			img1.onload = function(){
-				cxAPO.clearRect(objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
-				cxAPO.drawImage(img1, objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
-			}
-		} else { //Si es el objeto actual no lo dibujamos en la mano
-			cxAPO.clearRect(objetos[0].x, objetos[0].y, objetos[0].width, objetos[0].height);
+	//Tratamos de evitar parpadeos moviendo cartas
+	if (objetos[0].src != "") {
+		img1.src = objetos[0].src;
+		img1.onload = function(){
+			if ( (descartes[0] == true) || (objetos[0] == objetoActual) ) {
+				cxAPO.globalAlpha = 0.4;
+				cxAPO.clearRect(posCartasUsuario.carta1.x, posCartasUsuario.carta1.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.drawImage(img1, posCartasUsuario.carta1.x, posCartasUsuario.carta1.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.globalAlpha = 1;
+			} else {
+				cxAPO.clearRect(posCartasUsuario.carta1.x, posCartasUsuario.carta1.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.drawImage(img1, posCartasUsuario.carta1.x, posCartasUsuario.carta1.y, posCartasUsuario.width, posCartasUsuario.height);
+			}	
 		}
 	}
+
 	var img2 = new Image();
-	if ((objetos[1].src != "") && (descartes[1] == false)){
+	if (objetos[1].src != "") {
 		//Tratamos de evitar parpadeos moviendo cartas
-		if (objetos[1] != objetoActual) {
-			img2.src = objetos[1].src;
-			img2.onload = function(){
-				cxAPO.clearRect(objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
-				cxAPO.drawImage(img2, objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
+		img2.src = objetos[1].src;
+		img2.onload = function(){
+			//Si es el objeto actual o la carta ha sido descartada, dejamos carta semitransparente
+			if ( (descartes[1] == true) || (objetos[1] == objetoActual) ) {
+				cxAPO.globalAlpha = 0.4;
+				cxAPO.clearRect(posCartasUsuario.carta2.x, posCartasUsuario.carta2.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.drawImage(img2, posCartasUsuario.carta2.x, posCartasUsuario.carta2.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.globalAlpha = 1;
+			} else {
+				cxAPO.clearRect(posCartasUsuario.carta2.x, posCartasUsuario.carta2.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.drawImage(img2, posCartasUsuario.carta2.x, posCartasUsuario.carta2.y, posCartasUsuario.width, posCartasUsuario.height);
 			}
-		} else { //Si es el objeto actual no lo dibujamos en la mano
-			cxAPO.clearRect(objetos[1].x, objetos[1].y, objetos[1].width, objetos[1].height);
 		}
 	}
+
 	var img3 = new Image();
-	if ((objetos[2].src != "") && (descartes[2] == false)){
+	if (objetos[2].src != ""){
 		//Tratamos de evitar parpadeos moviendo cartas
-		if (objetos[2] != objetoActual) {
-			img3.src = objetos[2].src;
-			img3.onload = function(){
-				cxAPO.clearRect(objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
-				cxAPO.drawImage(img3, objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
+		img3.src = objetos[2].src;
+		img3.onload = function(){
+			if ( (descartes[2] == true) || (objetos[2] == objetoActual) ) {
+				cxAPO.globalAlpha = 0.4;
+				cxAPO.clearRect(posCartasUsuario.carta3.x, posCartasUsuario.carta3.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.drawImage(img3, posCartasUsuario.carta3.x, posCartasUsuario.carta3.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.globalAlpha = 1;
+			} else {
+				cxAPO.clearRect(posCartasUsuario.carta3.x, posCartasUsuario.carta3.y, posCartasUsuario.width, posCartasUsuario.height);
+				cxAPO.drawImage(img3, posCartasUsuario.carta3.x, posCartasUsuario.carta3.y, posCartasUsuario.width, posCartasUsuario.height);
 			}
-		} else { //Si es el objeto actual no lo dibujamos en la mano
-			cxAPO.clearRect(objetos[2].x, objetos[2].y, objetos[2].width, objetos[2].height);
 		}
 	}
 
