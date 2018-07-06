@@ -1,0 +1,18 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "¡VIRUS!",
+  "short_name": "¡VIRUS!",
+  "version": "com.virusRampage",
+  "description": "VIRUS RAMPAGE: UNA APLICACIÓN HÍBRIDA DESARROLLADA CON APACHE CORDOVA DEL JUEGO DE MESA VIRUS. Desarrollado solamente pon propositos educativos.",
+  "author": "Daniel Rodriguez Cabello",
+  "icons": [
+    {
+      "src": "www/img/icon.png",
+      "type": "image/png",
+      "sizes": "undefinedxundefined"
+    }
+  ],
+  "orientation": "landscape",
+  "start_url": "index.html"
+}

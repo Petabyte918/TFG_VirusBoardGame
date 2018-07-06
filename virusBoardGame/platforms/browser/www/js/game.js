@@ -1160,6 +1160,8 @@ function moveObjects(){
 	    console.log('Esto es un dispositivo movil');
 		cv.ontouchstart = function(event) {
 			touch = event.touches[0];
+			//Antes de abrir nuevas ayudas cerramos las ya abiertas
+			cerrarAyudaCartas();
 			//console.log("Ontouchstart");
 			for (var i = 0; i < objetos.length; i++) {
 				if (objetos[i].x < touch.pageX
@@ -1172,15 +1174,19 @@ function moveObjects(){
 					var numCarta = objetoActual.numCarta;
 					abrirAyudaCartas(numCarta);
 
-					//console.log("Objeto "+i+" TOCADO");
 					inicioY = touch.pageY - objetos[i].y;
 					inicioX = touch.pageX - objetos[i].x;
+
+					actualizarCanvasAPO(); //Si hay objeto actual borro carta de la mano
+					actualizarCanvasFrontal(); //Pero la dibujo en el canvas frontal (si solo click y no muevo => carta no desaparece)
+
 					//Optimizar renderizado
 					posInitObjX = objetoActual.x;
 					posInitObjY = objetoActual.y;
 					break;
 				}
 			}
+			evalClick(touch.x, touch.y);
 		}
 
 		cv.ontouchmove = function(event) {
@@ -1219,13 +1225,15 @@ function moveObjects(){
 			if (objetoActual != null){
 				checkCollision();
 				objetoActual = null; //Ocurra lo que ocurra acabo soltando el objeto
-				actualizarCanvasAPO();
-				actualizarCanvasFrontal();
+				actualizarCanvasMID(); //Redibujamos organos
+				actualizarCanvasAPO(); //Dibujamos cartas de la mano
+				actualizarCanvasFrontal(); //Refrescamos en canvas frontal
 			}
 			//	2Eliminar o no objeto
 			//	3Agregarlo o no a algun sitio
 			//4restablecer coordenadas iniciale
 			objetoActual = null;
+			evalUnClick(touch.x, touch.y);
 		}
 	} else {
 		console.log('Esto es un navegador de ordenador');
