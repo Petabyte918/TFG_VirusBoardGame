@@ -426,11 +426,17 @@ socket.on('create_ranquing', function(data) {
 	$(".ranquingElems").remove();
 
 	var optionRanquing = localStorage.getItem('optionRanquing');
-	//console.log("optionRanquing: "+ optionRanquing);
 
 	var sortedObj = getUsersSorted(optionRanquing, data);
 	var maxLoop = (Object.keys(sortedObj)).length;
 
+	console.log("maxOfLoops: "+maxOfLoops);
+	if (maxOfLoops < maxLoop) {
+		maxLoop = maxOfLoops;
+	}
+
+	//Eliminamos el elemento test
+	$(".ranquingElems").remove();
 
 	var html = "";
 	for (var i = 0; i < maxLoop; i++) {
@@ -825,7 +831,7 @@ socket.on('siguienteTurnoCli', function(datos_partida){
 
 	//Guante de Latex
 	//El jugador de la carta no se descarta
-	if ((movJugador.tipoMov == "guanteDeLatex") && (usuario != turno)) {
+	if ((movJugador.tipoMov == "guanteDeLatex") && (usuario != movJugador.jugOrigen)) {
 		objetos[0].src = "";
 		objetos[1].src = "";
 		objetos[2].src = "";
