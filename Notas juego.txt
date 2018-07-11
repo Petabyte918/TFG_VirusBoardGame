@@ -26,6 +26,5 @@ La baraja de cartas consiste en 68 cartas:
   --2 guante de latex
   --2 transplante
   --2 ladron de organos
-  --2 contagio
 
 
